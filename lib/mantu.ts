@@ -5,4 +5,20 @@
 //   _____/   /_____/    |  Entryfile for mantu project
 //                       |
 
-console.log('Hello World!')
+import Discord from 'discord.js'
+
+const config = require('../config.json')
+const client = new Discord.Client()
+
+client.once('ready', () => {
+    console.log('ready!')
+})
+
+client.login(config.token)
+
+client.on('message', (message) => {
+    if (message.content.startsWith(config.prefix) == true) {
+        const command = message.content.replace(config.prefix, '')
+        console.log(command)
+    }
+})
