@@ -1,0 +1,33 @@
+{
+    "name": "mantu",
+    "description": "A Discord bot to manage Vasanth Developer server.",
+    "version": "0.0.0",
+    "license": "MIT",
+    "private": true,
+    "author": {
+        "name": "Vasanth Developer",
+        "email": "vasanth@vasanthdeveloper.com",
+        "url": "https://vasanth.tech"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vasanthdeveloper/mantu.git"
+    },
+    "bugs": {
+        "url": "https://github.com/vasanthdeveloper/mantu/issues",
+        "email": "vasanth@vasanthdeveloper.com"
+    },
+    "scripts": {
+        "start": "node ./src/mantu.js",
+        "watch": "tsc --watch",
+        "build": "tsc"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@types/node": "^13.7.4",
+        "@typescript-eslint/eslint-plugin": "^2.21.0",
+        "@typescript-eslint/parser": "^2.21.0",
+        "eslint": "^6.8.0",
+        "typescript": "^3.8.2"
+    }
+}
