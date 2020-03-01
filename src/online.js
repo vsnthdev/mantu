@@ -20,10 +20,7 @@ function online(config) {
         return () => __awaiter(this, void 0, void 0, function* () {
             logger_1.default.success('The bot is online and ready');
             yield discord_1.default.setStatus();
-            logger_1.default.info('Running immediate tasks');
             cleanup_1.default(config)();
-            logger_1.default.info('Scheduled tasks');
-            setInterval(cleanup_1.default(config), config.get('interval'));
         });
     });
 }

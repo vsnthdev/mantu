@@ -59,6 +59,15 @@ function updateDisplayName(userId, newDisplayName) {
         });
     });
 }
+function updateLastActivity(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database('members')
+            .where({ id: userId })
+            .update({
+            lastActive: moment_1.default().format('x')
+        });
+    });
+}
 const exportable = {
     config: config,
     connection: database,
@@ -67,7 +76,8 @@ const exportable = {
         memberExists,
         addUserToDatabase,
         deleteUserFromDatabase,
-        updateDisplayName
+        updateDisplayName,
+        updateLastActivity
     }
 };
 exports.default = exportable;

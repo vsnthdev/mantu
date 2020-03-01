@@ -46,8 +46,24 @@ function getAllMembers(config) {
         return returnable;
     });
 }
+function presenceChanged(callback) {
+    client.on('presenceUpdate', (oldMember, newMember) => {
+        callback(oldMember, newMember);
+    });
+}
+function guildUpdated(callback) {
+    client.on('guildMemberUpdate', (oldMember, newMember) => {
+        callback(oldMember, newMember);
+    });
+}
 exports.default = {
     authenticate,
     setStatus,
-    getAllMembers
+    members: {
+        getAllMembers
+    },
+    events: {
+        presenceChanged,
+        guildUpdated
+    }
 };

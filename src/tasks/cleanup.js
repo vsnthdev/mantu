@@ -22,18 +22,27 @@ function forEach(array, callback) {
         }
     });
 }
+function forCollection(collection, callback) {
+    return __awaiter(this, void 0, void 0, function* () {
+        collection.forEach((value, key, map) => __awaiter(this, void 0, void 0, function* () {
+            yield callback(value, key, map);
+        }));
+    });
+}
 function cleanUpServer(config) {
     return function () {
         return __awaiter(this, void 0, void 0, function* () {
-            logger_1.default.info('Started cleanup task');
             yield syncDatabase(config);
+            logger_1.default.info('The database has been synchronized');
+            discord_1.default.events.presenceChanged(updateActivity);
+            discord_1.default.events.guildUpdated(updateUsersInDB);
         });
     };
 }
 exports.default = cleanUpServer;
 function syncDatabase(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const members = yield discord_1.default.getAllMembers(config);
+        const members = yield discord_1.default.members.getAllMembers(config);
         const membersInDB = yield database_1.default.queries.getAllMembers();
         let discordMembersId = [];
         yield forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
@@ -54,5 +63,26 @@ function syncDatabase(config) {
                 database_1.default.queries.deleteUserFromDatabase(member.id);
             }
         }));
+    });
+}
+function updateActivity(oldMember, newMember) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
+            yield database_1.default.queries.updateLastActivity(newMember.user.id);
+        }
+    });
+}
+function updateUsersInDB(oldMember, newMember) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let roles = [];
+        yield forCollection(newMember.roles, (role) => {
+            roles.push(role.name);
+        });
+        if (roles.includes('Member') == true) {
+            yield database_1.default.queries.addUserToDatabase(newMember);
+        }
+        else {
+            yield database_1.default.queries.deleteUserFromDatabase(newMember.user.id);
+        }
     });
 }

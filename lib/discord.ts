@@ -6,6 +6,7 @@ import logger from './logger'
 // Create a Discord client
 const client = new Discord.Client()
 
+// GLOBAL DISCORD
 async function authenticate(token: string, callback: Function): Promise<void> {
     client.on('ready', callback)
     client.login(token)
@@ -25,6 +26,7 @@ async function setStatus(): Promise<void> {
     })
 }
 
+// MEMBERS
 async function getAllMembers(config: Conf<any>): Promise<Discord.GuildMember[]> {
     const returnable = []
 
@@ -37,8 +39,27 @@ async function getAllMembers(config: Conf<any>): Promise<Discord.GuildMember[]> 
     return returnable
 }
 
+// EVENTS
+function presenceChanged(callback): void {
+    client.on('presenceUpdate', (oldMember, newMember) => {
+        callback(oldMember, newMember)
+    })
+}
+
+function guildUpdated(callback): void {
+    client.on('guildMemberUpdate', (oldMember, newMember) => {
+        callback(oldMember, newMember)
+    })
+}
+
 export default {
     authenticate,
     setStatus,
-    getAllMembers
+    members: {
+        getAllMembers
+    },
+    events: {
+        presenceChanged,
+        guildUpdated
+    }
 }

@@ -18,11 +18,6 @@ export default async function online(config: Conf<any>): Promise<Function> {
         await discord.setStatus()
     
         // Initial running of all the tasks
-        logger.info('Running immediate tasks')
         cleanUpServer(config)()
-    
-        // Scheduled tasks
-        logger.info('Scheduled tasks')
-        setInterval(cleanUpServer(config), config.get('interval'))
     }
 }

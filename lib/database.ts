@@ -30,7 +30,7 @@ async function addUserToDatabase(member: GuildMember): Promise<void> {
         })
 }
 
-async function deleteUserFromDatabase(userId: number): Promise<any> {
+async function deleteUserFromDatabase(userId: string): Promise<any> {
     return await database('members')
         .where({id: userId})
         .delete()
@@ -44,6 +44,14 @@ async function updateDisplayName(userId: string, newDisplayName: string): Promis
         })
 }
 
+async function updateLastActivity(userId: string): Promise<void> {
+    return await database('members')
+        .where({ id: userId })
+        .update({
+            lastActive: moment().format('x')
+        })
+}
+
 const exportable = {
     config: config,
     connection: database,
@@ -52,7 +60,8 @@ const exportable = {
         memberExists,
         addUserToDatabase,
         deleteUserFromDatabase,
-        updateDisplayName
+        updateDisplayName,
+        updateLastActivity
     }
 }
 
