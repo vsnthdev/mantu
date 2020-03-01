@@ -68,11 +68,20 @@ function updateLastActivity(userId) {
         });
     });
 }
+function getMember(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database('members')
+            .where({ id: userId })
+            .first()
+            .select();
+    });
+}
 const exportable = {
     config: config,
     connection: database,
     queries: {
         getAllMembers,
+        getMember,
         memberExists,
         addUserToDatabase,
         deleteUserFromDatabase,

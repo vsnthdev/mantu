@@ -56,6 +56,15 @@ function guildUpdated(callback) {
         callback(oldMember, newMember);
     });
 }
+function commandReceived(callback) {
+    client.on('message', (message) => {
+        if (message.mentions.members.first()) {
+            if (message.mentions.members.first().user.username == 'mantu') {
+                callback(message.content.replace(`<@!${message.mentions.members.first().user.id}> `, ''), message);
+            }
+        }
+    });
+}
 exports.default = {
     authenticate,
     setStatus,
@@ -64,6 +73,7 @@ exports.default = {
     },
     events: {
         presenceChanged,
-        guildUpdated
+        guildUpdated,
+        commandReceived
     }
 };

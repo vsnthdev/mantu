@@ -52,11 +52,19 @@ async function updateLastActivity(userId: string): Promise<void> {
         })
 }
 
+async function getMember(userId: string): Promise<any> {
+    return await database('members')
+        .where({ id: userId })
+        .first()
+        .select()
+}
+
 const exportable = {
     config: config,
     connection: database,
     queries: {
         getAllMembers,
+        getMember,
         memberExists,
         addUserToDatabase,
         deleteUserFromDatabase,

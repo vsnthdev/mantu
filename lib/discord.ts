@@ -52,6 +52,18 @@ function guildUpdated(callback): void {
     })
 }
 
+function commandReceived(callback): void {
+    client.on('message', (message: Discord.Message) => {
+        // check if someone was mentioned here
+        if (message.mentions.members.first()) {
+            // check if mantu was mentioned
+            if (message.mentions.members.first().user.username == 'mantu') {
+                callback(message.content.replace(`<@!${message.mentions.members.first().user.id}> `, ''), message)
+            }
+        }
+    })
+}
+
 export default {
     authenticate,
     setStatus,
@@ -60,6 +72,7 @@ export default {
     },
     events: {
         presenceChanged,
-        guildUpdated
+        guildUpdated,
+        commandReceived
     }
 }
