@@ -23,9 +23,17 @@
         "build": "tsc"
     },
     "dependencies": {
-        "discord.js": "^11.5.1"
+        "chalk": "^3.0.0",
+        "command-line-args": "^5.1.1",
+        "command-line-usage": "^6.1.0",
+        "conf": "^6.2.1",
+        "discord.js": "^11.5.1",
+        "itivrutaha": "^0.1.1",
+        "moment": "^2.24.0"
     },
     "devDependencies": {
+        "@types/command-line-args": "^5.0.0",
+        "@types/command-line-usage": "^5.0.1",
         "@types/node": "^13.7.4",
         "@typescript-eslint/eslint-plugin": "^2.21.0",
         "@typescript-eslint/parser": "^2.21.0",
