@@ -20,7 +20,8 @@
     "scripts": {
         "start": "node ./src/mantu.js",
         "watch": "tsc --watch",
-        "build": "tsc"
+        "build": "tsc",
+        "reset:db": "dropdb mantu_dev && createdb mantu_dev"
     },
     "dependencies": {
         "chalk": "^3.0.0",
@@ -29,7 +30,9 @@
         "conf": "^6.2.1",
         "discord.js": "^11.5.1",
         "itivrutaha": "^0.1.1",
-        "moment": "^2.24.0"
+        "knex": "^0.20.10",
+        "moment": "^2.24.0",
+        "pg": "^7.18.2"
     },
     "devDependencies": {
         "@types/command-line-args": "^5.0.0",

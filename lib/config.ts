@@ -5,17 +5,32 @@ import moment from 'moment'
 
 const defaultConfig: object = {
     token: '',
-    lastCleanup: moment().subtract('1', 'month').format('x'),
+    serverId: null,
     baseRole: 'Member',
-    interval: (1000 * 60) * 60
+    interval: (1000 * 60) * 60,
+    database: {
+        host: '127.0.0.1',
+        port: 5432,
+        user: process.env.USER,
+        password: null,
+        database: 'mantu'
+    }
 }
 
-export default async function loadConfig(): Promise<Conf<any>> {
-    const config = new Conf({
-        projectSuffix: '',
-        cwd: process.cwd(),
-        defaults: defaultConfig
-    })
+const config = new Conf({
+    projectSuffix: '',
+    cwd: process.cwd(),
+    defaults: defaultConfig
+})
 
+export default function loadConfig(): Conf<any> {
     return config
+}
+
+export const databaseInformation = {
+    host: config.get('database.host'),
+    port: config.get('database.port'),
+    user: config.get('database.user'),
+    database: config.get('database.database'),
+    password: config.get('database.password')
 }

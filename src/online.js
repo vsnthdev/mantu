@@ -13,22 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const logger_1 = __importDefault(require("./logger"));
+const discord_1 = __importDefault(require("./discord"));
 const cleanup_1 = __importDefault(require("./tasks/cleanup"));
-function online(config, client) {
+function online(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        logger_1.default.success('The bot is online and ready');
-        client.user.setPresence({
-            game: {
-                name: 'this server.',
-                type: 'WATCHING',
-                url: 'https://vasanth.tech'
-            },
-            status: 'online'
+        return () => __awaiter(this, void 0, void 0, function* () {
+            logger_1.default.success('The bot is online and ready');
+            yield discord_1.default.setStatus();
+            logger_1.default.info('Running immediate tasks');
+            cleanup_1.default(config)();
+            logger_1.default.info('Scheduled tasks');
+            setInterval(cleanup_1.default(config), config.get('interval'));
         });
-        logger_1.default.info('Running immediate tasks');
-        cleanup_1.default(config, client)();
-        logger_1.default.info('Scheduled tasks');
-        setInterval(cleanup_1.default(config, client), config.get('interval'));
     });
 }
 exports.default = online;

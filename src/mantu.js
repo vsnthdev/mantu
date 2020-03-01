@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const discord_js_1 = __importDefault(require("discord.js"));
 const moment_1 = __importDefault(require("moment"));
 const config_1 = __importDefault(require("./config"));
 const logger_1 = __importDefault(require("./logger"));
 const cli_1 = __importDefault(require("./cli"));
 const help_1 = __importDefault(require("./cmd/help"));
 const online_1 = __importDefault(require("./online"));
+const discord_1 = __importDefault(require("./discord"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         const args = yield cli_1.default();
@@ -33,10 +33,15 @@ function main() {
         if (config.get('token') == '') {
             logger_1.default.error('No access token provided. Aborting...', 2);
         }
-        const client = new discord_js_1.default.Client();
-        client.once('ready', () => online_1.default(config, client));
-        client.login(config.get('token'))
-            .catch(err => logger_1.default.error(err, 2));
+        if (typeof config.get('serverId') == 'number') {
+            if (config.get('serverId').toString().length < 18) {
+                logger_1.default.error('Invalid server ID provided. Aborting...', 3);
+            }
+        }
+        else {
+            logger_1.default.error('No server ID provided. Aborting...', 3);
+        }
+        discord_1.default.authenticate(config.get('token'), yield online_1.default(config));
     });
 }
 main();

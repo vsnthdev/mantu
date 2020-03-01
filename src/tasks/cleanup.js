@@ -8,12 +8,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-function cleanUpServer(config, client) {
+const discord_1 = __importDefault(require("../discord"));
+const database_1 = __importDefault(require("../database"));
+const logger_1 = __importDefault(require("../logger"));
+function forEach(array, callback) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let index = 0; index < array.length; index++) {
+            yield callback(array[index], index, array);
+        }
+    });
+}
+function cleanUpServer(config) {
     return function () {
         return __awaiter(this, void 0, void 0, function* () {
-            return;
+            logger_1.default.info('Started cleanup task');
+            yield syncDatabase(config);
         });
     };
 }
 exports.default = cleanUpServer;
+function syncDatabase(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const members = yield discord_1.default.getAllMembers(config);
+        const membersInDB = yield database_1.default.queries.getAllMembers();
+        let discordMembersId = [];
+        yield forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
+            let exists = yield database_1.default.queries.memberExists(member.user.id);
+            discordMembersId.push(member.user.id);
+            if (exists == false) {
+                logger_1.default.verbose(`Adding user: ${member.displayName} to the database`);
+                database_1.default.queries.addUserToDatabase(member);
+            }
+            else {
+                yield database_1.default.queries.updateDisplayName(member.user.id, member.displayName);
+            }
+        }));
+        yield forEach(membersInDB, (member) => __awaiter(this, void 0, void 0, function* () {
+            const exists = discordMembersId.includes(member.id);
+            if (exists == false) {
+                logger_1.default.verbose(`Removing user: ${member.name} from the database.`);
+                database_1.default.queries.deleteUserFromDatabase(member.id);
+            }
+        }));
+    });
+}
