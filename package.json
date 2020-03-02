@@ -21,6 +21,7 @@
         "start": "node ./src/mantu.js",
         "watch": "tsc --watch",
         "build": "tsc",
+        "build:docker": "docker build .",
         "reset:db": "dropdb mantu_dev && createdb mantu_dev"
     },
     "dependencies": {
