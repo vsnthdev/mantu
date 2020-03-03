@@ -1,12 +1,32 @@
 import knex from 'knex'
 import { GuildMember } from 'discord.js'
 import moment from 'moment'
+import logger from './logger'
 
 const knexfile = require('../knexfile')
 
 const config = (process.env.NODE_ENV == 'production') ? knexfile['production'] : knexfile['development']
 
-const database = knex(config)
+// the variable that stores the database connection
+// which can used across this file
+let database
+
+function connectToDatabase(): Promise<void> {
+    return new Promise((resolve) => {
+        const tempDatabase = knex(config)
+
+        // check if we have a successful connection by testing a query
+        tempDatabase('knex_migrations')
+            .catch((err) => {
+                logger.error(`Failed to connect to the database due to: ${err.message}`, 4)
+            })
+            .then(() => {
+                database = tempDatabase
+                logger.success('Finished connecting to the database')
+                resolve()
+            })
+    })
+}
 
 async function getAllMembers(): Promise<any[]> {
     return await database('members')
@@ -61,7 +81,7 @@ async function getMember(userId: string): Promise<any> {
 
 const exportable = {
     config: config,
-    connection: database,
+    connect: connectToDatabase,
     queries: {
         getAllMembers,
         getMember,

@@ -51,4 +51,4 @@ ENV GID=1000
 ENV UID=1000
 
 # Set the startup command
-CMD [ "node", "/var/lib/mantu/src/mantu.js" ]
+CMD [ "node", "/var/lib/mantu/src/mantu.js", "--unhandled-rejections=strict" ]

@@ -14,9 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const knex_1 = __importDefault(require("knex"));
 const moment_1 = __importDefault(require("moment"));
+const logger_1 = __importDefault(require("./logger"));
 const knexfile = require('../knexfile');
 const config = (process.env.NODE_ENV == 'production') ? knexfile['production'] : knexfile['development'];
-const database = knex_1.default(config);
+let database;
+function connectToDatabase() {
+    return new Promise((resolve) => {
+        const tempDatabase = knex_1.default(config);
+        tempDatabase('knex_migrations')
+            .catch((err) => {
+            logger_1.default.error(`Failed to connect to the database due to: ${err.message}`, 4);
+        })
+            .then(() => {
+            database = tempDatabase;
+            logger_1.default.success('Finished connecting to the database');
+            resolve();
+        });
+    });
+}
 function getAllMembers() {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database('members');
@@ -78,7 +93,7 @@ function getMember(userId) {
 }
 const exportable = {
     config: config,
-    connection: database,
+    connect: connectToDatabase,
     queries: {
         getAllMembers,
         getMember,

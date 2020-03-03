@@ -13,6 +13,7 @@ import parseArgs from './cli'
 import helpMessage from './cmd/help'
 import online from './online'
 import discord from './discord'
+import database from './database'
 
 async function main(): Promise<void> {
     // Parse the arguments
@@ -45,6 +46,9 @@ async function main(): Promise<void> {
     } else {
         logger.error('No server ID provided. Aborting...', 3)
     }
+
+    // ensure we have a successful database connection
+    await database.connect()
 
     // Attempt to login
     discord.authenticate(config.get('token'), await online(config))

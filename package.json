@@ -38,6 +38,7 @@
     "devDependencies": {
         "@types/command-line-args": "^5.0.0",
         "@types/command-line-usage": "^5.0.1",
+        "@types/knex": "^0.16.1",
         "@types/node": "^13.7.4",
         "@typescript-eslint/eslint-plugin": "^2.21.0",
         "@typescript-eslint/parser": "^2.21.0",
