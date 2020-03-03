@@ -22,6 +22,7 @@ function forEach(array, callback) {
         }
     });
 }
+exports.forEach = forEach;
 function forCollection(collection, callback) {
     return __awaiter(this, void 0, void 0, function* () {
         collection.forEach((value, key, map) => __awaiter(this, void 0, void 0, function* () {
@@ -29,6 +30,7 @@ function forCollection(collection, callback) {
         }));
     });
 }
+exports.forCollection = forCollection;
 function cleanUpServer(config) {
     return function () {
         return __awaiter(this, void 0, void 0, function* () {
