@@ -30,6 +30,7 @@
         "command-line-usage": "^6.1.0",
         "conf": "^6.2.1",
         "discord.js": "^11.5.1",
+        "execa": "^4.0.0",
         "itivrutaha": "^0.1.1",
         "knex": "^0.20.10",
         "moment": "^2.24.0",

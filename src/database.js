@@ -12,24 +12,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = __importDefault(require("path"));
 const knex_1 = __importDefault(require("knex"));
 const moment_1 = __importDefault(require("moment"));
+const execa_1 = __importDefault(require("execa"));
 const logger_1 = __importDefault(require("./logger"));
 const knexfile = require('../knexfile');
 const config = (process.env.NODE_ENV == 'production') ? knexfile['production'] : knexfile['development'];
 let database;
 function connectToDatabase() {
-    return new Promise((resolve) => {
-        const tempDatabase = knex_1.default(config);
-        tempDatabase('knex_migrations')
-            .catch((err) => {
-            logger_1.default.error(`Failed to connect to the database due to: ${err.message}`, 4);
-        })
-            .then(() => {
+    return __awaiter(this, void 0, void 0, function* () {
+        const tempDatabase = yield knex_1.default(config);
+        try {
+            yield tempDatabase('knex_migrations');
             database = tempDatabase;
             logger_1.default.success('Finished connecting to the database');
-            resolve();
-        });
+        }
+        catch (e) {
+            if (e.code == '42P01') {
+                yield initializeTables();
+                yield connectToDatabase();
+            }
+            else {
+                logger_1.default.error(`Failed to connect to the database due to: ${e.message}`, 4);
+            }
+        }
     });
 }
 function getAllMembers() {
@@ -91,10 +98,22 @@ function getMember(userId) {
             .select();
     });
 }
+function initializeTables() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield execa_1.default(path_1.default.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest']);
+            logger_1.default.success('Finished initializing the database');
+        }
+        catch (e) {
+            logger_1.default.error(e, 2);
+        }
+    });
+}
 const exportable = {
     config: config,
     connect: connectToDatabase,
     queries: {
+        initializeTables,
         getAllMembers,
         getMember,
         memberExists,
