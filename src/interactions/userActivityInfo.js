@@ -22,15 +22,20 @@ function respond(message) {
         const members = Array.from(message.mentions.members.values());
         members.shift();
         yield cleanup_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
-            const databaseInfo = yield database_1.default.queries.getMember(member.user.id);
-            const response = new discord_js_1.default.RichEmbed()
-                .setColor('0x006cff')
-                .setTitle(`Activity information for ${member.displayName}`)
-                .setThumbnail(member.user.avatarURL)
-                .setAuthor(myself.displayName, myself.user.avatarURL)
-                .addField('ID', member.user.id)
-                .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow());
-            message.channel.send(response);
+            if (!member.roles.find(r => r.name === 'Member')) {
+                message.channel.send(`${member.displayName} doesn't have a "Member" role, so ${member.displayName} isn't tracked my mantu.`);
+            }
+            else {
+                const databaseInfo = yield database_1.default.queries.getMember(member.user.id);
+                const response = new discord_js_1.default.RichEmbed()
+                    .setColor('0x00b0ff')
+                    .setTitle(`Activity information for ${member.displayName}`)
+                    .setThumbnail(member.user.avatarURL)
+                    .setAuthor(myself.displayName, myself.user.avatarURL)
+                    .addField('ID', member.user.id)
+                    .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow());
+                message.channel.send(response);
+            }
         }));
     });
 }
