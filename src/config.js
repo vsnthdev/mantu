@@ -5,10 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const conf_1 = __importDefault(require("conf"));
 const defaultConfig = {
-    token: '',
-    serverId: null,
+    token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    serverId: 100000000000000000,
+    logChannel: 100000000000000000,
     baseRole: 'Member',
-    interval: (1000 * 60) * 60,
+    prefix: ';',
+    embedColor: '0x00b0ff',
+    deleteCommandAfterExecution: true,
     database: {
         host: '127.0.0.1',
         port: 5432,

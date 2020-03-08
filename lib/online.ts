@@ -11,7 +11,7 @@ import cleanUpServer from './tasks/cleanup'
 
 // Interactions to be imported
 import userActivityInfo from './interactions/userActivityInfo'
-import { Message } from 'discord.js'
+import Discord from 'discord.js'
 
 export default async function online(config: Conf<any>): Promise<Function> {
     return async () => {
@@ -22,19 +22,26 @@ export default async function online(config: Conf<any>): Promise<Function> {
         await discord.setStatus()
 
         // link the discord interactions
-        await linkCommands()
+        await linkCommands(config)
     
         // Initial running of all the tasks
         await cleanUpServer(config)()
     }
 }
 
-async function linkCommands(): Promise<void> {
+async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event
-    discord.events.commandReceived((command: string, message: Message) => {
+    discord.events.commandReceived(config, async (command: string, message: Discord.Message) => {
+        let commandExecutionSuccessful: boolean = false
+
         // act accordingly
         if (command.startsWith('info ')) {
-            userActivityInfo(message)
+            commandExecutionSuccessful = await userActivityInfo(message, config)
+        }
+
+        // delete the message if the config has it
+        if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
+            message.delete()
         }
     })
 }

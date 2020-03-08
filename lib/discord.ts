@@ -52,14 +52,12 @@ function guildUpdated(callback): void {
     })
 }
 
-function commandReceived(callback): void {
+function commandReceived(config: Conf<any>, callback): void {
     client.on('message', (message: Discord.Message) => {
-        // check if someone was mentioned here
-        if (message.mentions.members.first()) {
-            // check if mantu was mentioned
-            if (message.mentions.members.first().user.username == 'mantu') {
-                callback(message.content.replace(`<@!${message.mentions.members.first().user.id}> `, ''), message)
-            }
+        // check if the prefix is there to determine if the message
+        // is intended for the bot
+        if (message.content.startsWith(config.get('prefix'))) {
+            callback(message.content.substring(1), message)
         }
     })
 }

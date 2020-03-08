@@ -21,18 +21,22 @@ function online(config) {
         return () => __awaiter(this, void 0, void 0, function* () {
             logger_1.default.success('The bot is online and ready');
             yield discord_1.default.setStatus();
-            yield linkCommands();
+            yield linkCommands(config);
             yield cleanup_1.default(config)();
         });
     });
 }
 exports.default = online;
-function linkCommands() {
+function linkCommands(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        discord_1.default.events.commandReceived((command, message) => {
+        discord_1.default.events.commandReceived(config, (command, message) => __awaiter(this, void 0, void 0, function* () {
+            let commandExecutionSuccessful = false;
             if (command.startsWith('info ')) {
-                userActivityInfo_1.default(message);
+                commandExecutionSuccessful = yield userActivityInfo_1.default(message, config);
             }
-        });
+            if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
+                message.delete();
+            }
+        }));
     });
 }

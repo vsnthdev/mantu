@@ -56,12 +56,10 @@ function guildUpdated(callback) {
         callback(oldMember, newMember);
     });
 }
-function commandReceived(callback) {
+function commandReceived(config, callback) {
     client.on('message', (message) => {
-        if (message.mentions.members.first()) {
-            if (message.mentions.members.first().user.username == 'mantu') {
-                callback(message.content.replace(`<@!${message.mentions.members.first().user.id}> `, ''), message);
-            }
+        if (message.content.startsWith(config.get('prefix'))) {
+            callback(message.content.substring(1), message);
         }
     });
 }
