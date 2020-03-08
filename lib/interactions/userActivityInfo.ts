@@ -26,8 +26,9 @@ export default async function respond(message: Discord.Message, config: Conf<any
                 .setColor(config.get('embedColor'))
                 .setTitle(`Activity information for ${member.displayName}`)
                 .setThumbnail(member.user.avatarURL)
-                .addField('ID', member.user.id)
-                .addField('Last Activity', moment(databaseInfo.lastActive, 'x').fromNow())
+                .addField('ID', member.user.id, true)
+                .addField('Last Activity', moment(databaseInfo.lastActive, 'x').fromNow(), true)
+                .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
 
             // send the response
             message.channel.send(response)

@@ -25,17 +25,12 @@ function connectToDatabase() {
         const tempDatabase = yield knex_1.default(config);
         try {
             yield tempDatabase('knex_migrations');
-            database = tempDatabase;
             logger_1.default.success('Finished connecting to the database');
+            yield initializeTables();
+            database = tempDatabase;
         }
         catch (e) {
-            if (e.code == '42P01') {
-                yield initializeTables();
-                yield connectToDatabase();
-            }
-            else {
-                logger_1.default.error(`Failed to connect to the database due to: ${e.message}`, 4);
-            }
+            logger_1.default.error(`Failed to connect to the database due to: ${e.message}`, 4);
         }
     });
 }
@@ -90,6 +85,15 @@ function updateLastActivity(userId) {
         });
     });
 }
+function setTimezone(userId, timezone) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield database('members')
+            .where({ id: userId })
+            .update({
+            timezone
+        });
+    });
+}
 function getMember(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database('members')
@@ -102,7 +106,7 @@ function initializeTables() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield execa_1.default(path_1.default.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest']);
-            logger_1.default.success('Finished initializing the database');
+            logger_1.default.success('Finished syncing database structure');
         }
         catch (e) {
             logger_1.default.error(e, 2);
@@ -120,7 +124,8 @@ const exportable = {
         addUserToDatabase,
         deleteUserFromDatabase,
         updateDisplayName,
-        updateLastActivity
+        updateLastActivity,
+        setTimezone
     }
 };
 exports.default = exportable;

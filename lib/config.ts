@@ -14,7 +14,7 @@ const defaultConfig: object = {
         host: '127.0.0.1',
         port: 5432,
         user: process.env.USER,
-        password: null,
+        password: 'password',
         database: 'mantu'
     }
 }

@@ -29,8 +29,9 @@ function respond(message, config) {
                     .setColor(config.get('embedColor'))
                     .setTitle(`Activity information for ${member.displayName}`)
                     .setThumbnail(member.user.avatarURL)
-                    .addField('ID', member.user.id)
-                    .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow());
+                    .addField('ID', member.user.id, true)
+                    .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow(), true)
+                    .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true);
                 message.channel.send(response);
             }
         }));

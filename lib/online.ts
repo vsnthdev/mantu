@@ -2,6 +2,7 @@
 // once the bot is online and ready
 
 import Conf from 'conf'
+import Discord from 'discord.js'
 
 import logger from './logger'
 import discord from './discord'
@@ -11,7 +12,8 @@ import cleanUpServer from './tasks/cleanup'
 
 // Interactions to be imported
 import userActivityInfo from './interactions/userActivityInfo'
-import Discord from 'discord.js'
+import setTimezone from './interactions/setTimezone'
+import timezoneTranslate from './interactions/timezoneTranslate'
 
 export default async function online(config: Conf<any>): Promise<Function> {
     return async () => {
@@ -37,6 +39,10 @@ async function linkCommands(config: Conf<any>): Promise<void> {
         // act accordingly
         if (command.startsWith('info ')) {
             commandExecutionSuccessful = await userActivityInfo(message, config)
+        } else if (command.startsWith('timezone ')) {
+            commandExecutionSuccessful = await setTimezone(command, message)
+        } else if (command.startsWith('time ') || command == 'time') {
+            commandExecutionSuccessful = await timezoneTranslate(command, message)
         }
 
         // delete the message if the config has it

@@ -16,6 +16,8 @@ const logger_1 = __importDefault(require("./logger"));
 const discord_1 = __importDefault(require("./discord"));
 const cleanup_1 = __importDefault(require("./tasks/cleanup"));
 const userActivityInfo_1 = __importDefault(require("./interactions/userActivityInfo"));
+const setTimezone_1 = __importDefault(require("./interactions/setTimezone"));
+const timezoneTranslate_1 = __importDefault(require("./interactions/timezoneTranslate"));
 function online(config) {
     return __awaiter(this, void 0, void 0, function* () {
         return () => __awaiter(this, void 0, void 0, function* () {
@@ -33,6 +35,12 @@ function linkCommands(config) {
             let commandExecutionSuccessful = false;
             if (command.startsWith('info ')) {
                 commandExecutionSuccessful = yield userActivityInfo_1.default(message, config);
+            }
+            else if (command.startsWith('timezone ')) {
+                commandExecutionSuccessful = yield setTimezone_1.default(command, message);
+            }
+            else if (command.startsWith('time ') || command == 'time') {
+                commandExecutionSuccessful = yield timezoneTranslate_1.default(command, message);
             }
             if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
                 message.delete();

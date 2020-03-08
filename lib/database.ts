@@ -1,7 +1,7 @@
 import path from 'path'
 
 import knex from 'knex'
-import { GuildMember } from 'discord.js'
+import Discord from 'discord.js'
 import moment from 'moment'
 import execa from 'execa'
 
@@ -21,16 +21,16 @@ async function connectToDatabase(): Promise<void> {
     // check if we have a successful connection by testing a query
     try {
         await tempDatabase('knex_migrations')
-        database = tempDatabase
         logger.success('Finished connecting to the database')
+        
+        // now that we are successfully connected to the database
+        // run the migrations
+        await initializeTables()
+
+        // save the database connection in a global variable
+        database = tempDatabase
     } catch(e) {
-        // if the table isn't found, initialize the database to create those tables
-        if (e.code == '42P01') {
-            await initializeTables()
-            await connectToDatabase()
-        } else {
-            logger.error(`Failed to connect to the database due to: ${e.message}`, 4)
-        }
+        logger.error(`Failed to connect to the database due to: ${e.message}`, 4)
     }
 }
 
@@ -47,7 +47,7 @@ async function memberExists(id: string): Promise<any> {
     }
 }
 
-async function addUserToDatabase(member: GuildMember): Promise<void> {
+async function addUserToDatabase(member: Discord.GuildMember): Promise<void> {
     return await database('members')
         .insert({
             id: member.user.id,
@@ -78,6 +78,14 @@ async function updateLastActivity(userId: string): Promise<void> {
         })
 }
 
+async function setTimezone(userId: string, timezone: string): Promise<void> {
+    await database('members')
+        .where({ id: userId })
+        .update({
+            timezone
+        })
+}
+
 async function getMember(userId: string): Promise<any> {
     return await database('members')
         .where({ id: userId })
@@ -88,7 +96,7 @@ async function getMember(userId: string): Promise<any> {
 async function initializeTables(): Promise<any> {
     try {
         await execa(path.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest'])
-        logger.success('Finished initializing the database')
+        logger.success('Finished syncing database structure')
     } catch(e) {
         logger.error(e, 2)
     }
@@ -105,7 +113,8 @@ const exportable = {
         addUserToDatabase,
         deleteUserFromDatabase,
         updateDisplayName,
-        updateLastActivity
+        updateLastActivity,
+        setTimezone
     }
 }
 
