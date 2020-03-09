@@ -12,9 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(require("moment"));
 const discord_1 = __importDefault(require("../discord"));
 const database_1 = __importDefault(require("../database"));
 const logger_1 = __importDefault(require("../logger"));
+const templates_1 = __importDefault(require("../templates"));
 function forEach(array, callback) {
     return __awaiter(this, void 0, void 0, function* () {
         for (let index = 0; index < array.length; index++) {
@@ -55,7 +57,9 @@ function syncDatabase(config) {
                 database_1.default.queries.addUserToDatabase(member);
             }
             else {
-                yield database_1.default.queries.updateDisplayName(member.user.id, member.displayName);
+                const kicked = yield kickUserIfInactive(member, membersInDB, config);
+                if (kicked == false)
+                    yield database_1.default.queries.updateDisplayName(member.user.id, member.displayName);
             }
         }));
         yield forEach(membersInDB, (member) => __awaiter(this, void 0, void 0, function* () {
@@ -81,10 +85,38 @@ function updateUsersInDB(oldMember, newMember) {
             roles.push(role.name);
         });
         if (roles.includes('Member') == true) {
-            yield database_1.default.queries.addUserToDatabase(newMember);
+            const exists = yield database_1.default.queries.memberExists(newMember.id);
+            if (exists == false) {
+                yield database_1.default.queries.addUserToDatabase(newMember);
+            }
+            else {
+                yield database_1.default.queries.updateDisplayName(newMember.id, newMember.displayName);
+            }
         }
         else {
             yield database_1.default.queries.deleteUserFromDatabase(newMember.user.id);
         }
+    });
+}
+function kickUserIfInactive(member, members, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const memberInDB = members.find((memberInDB) => memberInDB.id == member.id);
+        const daysAgo = moment_1.default().diff(moment_1.default(memberInDB.lastActive, 'x'), 'days');
+        if (daysAgo >= 20) {
+            const template = yield templates_1.default('inactiveKick');
+            let memberDMed = false;
+            try {
+                const channel = yield member.createDM();
+                yield channel.send(template);
+                memberDMed = true;
+            }
+            catch (e) {
+                logger_1.default.warning(`Failed to send DM to ${member.displayName} before kicking.`);
+            }
+            yield member.kick('Inactive for 20+ days.');
+            yield database_1.default.queries.deleteUserFromDatabase(member.id);
+            yield discord_1.default.logging.sendServerLog(`:recycle: **<@${member.id}> has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}**`, config);
+        }
+        return false;
     });
 }

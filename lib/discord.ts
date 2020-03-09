@@ -15,14 +15,17 @@ async function authenticate(token: string, callback: Function): Promise<void> {
 }
 
 async function setStatus(): Promise<void> {
+    // check if we are on development or production
+    const environment: string = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
+
     // Set the status
     client.user.setPresence({
         game: {
-            name: 'this server.',
-            type: 'WATCHING',
-            url: 'https://vasanth.tech'
+            name: (environment == 'production') ? 'this server.' : 'Vasanth Developer.',
+            type: (environment == 'production') ? 'WATCHING' : 'LISTENING',
+            url: (environment == 'production') ? 'https://vasanth.tech' : 'https://github.com/vasanthdeveloper/mantu'
         },
-        status: 'online'
+        status: (environment == 'production') ? 'online' : 'dnd'
     })
 }
 
@@ -37,6 +40,12 @@ async function getAllMembers(config: Conf<any>): Promise<Discord.GuildMember[]> 
     })
 
     return returnable
+}
+
+// LOGGING
+async function sendServerLog(content, config: Conf<any>): Promise<void> {
+    const serverLog = await client.channels.find((channel) => channel.id == config.get('logChannel')) as Discord.TextChannel
+    serverLog.send(content)
 }
 
 // EVENTS
@@ -72,5 +81,8 @@ export default {
         presenceChanged,
         guildUpdated,
         commandReceived
+    },
+    logging: {
+        sendServerLog
     }
 }

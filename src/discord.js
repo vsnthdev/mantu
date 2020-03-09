@@ -25,13 +25,14 @@ function authenticate(token, callback) {
 }
 function setStatus() {
     return __awaiter(this, void 0, void 0, function* () {
+        const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
         client.user.setPresence({
             game: {
-                name: 'this server.',
-                type: 'WATCHING',
-                url: 'https://vasanth.tech'
+                name: (environment == 'production') ? 'this server.' : 'Vasanth Developer.',
+                type: (environment == 'production') ? 'WATCHING' : 'LISTENING',
+                url: (environment == 'production') ? 'https://vasanth.tech' : 'https://github.com/vasanthdeveloper/mantu'
             },
-            status: 'online'
+            status: (environment == 'production') ? 'online' : 'dnd'
         });
     });
 }
@@ -44,6 +45,12 @@ function getAllMembers(config) {
             returnable.push(member);
         });
         return returnable;
+    });
+}
+function sendServerLog(content, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const serverLog = yield client.channels.find((channel) => channel.id == config.get('logChannel'));
+        serverLog.send(content);
     });
 }
 function presenceChanged(callback) {
@@ -73,5 +80,8 @@ exports.default = {
         presenceChanged,
         guildUpdated,
         commandReceived
+    },
+    logging: {
+        sendServerLog
     }
 };
