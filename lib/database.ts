@@ -34,6 +34,16 @@ async function connectToDatabase(): Promise<void> {
     }
 }
 
+async function initializeTables(): Promise<any> {
+    try {
+        await execa(path.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest'])
+        logger.success('Finished syncing database structure')
+    } catch(e) {
+        logger.error(e, 2)
+    }
+}
+
+//#region MEMBERS
 async function getAllMembers(): Promise<any[]> {
     return await database('members')
 }
@@ -86,6 +96,14 @@ async function setTimezone(userId: string, timezone: string): Promise<void> {
         })
 }
 
+async function setCountry(userId: string, country: string): Promise<void> {
+    await database('members')
+        .where({ id: userId })
+        .update({
+            country
+        })
+}
+
 async function getMember(userId: string): Promise<any> {
     return await database('members')
         .where({ id: userId })
@@ -93,28 +111,90 @@ async function getMember(userId: string): Promise<any> {
         .select()
 }
 
-async function initializeTables(): Promise<any> {
-    try {
-        await execa(path.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest'])
-        logger.success('Finished syncing database structure')
-    } catch(e) {
-        logger.error(e, 2)
-    }
+//#endregion
+
+//#region COUNTRIES
+
+async function getCountryByName(name: string): Promise<any> {
+    return await database('countries')
+        .where({ name: name })
+        .first()
+        .select()
 }
+
+async function getCountryByAlpha2(code: string): Promise<any> {
+    return await database('countries')
+        .where({ alpha2code: code })
+        .first()
+        .select()
+}
+
+async function getCountryByAlpha3(code: string): Promise<any> {
+    return await database('countries')
+        .where({ alpha3code: code })
+        .first()
+        .select()
+}
+
+async function addCountry(country): Promise<void> {
+    return await database('countries')
+        .insert({
+            name: `${country.name}`.toLowerCase(),
+            nativeName: country.nativeName,
+            alpha2code: country.alpha2Code,
+            alpha3code: country.alpha3Code,
+            cashCode: country.currencies[0].code,
+            cashSymbol: country.currencies[0].symbol
+        })
+}
+
+//#endregion
+
+//#region CASHTRANSLATE
+
+async function addCashTranslation(code, value): Promise<void> {
+    return await database('cashTranslate')
+        .insert({ code, value })
+}
+
+async function resetCashTranslation(): Promise<void> {
+    await database('cashTranslate')
+        .del()
+}
+
+async function getRates(): Promise<any> {
+    return await database('cashTranslate')
+}
+
+//#endregion
 
 const exportable = {
     config: config,
     connect: connectToDatabase,
     queries: {
         initializeTables,
-        getAllMembers,
-        getMember,
-        memberExists,
-        addUserToDatabase,
-        deleteUserFromDatabase,
-        updateDisplayName,
-        updateLastActivity,
-        setTimezone
+        members: {
+            getAllMembers,
+            getMember,
+            memberExists,
+            addUserToDatabase,
+            deleteUserFromDatabase,
+            updateDisplayName,
+            updateLastActivity,
+            setTimezone,
+            setCountry
+        },
+        countries: {
+            getCountryByName,
+            getCountryByAlpha2,
+            getCountryByAlpha3,
+            addCountry
+        },
+        cashTranslate: {
+            addCashTranslation,
+            resetCashTranslation,
+            getRates
+        }
     }
 }
 

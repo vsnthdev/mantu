@@ -26,6 +26,7 @@ function authenticate(token, callback) {
 function setStatus() {
     return __awaiter(this, void 0, void 0, function* () {
         const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+        logger_1.default.verbose(`Running in ${environment} environment`);
         client.user.setPresence({
             game: {
                 name: (environment == 'production') ? 'this server.' : 'Vasanth Developer.',

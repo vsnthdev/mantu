@@ -9,7 +9,7 @@ import { forEach } from '../tasks/cleanup'
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     // check if it is just a time command
     if (command == 'time') {
-        const timezone = (await database.queries.getMember(message.author.id)).timezone
+        const timezone = (await database.queries.members.getMember(message.author.id)).timezone
         if (timezone !== null) {
             message.channel.send(`:clock5: <@${message.author.id}> **the time right now is ${moment().tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`)
             return true
@@ -28,7 +28,7 @@ export default async function respond(command: string, message: Discord.Message)
         const members = Array.from(message.mentions.members.values())
         await forEach(members, async (member: Discord.GuildMember) => {
             // check if member has a timezone stored in the database
-            const timezone = (await database.queries.getMember(member.id)).timezone
+            const timezone = (await database.queries.members.getMember(member.id)).timezone
             if (timezone !== null) {
                 // do the conversion
                 message.channel.send(`:clock5: <@${member.id}> **time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`)

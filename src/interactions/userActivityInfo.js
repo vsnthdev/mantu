@@ -24,14 +24,15 @@ function respond(message, config) {
                 message.channel.send(`${member.displayName} doesn't have a "Member" role, so ${member.displayName} isn't tracked my mantu.`);
             }
             else {
-                const databaseInfo = yield database_1.default.queries.getMember(member.user.id);
+                const databaseInfo = yield database_1.default.queries.members.getMember(member.user.id);
                 const response = new discord_js_1.default.RichEmbed()
                     .setColor(config.get('embedColor'))
                     .setTitle(`Activity information for ${member.displayName}`)
                     .setThumbnail(member.user.avatarURL)
                     .addField('ID', member.user.id, true)
                     .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow(), true)
-                    .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true);
+                    .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
+                    .addField('Country', (databaseInfo.country) ? databaseInfo.country : 'Unknown');
                 message.channel.send(response);
             }
         }));

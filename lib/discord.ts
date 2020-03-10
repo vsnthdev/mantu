@@ -17,6 +17,7 @@ async function authenticate(token: string, callback: Function): Promise<void> {
 async function setStatus(): Promise<void> {
     // check if we are on development or production
     const environment: string = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
+    logger.verbose(`Running in ${environment} environment`)
 
     // Set the status
     client.user.setPresence({

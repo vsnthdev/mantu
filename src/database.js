@@ -34,6 +34,17 @@ function connectToDatabase() {
         }
     });
 }
+function initializeTables() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield execa_1.default(path_1.default.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest']);
+            logger_1.default.success('Finished syncing database structure');
+        }
+        catch (e) {
+            logger_1.default.error(e, 2);
+        }
+    });
+}
 function getAllMembers() {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database('members');
@@ -94,6 +105,15 @@ function setTimezone(userId, timezone) {
         });
     });
 }
+function setCountry(userId, country) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield database('members')
+            .where({ id: userId })
+            .update({
+            country
+        });
+    });
+}
 function getMember(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database('members')
@@ -102,15 +122,58 @@ function getMember(userId) {
             .select();
     });
 }
-function initializeTables() {
+function getCountryByName(name) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield execa_1.default(path_1.default.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest']);
-            logger_1.default.success('Finished syncing database structure');
-        }
-        catch (e) {
-            logger_1.default.error(e, 2);
-        }
+        return yield database('countries')
+            .where({ name: name })
+            .first()
+            .select();
+    });
+}
+function getCountryByAlpha2(code) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database('countries')
+            .where({ alpha2code: code })
+            .first()
+            .select();
+    });
+}
+function getCountryByAlpha3(code) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database('countries')
+            .where({ alpha3code: code })
+            .first()
+            .select();
+    });
+}
+function addCountry(country) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database('countries')
+            .insert({
+            name: `${country.name}`.toLowerCase(),
+            nativeName: country.nativeName,
+            alpha2code: country.alpha2Code,
+            alpha3code: country.alpha3Code,
+            cashCode: country.currencies[0].code,
+            cashSymbol: country.currencies[0].symbol
+        });
+    });
+}
+function addCashTranslation(code, value) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database('cashTranslate')
+            .insert({ code, value });
+    });
+}
+function resetCashTranslation() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield database('cashTranslate')
+            .del();
+    });
+}
+function getRates() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database('cashTranslate');
     });
 }
 const exportable = {
@@ -118,14 +181,28 @@ const exportable = {
     connect: connectToDatabase,
     queries: {
         initializeTables,
-        getAllMembers,
-        getMember,
-        memberExists,
-        addUserToDatabase,
-        deleteUserFromDatabase,
-        updateDisplayName,
-        updateLastActivity,
-        setTimezone
+        members: {
+            getAllMembers,
+            getMember,
+            memberExists,
+            addUserToDatabase,
+            deleteUserFromDatabase,
+            updateDisplayName,
+            updateLastActivity,
+            setTimezone,
+            setCountry
+        },
+        countries: {
+            getCountryByName,
+            getCountryByAlpha2,
+            getCountryByAlpha3,
+            addCountry
+        },
+        cashTranslate: {
+            addCashTranslation,
+            resetCashTranslation,
+            getRates
+        }
     }
 };
 exports.default = exportable;

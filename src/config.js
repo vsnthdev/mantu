@@ -18,6 +18,10 @@ const defaultConfig = {
         user: process.env.USER,
         password: 'password',
         database: 'mantu'
+    },
+    fixer: {
+        lastFetch: 10000000,
+        token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
     }
 };
 const config = new conf_1.default({

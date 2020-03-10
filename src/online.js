@@ -18,6 +18,8 @@ const cleanup_1 = __importDefault(require("./tasks/cleanup"));
 const userActivityInfo_1 = __importDefault(require("./interactions/userActivityInfo"));
 const setTimezone_1 = __importDefault(require("./interactions/setTimezone"));
 const timezoneTranslate_1 = __importDefault(require("./interactions/timezoneTranslate"));
+const setCountry_1 = __importDefault(require("./interactions/setCountry"));
+const cashTranslate_1 = __importDefault(require("./interactions/cashTranslate"));
 function online(config) {
     return __awaiter(this, void 0, void 0, function* () {
         return () => __awaiter(this, void 0, void 0, function* () {
@@ -41,6 +43,12 @@ function linkCommands(config) {
             }
             else if (command.startsWith('time ') || command == 'time') {
                 commandExecutionSuccessful = yield timezoneTranslate_1.default(command, message);
+            }
+            else if (command.startsWith('country ')) {
+                commandExecutionSuccessful = yield setCountry_1.default(command, message);
+            }
+            else if (command.startsWith('cash ')) {
+                commandExecutionSuccessful = yield cashTranslate_1.default(command, message);
             }
             if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
                 message.delete();

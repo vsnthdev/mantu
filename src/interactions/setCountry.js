@@ -12,19 +12,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const database_1 = __importDefault(require("../database"));
+function setTitleCase(str) {
+    let split = str.toLowerCase().split(' ');
+    for (var i = 0; i < split.length; i++) {
+        split[i] = split[i][0].toUpperCase() + split[i].slice(1);
+    }
+    return split.join(' ');
+}
 function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
-        const timezoneParsed = moment_timezone_1.default.tz.zone(command.substring(9));
-        if (timezoneParsed !== null) {
-            yield database_1.default.queries.members.setTimezone(message.author.id, timezoneParsed.name);
-            message.channel.send(':gem: **Your timezone has been saved successfully.**');
-            return true;
+        const countryParsed = command.substring(8);
+        let countryInDB;
+        if (countryParsed.length == 2) {
+            countryInDB = yield database_1.default.queries.countries.getCountryByAlpha2(countryParsed);
+        }
+        else if (countryParsed.length == 3) {
+            countryInDB = yield database_1.default.queries.countries.getCountryByAlpha3(countryParsed);
         }
         else {
-            message.channel.send(':beetle: **Invalid timezone provided. Please issue the command once again with timezone in the following format:** `Continent/Place`');
+            countryInDB = yield database_1.default.queries.countries.getCountryByName(countryParsed.toLowerCase());
+        }
+        if (!countryInDB) {
+            message.channel.send(`:beetle: **The country ${countryParsed} is either invalid or given in wrong format.**`);
             return false;
+        }
+        else {
+            yield database_1.default.queries.members.setCountry(message.author.id, countryInDB.name);
+            message.channel.send(':gem: **Your country has been saved successfully.**');
+            return true;
         }
     });
 }

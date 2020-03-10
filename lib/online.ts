@@ -13,7 +13,9 @@ import cleanUpServer from './tasks/cleanup'
 // Interactions to be imported
 import userActivityInfo from './interactions/userActivityInfo'
 import setTimezone from './interactions/setTimezone'
-import timezoneTranslate from './interactions/timezoneTranslate'
+import timeTranslate from './interactions/timezoneTranslate'
+import setCountry from './interactions/setCountry'
+import cashTranslate from './interactions/cashTranslate'
 
 export default async function online(config: Conf<any>): Promise<Function> {
     return async () => {
@@ -42,7 +44,11 @@ async function linkCommands(config: Conf<any>): Promise<void> {
         } else if (command.startsWith('timezone ')) {
             commandExecutionSuccessful = await setTimezone(command, message)
         } else if (command.startsWith('time ') || command == 'time') {
-            commandExecutionSuccessful = await timezoneTranslate(command, message)
+            commandExecutionSuccessful = await timeTranslate(command, message)
+        } else if (command.startsWith('country ')) {
+            commandExecutionSuccessful = await setCountry(command, message)
+        } else if (command.startsWith('cash ')) {
+            commandExecutionSuccessful = await cashTranslate(command, message)
         }
 
         // delete the message if the config has it

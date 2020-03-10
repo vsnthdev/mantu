@@ -19,7 +19,7 @@ export default async function respond(message: Discord.Message, config: Conf<any
             message.channel.send(`${member.displayName} doesn't have a "Member" role, so ${member.displayName} isn't tracked my mantu.`)
         } else {
             // get the last activity from database
-            const databaseInfo = await database.queries.getMember(member.user.id)
+            const databaseInfo = await database.queries.members.getMember(member.user.id)
 
             // create a rich embed
             const response = new Discord.RichEmbed()
@@ -29,6 +29,7 @@ export default async function respond(message: Discord.Message, config: Conf<any
                 .addField('ID', member.user.id, true)
                 .addField('Last Activity', moment(databaseInfo.lastActive, 'x').fromNow(), true)
                 .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
+                .addField('Country', (databaseInfo.country) ? databaseInfo.country : 'Unknown')
 
             // send the response
             message.channel.send(response)

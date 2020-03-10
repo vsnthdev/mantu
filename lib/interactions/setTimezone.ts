@@ -12,7 +12,7 @@ export default async function respond(command: string, message: Discord.Message)
     // check if the timezone is valid, otherwise tell the user about it
     if (timezoneParsed !== null) {
         // update in the database
-        await database.queries.setTimezone(message.author.id, timezoneParsed.name)
+        await database.queries.members.setTimezone(message.author.id, timezoneParsed.name)
 
         // tell the user that the timezone was saved
         message.channel.send(':gem: **Your timezone has been saved successfully.**')
