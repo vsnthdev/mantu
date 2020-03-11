@@ -100,6 +100,12 @@ function updateActivity(oldMember, newMember) {
     return __awaiter(this, void 0, void 0, function* () {
         if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
             yield database_1.default.queries.members.updateLastActivity(newMember.user.id);
+            if (newMember.presence.status == 'online') {
+                logger_1.default.verbose(`${newMember.displayName} has come online.`);
+            }
+            else {
+                logger_1.default.verbose(`${newMember.displayName} went ${newMember.presence.status}.`);
+            }
         }
     });
 }
@@ -113,13 +119,16 @@ function updateUsersInDB(oldMember, newMember) {
             const exists = yield database_1.default.queries.members.memberExists(newMember.id);
             if (exists == false) {
                 yield database_1.default.queries.members.addUserToDatabase(newMember);
+                logger_1.default.verbose(`${newMember.displayName} has been added to the database.`);
             }
             else {
                 yield database_1.default.queries.members.updateDisplayName(newMember.id, newMember.displayName);
+                logger_1.default.verbose(`${oldMember.displayName} has changed nickname to ${newMember.displayName}`);
             }
         }
         else {
             yield database_1.default.queries.members.deleteUserFromDatabase(newMember.user.id);
+            logger_1.default.verbose(`${oldMember.displayName} is no longer a member.`);
         }
     });
 }

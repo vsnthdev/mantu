@@ -16,6 +16,7 @@ import setTimezone from './interactions/setTimezone'
 import timeTranslate from './interactions/timezoneTranslate'
 import setCountry from './interactions/setCountry'
 import cashTranslate from './interactions/cashTranslate'
+import github from './interactions/github'
 
 export default async function online(config: Conf<any>): Promise<Function> {
     return async () => {
@@ -49,6 +50,8 @@ async function linkCommands(config: Conf<any>): Promise<void> {
             commandExecutionSuccessful = await setCountry(command, message)
         } else if (command.startsWith('cash ')) {
             commandExecutionSuccessful = await cashTranslate(command, message)
+        } else if (command.startsWith('github ')) {
+            commandExecutionSuccessful = await github(command, message)
         }
 
         // delete the message if the config has it

@@ -121,6 +121,13 @@ async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord
     if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
         // update the database accordingly!
         await database.queries.members.updateLastActivity(newMember.user.id)
+
+        // just so that we know the database was changed
+        if (newMember.presence.status == 'online') {
+            logger.verbose(`${newMember.displayName} has come online.`)
+        } else {
+            logger.verbose(`${newMember.displayName} went ${newMember.presence.status}.`)
+        }
     }
 }
 
@@ -135,11 +142,14 @@ async function updateUsersInDB(oldMember: Discord.GuildMember, newMember: Discor
         const exists = await database.queries.members.memberExists(newMember.id)
         if (exists == false) {
             await database.queries.members.addUserToDatabase(newMember)
+            logger.verbose(`${newMember.displayName} has been added to the database.`)
         } else {
             await database.queries.members.updateDisplayName(newMember.id, newMember.displayName)
+            logger.verbose(`${oldMember.displayName} has changed nickname to ${newMember.displayName}`)
         }
     } else {
         await database.queries.members.deleteUserFromDatabase(newMember.user.id)
+        logger.verbose(`${oldMember.displayName} is no longer a member.`)
     }
 }
 
