@@ -24,9 +24,9 @@ function connectToDatabase() {
     return __awaiter(this, void 0, void 0, function* () {
         const tempDatabase = yield knex_1.default(config);
         try {
-            yield initializeTables();
             yield tempDatabase('knex_migrations');
             logger_1.default.success('Finished connecting to the database');
+            yield initializeTables();
             database = tempDatabase;
         }
         catch (e) {

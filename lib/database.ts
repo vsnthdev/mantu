@@ -20,12 +20,12 @@ async function connectToDatabase(): Promise<void> {
 
     // check if we have a successful connection by testing a query
     try {
+        await tempDatabase('knex_migrations')
+        logger.success('Finished connecting to the database')
+
         // now that we are successfully connected to the database
         // run the migrations
         await initializeTables()
-
-        await tempDatabase('knex_migrations')
-        logger.success('Finished connecting to the database')
 
         // save the database connection in a global variable
         database = tempDatabase
