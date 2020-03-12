@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const itivrutaha_1 = __importDefault(require("itivrutaha"));
 const logger = itivrutaha_1.default.createNewLogger({
-    theme: ':type :message'
+    theme: ':type :message',
+    verboseIdentifier: ['-V', '--verbose']
 });
 exports.default = logger;

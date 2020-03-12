@@ -17,6 +17,7 @@ const config_1 = __importDefault(require("./config"));
 const logger_1 = __importDefault(require("./logger"));
 const cli_1 = __importDefault(require("./cli"));
 const help_1 = __importDefault(require("./cmd/help"));
+const version_1 = __importDefault(require("./cmd/version"));
 const online_1 = __importDefault(require("./online"));
 const discord_1 = __importDefault(require("./discord"));
 const database_1 = __importDefault(require("./database"));
@@ -26,6 +27,10 @@ function main() {
         logger_1.default.verbose(`Arguments: ${JSON.stringify(args)}`);
         if (args.help) {
             console.log(help_1.default);
+            process.exit(0);
+        }
+        if (args.version) {
+            yield version_1.default();
             process.exit(0);
         }
         logger_1.default.okay(`Application boot on ${moment_1.default().format('llll')}`);

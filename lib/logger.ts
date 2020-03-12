@@ -3,7 +3,8 @@
 import itivrutaha from 'itivrutaha'
 
 const logger = itivrutaha.createNewLogger({
-    theme: ':type :message'
+    theme: ':type :message',
+    verboseIdentifier: ['-V', '--verbose']
 })
 
 export default logger
