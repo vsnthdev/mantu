@@ -1,5 +1,7 @@
 // This file will handle the loading and creation of the config file
 
+import path from 'path'
+
 import Conf from 'conf'
 
 const defaultConfig: object = {
@@ -25,7 +27,7 @@ const defaultConfig: object = {
 
 const config = new Conf({
     projectSuffix: '',
-    cwd: process.cwd(),
+    cwd: path.join(process.cwd(), 'data'),
     defaults: defaultConfig
 })
 

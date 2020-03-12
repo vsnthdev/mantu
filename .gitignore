@@ -108,3 +108,4 @@ dist
 
 # the mantu bot config file
 config.json
+data/

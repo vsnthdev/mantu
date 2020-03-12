@@ -50,5 +50,8 @@ ENV NODE_ENV=production
 ENV GID=1000
 ENV UID=1000
 
+# Make the data drive mountable
+VOLUME [ "/var/lib/mantu/data" ]
+
 # Set the startup command
 CMD [ "node", "/var/lib/mantu/src/mantu.js", "--verbose" ]
