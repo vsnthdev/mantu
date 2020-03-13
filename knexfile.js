@@ -1,4 +1,4 @@
-const cli = require('./src/config').databaseInformation
+const cli = require('./dist/config').databaseInformation
 
 const exportable = {
     development: {

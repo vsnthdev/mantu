@@ -40,18 +40,14 @@ async function main(): Promise<void> {
     logger.verbose('Loading configuration file')
     const config = await loadConfig()
 
-    // check if there is an access token
-    if (config.get('token') == '') {
-        logger.error('No access token provided. Aborting...', 2)
+    // check if a valid access token was provided
+    if (typeof config.get('token') != 'string' && config.get('token').length != 59) {
+        logger.error(`The access token: ${config.get('token')} is invalid.`, 2)
     }
 
     // check if we have a valid serverId
-    if (typeof config.get('serverId') == 'number') {
-        if (config.get('serverId').toString().length < 18) {
-            logger.error('Invalid server ID provided. Aborting...', 3)
-        }
-    } else {
-        logger.error('No server ID provided. Aborting...', 3)
+    if (typeof config.get('serverId') != 'string' && config.get('serverId').length != 18) {
+        logger.error(`The server ID ${config.get('serverId')} is invalid.`, 3)
     }
 
     // ensure we have a successful database connection

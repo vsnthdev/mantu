@@ -6,7 +6,7 @@ import Conf from 'conf'
 
 export interface ConfigImpl {
     token: string
-    serverId: number
+    serverId: string
     prefix: string
     embedColor: string
     deleteCommandAfterExecution: boolean
@@ -32,7 +32,7 @@ export interface ConfigImpl {
 
 const defaultConfig: ConfigImpl = {
     token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    serverId: 100000000000000000,
+    serverId: '100000000000000000',
     prefix: ';',
     embedColor: '0x00b0ff',
     deleteCommandAfterExecution: true,
@@ -62,7 +62,7 @@ const config = new Conf({
     defaults: defaultConfig
 })
 
-export default function loadConfig(): Conf<any> {
+export default function loadConfig(): Conf<ConfigImpl> {
     return config
 }
 

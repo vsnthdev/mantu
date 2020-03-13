@@ -14,10 +14,10 @@
         "moduleResolution": "node",
         "module": "commonjs",
         "newLine": "LF",
-        "outDir": "src",
+        "outDir": "dist",
         "pretty": true,
         "removeComments": true,
-        "rootDir": "lib",
+        "rootDir": "src",
         "target": "ES6",
         "resolveJsonModule": true
     }
