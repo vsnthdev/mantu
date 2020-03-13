@@ -31,10 +31,10 @@ export default async function respond(message: Discord.Message, config: Conf<Con
 
     await forEach(members, async (member: Discord.GuildMember) => {
         // check if the provided role is a member
-        if (!member.roles.find(r => r.id === config.get('baseRole').toString())) {
+        if (!member.roles.find(r => r.id === config.get('roles').base)) {
             // as this member doesn't have a member role, he/she/it won't be in the database
             // in which case we simply tell the user about it
-            message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await discord.roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my mantu.**`)
+            message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await discord.roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`)
         } else {
             // get the last activity from database
             const databaseInfo = await database.queries.members.getMember(member.user.id)

@@ -46,9 +46,9 @@ function getAnyoneById(id) {
 function getBaseRole(config) {
     return __awaiter(this, void 0, void 0, function* () {
         const guild = client.guilds.first();
-        const baseRole = guild.roles.find(role => role.id === config.get('baseRole'));
+        const baseRole = guild.roles.find(role => role.id === config.get('roles').base);
         if (!baseRole) {
-            logger_1.default.error(`A role with id ${config.get('baseRole')} does not exist.`, 6);
+            logger_1.default.error(`A role with id ${config.get('roles').base} does not exist.`, 6);
         }
         else {
             return baseRole;

@@ -31,8 +31,8 @@ function respond(message, config) {
         }));
         members = members.concat(Array.from(message.mentions.members.values()));
         yield cleanup_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
-            if (!member.roles.find(r => r.id === config.get('baseRole').toString())) {
-                message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield discord_1.default.roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my mantu.**`);
+            if (!member.roles.find(r => r.id === config.get('roles').base)) {
+                message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield discord_1.default.roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`);
             }
             else {
                 const databaseInfo = yield database_1.default.queries.members.getMember(member.user.id);

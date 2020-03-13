@@ -7,8 +7,6 @@ import Conf from 'conf'
 export interface ConfigImpl {
     token: string
     serverId: number
-    logChannel: number
-    baseRole: string
     prefix: string
     embedColor: string
     deleteCommandAfterExecution: boolean
@@ -22,14 +20,19 @@ export interface ConfigImpl {
     fixer: {
         lastFetch: number
         token: string
+    },
+    roles: {
+        moderators: string[]
+        base: string
+    },
+    channels: {
+        log: string
     }
 }
 
 const defaultConfig: ConfigImpl = {
     token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     serverId: 100000000000000000,
-    logChannel: 100000000000000000,
-    baseRole: '100000000000000000',
     prefix: ';',
     embedColor: '0x00b0ff',
     deleteCommandAfterExecution: true,
@@ -43,6 +46,13 @@ const defaultConfig: ConfigImpl = {
     fixer: {
         lastFetch: 10000000,
         token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    },
+    roles: {
+        base: '100000000000000000',
+        moderators: []
+    },
+    channels: {
+        log: '100000000000000000'
     }
 }
 

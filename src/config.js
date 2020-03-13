@@ -8,8 +8,6 @@ const conf_1 = __importDefault(require("conf"));
 const defaultConfig = {
     token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     serverId: 100000000000000000,
-    logChannel: 100000000000000000,
-    baseRole: '100000000000000000',
     prefix: ';',
     embedColor: '0x00b0ff',
     deleteCommandAfterExecution: true,
@@ -23,6 +21,13 @@ const defaultConfig = {
     fixer: {
         lastFetch: 10000000,
         token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    },
+    roles: {
+        base: '100000000000000000',
+        moderators: []
+    },
+    channels: {
+        log: '100000000000000000'
     }
 };
 const config = new conf_1.default({

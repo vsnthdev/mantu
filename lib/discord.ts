@@ -39,9 +39,9 @@ async function getAnyoneById(id: string): Promise<Discord.GuildMember> {
 // ROLES
 async function getBaseRole(config: Conf<ConfigImpl>): Promise<Discord.Role> {
     const guild = client.guilds.first()
-    const baseRole = guild.roles.find(role => role.id === config.get('baseRole'))
+    const baseRole = guild.roles.find(role => role.id === config.get('roles').base)
     if (!baseRole) {
-        logger.error(`A role with id ${config.get('baseRole')} does not exist.`, 6)
+        logger.error(`A role with id ${config.get('roles').base} does not exist.`, 6)
     } else {
         return baseRole
     }
