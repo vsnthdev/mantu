@@ -2,6 +2,7 @@ import Discord from 'discord.js'
 import Conf from 'conf'
 
 import logger from './logger'
+import { ConfigImpl } from './config'
 
 // Create a Discord client
 const client = new Discord.Client()
@@ -30,17 +31,31 @@ async function setStatus(): Promise<void> {
     })
 }
 
-// MEMBERS
-async function getAllMembers(config: Conf<any>): Promise<Discord.GuildMember[]> {
-    const returnable = []
-
+async function getAnyoneById(id: string): Promise<Discord.GuildMember> {
     const guild = client.guilds.first()
-    const role = guild.roles.find(role => role.name === config.get('baseRole'))
-    role.members.forEach(member => {
-        returnable.push(member)
-    })
+    return guild.members.find(anyone => anyone.id == id)
+}
 
-    return returnable
+// ROLES
+async function getBaseRole(config: Conf<ConfigImpl>): Promise<Discord.Role> {
+    const guild = client.guilds.first()
+    const baseRole = guild.roles.find(role => role.id === config.get('baseRole'))
+    if (!baseRole) {
+        logger.error(`A role with id ${config.get('baseRole')} does not exist.`, 6)
+    } else {
+        return baseRole
+    }
+}
+
+// MEMBERS
+async function getAllMembers(config: Conf<ConfigImpl>): Promise<Discord.GuildMember[]> {
+    const role = await getBaseRole(config)
+    return Array.from(role.members.values())
+}
+
+async function getMemberById(userId: string, config: Conf<ConfigImpl>): Promise<Discord.GuildMember> {
+    const members = await getAllMembers(config)
+    return members.find(member => member.id == userId)
 }
 
 // LOGGING
@@ -89,16 +104,21 @@ function commandReceived(config: Conf<any>, callback): void {
 export default {
     authenticate,
     setStatus,
+    getAnyoneById,
     members: {
-        getAllMembers
+        getAllMembers,
+        getMemberById
+    },
+    logging: {
+        sendServerLog,
+        sendDiscordError
+    },
+    roles: {
+        getBaseRole
     },
     events: {
         presenceChanged,
         guildUpdated,
         commandReceived
     },
-    logging: {
-        sendServerLog,
-        sendDiscordError
-    }
 }

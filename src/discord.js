@@ -37,15 +37,34 @@ function setStatus() {
         });
     });
 }
+function getAnyoneById(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const guild = client.guilds.first();
+        return guild.members.find(anyone => anyone.id == id);
+    });
+}
+function getBaseRole(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const guild = client.guilds.first();
+        const baseRole = guild.roles.find(role => role.id === config.get('baseRole'));
+        if (!baseRole) {
+            logger_1.default.error(`A role with id ${config.get('baseRole')} does not exist.`, 6);
+        }
+        else {
+            return baseRole;
+        }
+    });
+}
 function getAllMembers(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const returnable = [];
-        const guild = client.guilds.first();
-        const role = guild.roles.find(role => role.name === config.get('baseRole'));
-        role.members.forEach(member => {
-            returnable.push(member);
-        });
-        return returnable;
+        const role = yield getBaseRole(config);
+        return Array.from(role.members.values());
+    });
+}
+function getMemberById(userId, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const members = yield getAllMembers(config);
+        return members.find(member => member.id == userId);
     });
 }
 function sendServerLog(content, config) {
@@ -88,16 +107,21 @@ function commandReceived(config, callback) {
 exports.default = {
     authenticate,
     setStatus,
+    getAnyoneById,
     members: {
-        getAllMembers
+        getAllMembers,
+        getMemberById
+    },
+    logging: {
+        sendServerLog,
+        sendDiscordError
+    },
+    roles: {
+        getBaseRole
     },
     events: {
         presenceChanged,
         guildUpdated,
         commandReceived
     },
-    logging: {
-        sendServerLog,
-        sendDiscordError
-    }
 };

@@ -4,11 +4,32 @@ import path from 'path'
 
 import Conf from 'conf'
 
-const defaultConfig: object = {
+export interface ConfigImpl {
+    token: string
+    serverId: number
+    logChannel: number
+    baseRole: string
+    prefix: string
+    embedColor: string
+    deleteCommandAfterExecution: boolean
+    database: {
+        host: string
+        port: number
+        user: string
+        password: string
+        database: string
+    },
+    fixer: {
+        lastFetch: number
+        token: string
+    }
+}
+
+const defaultConfig: ConfigImpl = {
     token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     serverId: 100000000000000000,
     logChannel: 100000000000000000,
-    baseRole: 'Member',
+    baseRole: '100000000000000000',
     prefix: ';',
     embedColor: '0x00b0ff',
     deleteCommandAfterExecution: true,
@@ -36,9 +57,9 @@ export default function loadConfig(): Conf<any> {
 }
 
 export const databaseInformation = {
-    host: config.get('database.host'),
-    port: config.get('database.port'),
-    user: config.get('database.user'),
-    database: config.get('database.database'),
-    password: config.get('database.password')
+    host: config.get('database').host,
+    port: config.get('database').port,
+    user: config.get('database').user,
+    database: config.get('database').database,
+    password: config.get('database').password
 }

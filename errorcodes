@@ -2,3 +2,4 @@
 3 = No server id provided. Or invalid server id provided
 4 = Failed to connect to the database
 5 = Failed to connect to fixer api
+6 = Invalid baseRole provided

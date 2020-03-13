@@ -15,14 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
 const moment_1 = __importDefault(require("moment"));
 const database_1 = __importDefault(require("../database"));
+const discord_1 = __importDefault(require("../discord"));
 const cleanup_1 = require("../tasks/cleanup");
 const setCountry_1 = require("./setCountry");
 function respond(message, config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const members = Array.from(message.mentions.members.values());
+        let members = [];
+        const parsed = message.content.split(' ');
+        yield cleanup_1.forEach(parsed, (word) => __awaiter(this, void 0, void 0, function* () {
+            if (isNaN(parseInt(word)) == false && word.length == 18) {
+                const member = yield discord_1.default.getAnyoneById(word);
+                if (member)
+                    members.push(member);
+            }
+        }));
+        members = members.concat(Array.from(message.mentions.members.values()));
         yield cleanup_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
-            if (!member.roles.find(r => r.name === 'Member')) {
-                message.channel.send(`${member.displayName} doesn't have a "Member" role, so ${member.displayName} isn't tracked my mantu.`);
+            if (!member.roles.find(r => r.id === config.get('baseRole').toString())) {
+                message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield discord_1.default.roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my mantu.**`);
             }
             else {
                 const databaseInfo = yield database_1.default.queries.members.getMember(member.user.id);
