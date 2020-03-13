@@ -21,6 +21,22 @@ const timezoneTranslate_1 = __importDefault(require("./interactions/timezoneTran
 const setCountry_1 = __importDefault(require("./interactions/setCountry"));
 const cashTranslate_1 = __importDefault(require("./interactions/cashTranslate"));
 const github_1 = __importDefault(require("./interactions/github"));
+function errorHandler(promiseToHandle) {
+    return new Promise(resolve => {
+        promiseToHandle
+            .catch(e => {
+            resolve({
+                e
+            });
+        })
+            .then(data => {
+            resolve({
+                data
+            });
+        });
+    });
+}
+exports.errorHandler = errorHandler;
 function online(config) {
     return __awaiter(this, void 0, void 0, function* () {
         return () => __awaiter(this, void 0, void 0, function* () {
@@ -55,7 +71,10 @@ function linkCommands(config) {
                 commandExecutionSuccessful = yield github_1.default(command, message);
             }
             if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
-                message.delete();
+                const deleteMessage = yield errorHandler(message.delete());
+                if (deleteMessage.e) {
+                    yield discord_1.default.logging.sendDiscordError(deleteMessage.e, message.member, message.channel, config);
+                }
             }
         }));
     });

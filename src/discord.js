@@ -54,6 +54,20 @@ function sendServerLog(content, config) {
         serverLog.send(content);
     });
 }
+function sendDiscordError(e, author, channel, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const content = new discord_js_1.default.RichEmbed()
+            .setColor(config.get('embedColor'))
+            .setTitle(`A ${e.name} occurred in mantu`)
+            .addField('Name', e.name, true)
+            .addField('Code', e.code, true)
+            .addField('Action', e.method, true)
+            .addField('Triggered By', `<@${author.id}>`, true)
+            .addField('On Channel', `<#${channel.id}>`, true)
+            .addField('Message', e.message);
+        yield sendServerLog(content, config);
+    });
+}
 function presenceChanged(callback) {
     client.on('presenceUpdate', (oldMember, newMember) => {
         callback(oldMember, newMember);
@@ -83,6 +97,7 @@ exports.default = {
         commandReceived
     },
     logging: {
-        sendServerLog
+        sendServerLog,
+        sendDiscordError
     }
 };

@@ -16,6 +16,7 @@ const discord_js_1 = __importDefault(require("discord.js"));
 const moment_1 = __importDefault(require("moment"));
 const database_1 = __importDefault(require("../database"));
 const cleanup_1 = require("../tasks/cleanup");
+const setCountry_1 = require("./setCountry");
 function respond(message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const members = Array.from(message.mentions.members.values());
@@ -32,7 +33,7 @@ function respond(message, config) {
                     .addField('ID', member.user.id, true)
                     .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow(), true)
                     .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
-                    .addField('Country', (databaseInfo.country) ? databaseInfo.country : 'Unknown');
+                    .addField('Country', (databaseInfo.country) ? setCountry_1.setTitleCase(databaseInfo.country) : 'Unknown');
                 message.channel.send(response);
             }
         }));

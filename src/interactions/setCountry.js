@@ -20,6 +20,7 @@ function setTitleCase(str) {
     }
     return split.join(' ');
 }
+exports.setTitleCase = setTitleCase;
 function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
         const countryParsed = command.substring(8);

@@ -6,6 +6,7 @@ import Conf from 'conf'
 
 import database from '../database'
 import { forEach } from '../tasks/cleanup'
+import { setTitleCase } from './setCountry'
 
 export default async function respond(message: Discord.Message, config: Conf<any>): Promise<boolean> {
     // loop through all the members
@@ -29,7 +30,7 @@ export default async function respond(message: Discord.Message, config: Conf<any
                 .addField('ID', member.user.id, true)
                 .addField('Last Activity', moment(databaseInfo.lastActive, 'x').fromNow(), true)
                 .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
-                .addField('Country', (databaseInfo.country) ? databaseInfo.country : 'Unknown')
+                .addField('Country', (databaseInfo.country) ? setTitleCase(databaseInfo.country) : 'Unknown')
 
             // send the response
             message.channel.send(response)

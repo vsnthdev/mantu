@@ -18,6 +18,22 @@ import setCountry from './interactions/setCountry'
 import cashTranslate from './interactions/cashTranslate'
 import github from './interactions/github'
 
+export function errorHandler(promiseToHandle: Promise<any>): Promise<any> {
+    return new Promise(resolve => {
+        promiseToHandle
+            .catch(e => {
+                resolve({
+                    e
+                })
+            })
+            .then(data => {
+                resolve({
+                    data
+                })
+            })
+    })
+}
+
 export default async function online(config: Conf<any>): Promise<Function> {
     return async () => {
         // Notify that the bot should be online now
@@ -56,7 +72,10 @@ async function linkCommands(config: Conf<any>): Promise<void> {
 
         // delete the message if the config has it
         if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
-            message.delete()
+            const deleteMessage = await errorHandler(message.delete())
+            if (deleteMessage.e) {
+                await discord.logging.sendDiscordError(deleteMessage.e, message.member, message.channel as Discord.TextChannel, config)
+            }
         }
     })
 }

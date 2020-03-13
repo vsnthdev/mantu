@@ -49,6 +49,20 @@ async function sendServerLog(content, config: Conf<any>): Promise<void> {
     serverLog.send(content)
 }
 
+async function sendDiscordError(e: Discord.DiscordAPIError, author: Discord.GuildMember, channel: Discord.TextChannel, config: Conf<any>): Promise<void> {
+    const content = new Discord.RichEmbed()
+        .setColor(config.get('embedColor'))
+        .setTitle(`A ${e.name} occurred in mantu`)
+        .addField('Name', e.name, true)
+        .addField('Code', e.code, true)
+        .addField('Action', e.method, true)
+        .addField('Triggered By', `<@${author.id}>`, true)
+        .addField('On Channel', `<#${channel.id}>`, true)
+        .addField('Message', e.message)
+    
+    await sendServerLog(content, config)
+}
+
 // EVENTS
 function presenceChanged(callback): void {
     client.on('presenceUpdate', (oldMember, newMember) => {
@@ -84,6 +98,7 @@ export default {
         commandReceived
     },
     logging: {
-        sendServerLog
+        sendServerLog,
+        sendDiscordError
     }
 }
