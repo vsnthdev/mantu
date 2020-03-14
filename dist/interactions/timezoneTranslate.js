@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const members_1 = __importDefault(require("../database/members"));
-const cleanup_1 = require("../tasks/cleanup");
+const loops_1 = require("../utilities/loops");
 function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
         if (command == 'time') {
@@ -31,7 +31,7 @@ function respond(command, message) {
         const timeToTranslate = yield moment_timezone_1.default(command.substring(5).split('<')[0], ['hh:mm a DD/MM/YYYY', 'DD/MM/YYYY']);
         if (timeToTranslate.isValid() == true) {
             const members = Array.from(message.mentions.members.values());
-            yield cleanup_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
+            yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
                 const timezone = (yield members_1.default.getMember(member.id)).timezone;
                 if (timezone !== null) {
                     message.channel.send(`:clock5: <@${member.id}> **time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`);

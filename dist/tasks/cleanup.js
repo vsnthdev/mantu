@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = __importDefault(require("moment"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
+const loops_1 = require("../utilities/loops");
 const logger_1 = __importDefault(require("../logger"));
 const templates_1 = __importDefault(require("../templates"));
 const members_1 = __importDefault(require("../discord/members"));
@@ -22,22 +23,6 @@ const events_1 = __importDefault(require("../discord/events"));
 const members_2 = __importDefault(require("../database/members"));
 const countries_1 = __importDefault(require("../database/countries"));
 const cashTranslate_1 = __importDefault(require("../database/cashTranslate"));
-function forEach(array, callback) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (let index = 0; index < array.length; index++) {
-            yield callback(array[index], index, array);
-        }
-    });
-}
-exports.forEach = forEach;
-function forCollection(collection, callback) {
-    return __awaiter(this, void 0, void 0, function* () {
-        collection.forEach((value, key, map) => __awaiter(this, void 0, void 0, function* () {
-            yield callback(value, key, map);
-        }));
-    });
-}
-exports.forCollection = forCollection;
 function updateActivity(oldMember, newMember) {
     return __awaiter(this, void 0, void 0, function* () {
         if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
@@ -54,7 +39,7 @@ function updateActivity(oldMember, newMember) {
 function updateUsersInDB(oldMember, newMember) {
     return __awaiter(this, void 0, void 0, function* () {
         const roles = [];
-        yield forCollection(newMember.roles, (role) => {
+        yield loops_1.forCollection(newMember.roles, (role) => {
             roles.push(role.name);
         });
         if (roles.includes('Member') == true) {
@@ -101,7 +86,7 @@ function syncDatabase(config) {
         const discordMembers = yield members_1.default.getAllMembers(config);
         const membersInDB = yield members_2.default.getAllMembers();
         const discordMembersId = [];
-        yield forEach(discordMembers, (member) => __awaiter(this, void 0, void 0, function* () {
+        yield loops_1.forEach(discordMembers, (member) => __awaiter(this, void 0, void 0, function* () {
             const exists = yield members_2.default.memberExists(member.user.id);
             discordMembersId.push(member.user.id);
             if (exists == false) {
@@ -114,7 +99,7 @@ function syncDatabase(config) {
                     yield members_2.default.updateDisplayName(member.user.id, member.displayName);
             }
         }));
-        yield forEach(membersInDB, (member) => __awaiter(this, void 0, void 0, function* () {
+        yield loops_1.forEach(membersInDB, (member) => __awaiter(this, void 0, void 0, function* () {
             const exists = discordMembersId.includes(member.id);
             if (exists == false) {
                 logger_1.default.verbose(`Removing user: ${member.name} from the database.`);
@@ -124,7 +109,7 @@ function syncDatabase(config) {
         const country = yield countries_1.default.getCountryByName('India');
         if (!country) {
             const countryRestInfo = yield (yield node_fetch_1.default('https://restcountries.eu/rest/v2/all')).json();
-            yield forEach(countryRestInfo, (country) => __awaiter(this, void 0, void 0, function* () {
+            yield loops_1.forEach(countryRestInfo, (country) => __awaiter(this, void 0, void 0, function* () {
                 yield countries_1.default.addCountry(country);
             }));
         }

@@ -5,7 +5,7 @@ import moment from 'moment'
 import Conf from 'conf'
 
 import daMembers from '../database/members'
-import { forEach } from '../tasks/cleanup'
+import { forEach } from '../utilities/loops'
 import { setTitleCase } from './setCountry'
 import { ConfigImpl } from '../config'
 import roles from '../discord/roles'

@@ -7,6 +7,7 @@ import Discord from 'discord.js'
 import moment from 'moment'
 import fetch from 'node-fetch'
 
+import { forEach, forCollection } from '../utilities/loops'
 import logger from '../logger'
 import getTemplate from '../templates'
 import diMembers from '../discord/members'
@@ -15,18 +16,6 @@ import events from '../discord/events'
 import daMembers from '../database/members'
 import daCountries from '../database/countries'
 import daCashTranslate from '../database/cashTranslate'
-
-export async function forEach(array: any[], callback): Promise<void> {
-    for (let index = 0; index < array.length; index++) {
-        await callback(array[index], index, array)
-    }
-}
-
-export async function forCollection(collection: Discord.Collection<any, any>, callback): Promise<void> {
-    collection.forEach(async (value, key, map) => {
-        await callback(value, key, map)
-    })
-}
 
 async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
     // check if the user came online

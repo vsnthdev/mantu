@@ -4,7 +4,7 @@ import Discord from 'discord.js'
 import moment from 'moment-timezone'
 
 import daMembers from '../database/members'
-import { forEach } from '../tasks/cleanup'
+import { forEach } from '../utilities/loops'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     // check if it is just a time command

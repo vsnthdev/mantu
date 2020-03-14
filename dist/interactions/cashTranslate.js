@@ -16,7 +16,7 @@ const cashify_1 = require("cashify");
 const members_1 = __importDefault(require("../database/members"));
 const countries_1 = __importDefault(require("../database/countries"));
 const cashTranslate_1 = __importDefault(require("../database/cashTranslate"));
-const cleanup_1 = require("../tasks/cleanup");
+const loops_1 = require("../utilities/loops");
 function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
         const cashToTranslate = parseFloat(command.substring(5).split('<')[0]);
@@ -32,7 +32,7 @@ function respond(command, message) {
             }
             const countryShortCode = (yield countries_1.default.getCountryByName(memberCountry)).cashCode;
             const members = Array.from(message.mentions.members.values());
-            yield cleanup_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
+            yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
                 const memberCountry = (yield members_1.default.getMember(member.id)).country;
                 if (memberCountry == null) {
                     message.channel.send(`:man_shrugging: **I don't know the country of ${member.displayName}.**`);
@@ -42,7 +42,7 @@ function respond(command, message) {
                     const countryInfo = yield countries_1.default.getCountryByName(memberCountry);
                     const ratesInDB = yield cashTranslate_1.default.getRates();
                     const rates = {};
-                    yield cleanup_1.forEach(ratesInDB, (rate) => __awaiter(this, void 0, void 0, function* () {
+                    yield loops_1.forEach(ratesInDB, (rate) => __awaiter(this, void 0, void 0, function* () {
                         rates[rate.code] = rate.value;
                     }));
                     const cashify = new cashify_1.Cashify({
