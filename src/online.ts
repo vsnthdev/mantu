@@ -10,6 +10,7 @@ import logging from './discord/logging'
 import { setStatus } from './discord/discord'
 import initDatabase from './database/init'
 import { ConfigImpl } from './config'
+import { errorHandler } from './utilities/error'
 
 // Tasks to be imported
 import cleanUpServer from './tasks/cleanup'
@@ -21,22 +22,6 @@ import timeTranslate from './interactions/timezoneTranslate'
 import setCountry from './interactions/setCountry'
 import cashTranslate from './interactions/cashTranslate'
 import github from './interactions/github'
-
-export function errorHandler(promiseToHandle: Promise<any>): Promise<any> {
-    return new Promise(resolve => {
-        promiseToHandle
-            .catch(e => {
-                resolve({
-                    e
-                })
-            })
-            .then(data => {
-                resolve({
-                    data
-                })
-            })
-    })
-}
 
 async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event

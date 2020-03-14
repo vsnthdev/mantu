@@ -24,7 +24,7 @@ export async function connectToDatabase(): Promise<void> {
 
     // check if we have a successful connection by testing a query
     try {
-        await tempDatabase('knex_migrations')
+        await tempDatabase.raw('SELECT 1')
 
         // now that we are successfully connected to the database
         // run the migrations
