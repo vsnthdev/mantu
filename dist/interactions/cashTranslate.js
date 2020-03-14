@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cashify_1 = require("cashify");
-const database_1 = __importDefault(require("../database"));
+const members_1 = __importDefault(require("../database/members"));
+const countries_1 = __importDefault(require("../database/countries"));
+const cashTranslate_1 = __importDefault(require("../database/cashTranslate"));
 const cleanup_1 = require("../tasks/cleanup");
 function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -23,22 +25,22 @@ function respond(command, message) {
             return false;
         }
         else {
-            const memberCountry = (yield database_1.default.queries.members.getMember(message.author.id)).country;
+            const memberCountry = (yield members_1.default.getMember(message.author.id)).country;
             if (memberCountry == null) {
                 message.channel.send(':face_with_raised_eyebrow: **You haven\'t told me your country. How did you think, I can do currency conversion? Issue the command** `;country [the country you live in]` **without brackets first.**');
                 return false;
             }
-            const countryShortCode = (yield database_1.default.queries.countries.getCountryByName(memberCountry)).cashCode;
+            const countryShortCode = (yield countries_1.default.getCountryByName(memberCountry)).cashCode;
             const members = Array.from(message.mentions.members.values());
             yield cleanup_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
-                const memberCountry = (yield database_1.default.queries.members.getMember(member.id)).country;
+                const memberCountry = (yield members_1.default.getMember(member.id)).country;
                 if (memberCountry == null) {
                     message.channel.send(`:man_shrugging: **I don't know the country of ${member.displayName}.**`);
                     return false;
                 }
                 else {
-                    const countryInfo = yield database_1.default.queries.countries.getCountryByName(memberCountry);
-                    const ratesInDB = yield database_1.default.queries.cashTranslate.getRates();
+                    const countryInfo = yield countries_1.default.getCountryByName(memberCountry);
+                    const ratesInDB = yield cashTranslate_1.default.getRates();
                     const rates = {};
                     yield cleanup_1.forEach(ratesInDB, (rate) => __awaiter(this, void 0, void 0, function* () {
                         rates[rate.code] = rate.value;

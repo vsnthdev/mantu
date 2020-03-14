@@ -2,7 +2,8 @@
 
 import Discord from 'discord.js'
 
-import database from '../database'
+import daMembers from '../database/members'
+import daCountries from '../database/countries'
 
 export function setTitleCase(str: string): string {
     const split = str.toLowerCase().split(' ')
@@ -23,11 +24,11 @@ export default async function respond(command: string, message: Discord.Message)
     
     // check if the length 2 chars or 3 chars and search accordingly
     if (countryParsed.length == 2) {
-        countryInDB = await database.queries.countries.getCountryByAlpha2(countryParsed)
+        countryInDB = await daCountries.getCountryByAlpha2(countryParsed)
     } else if (countryParsed.length == 3) {
-        countryInDB = await database.queries.countries.getCountryByAlpha3(countryParsed)
+        countryInDB = await daCountries.getCountryByAlpha3(countryParsed)
     } else {
-        countryInDB = await database.queries.countries.getCountryByName(countryParsed.toLowerCase())
+        countryInDB = await daCountries.getCountryByName(countryParsed.toLowerCase())
     }
     
     // check that is a valid country
@@ -36,7 +37,7 @@ export default async function respond(command: string, message: Discord.Message)
         return false
     } else {
         // now that we know his country. Let's save it in the database
-        await database.queries.members.setCountry(message.author.id, countryInDB.name)
+        await daMembers.setCountry(message.author.id, countryInDB.name)
 
         // tell the user that country has been updated
         message.channel.send(':gem: **Your country has been saved successfully.**')

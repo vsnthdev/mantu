@@ -7,12 +7,14 @@ import Discord from 'discord.js'
 import moment from 'moment'
 import fetch from 'node-fetch'
 
-import database from '../database'
 import logger from '../logger'
 import getTemplate from '../templates'
-import members from '../discord/members'
+import diMembers from '../discord/members'
 import logging from '../discord/logging'
 import events from '../discord/events'
+import daMembers from '../database/members'
+import daCountries from '../database/countries'
+import daCashTranslate from '../database/cashTranslate'
 
 export async function forEach(array: any[], callback): Promise<void> {
     for (let index = 0; index < array.length; index++) {
@@ -30,7 +32,7 @@ async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord
     // check if the user came online
     if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
         // update the database accordingly!
-        await database.queries.members.updateLastActivity(newMember.user.id)
+        await daMembers.updateLastActivity(newMember.user.id)
 
         // just so that we know the database was changed
         if (newMember.presence.status == 'online') {
@@ -49,16 +51,16 @@ async function updateUsersInDB(oldMember: Discord.GuildMember, newMember: Discor
     })
 
     if (roles.includes('Member') == true) {
-        const exists = await database.queries.members.memberExists(newMember.id)
+        const exists = await daMembers.memberExists(newMember.id)
         if (exists == false) {
-            await database.queries.members.addUserToDatabase(newMember)
+            await daMembers.addUserToDatabase(newMember)
             logger.verbose(`${newMember.displayName} has been added to the database.`)
         } else {
-            await database.queries.members.updateDisplayName(newMember.id, newMember.displayName)
+            await daMembers.updateDisplayName(newMember.id, newMember.displayName)
             logger.verbose(`${oldMember.displayName} has changed nickname to ${newMember.displayName}`)
         }
     } else {
-        await database.queries.members.deleteUserFromDatabase(newMember.user.id)
+        await daMembers.deleteUserFromDatabase(newMember.user.id)
         logger.verbose(`${oldMember.displayName} is no longer a member.`)
     }
 }
@@ -85,7 +87,7 @@ async function kickUserIfInactive(member: Discord.GuildMember, members: Array<an
 
         // kick the member
         await member.kick('Inactive for 20+ days.')
-        await database.queries.members.deleteUserFromDatabase(member.id)
+        await daMembers.deleteUserFromDatabase(member.id)
 
         // send this instance to server logs
         await logging.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }**`, config)
@@ -96,29 +98,29 @@ async function kickUserIfInactive(member: Discord.GuildMember, members: Array<an
 
 async function syncDatabase(config: Conf<any>): Promise<void> {
     // get all members from my discord server
-    const discordMembers = await members.getAllMembers(config)
+    const discordMembers = await diMembers.getAllMembers(config)
 
     // get all the users from the database
-    const membersInDB = await database.queries.members.getAllMembers()
+    const membersInDB = await daMembers.getAllMembers()
     const discordMembersId: string[] = []
 
     // loop through all the members from Discord and add new ones
     // while updating existing one's names
     await forEach(discordMembers, async (member: Discord.GuildMember) => {
         // Check if the member exists in our database
-        const exists = await database.queries.members.memberExists(member.user.id)
+        const exists = await daMembers.memberExists(member.user.id)
         discordMembersId.push(member.user.id)
         
         if (exists == false) {
             // Add the user to our database
             logger.verbose(`Adding user: ${member.displayName} to the database`)
-            database.queries.members.addUserToDatabase(member)
+            daMembers.addUserToDatabase(member)
         } else {
             // check if he should be kicked due to inactivity
             const kicked = await kickUserIfInactive(member, membersInDB, config)
 
             // update their names in case it has been changed
-            if (kicked == false) await database.queries.members.updateDisplayName(member.user.id, member.displayName)
+            if (kicked == false) await daMembers.updateDisplayName(member.user.id, member.displayName)
         }
     })
 
@@ -130,13 +132,13 @@ async function syncDatabase(config: Conf<any>): Promise<void> {
             // delete the user from our database as he no longer is a member
             // on the discord server
             logger.verbose(`Removing user: ${member.name} from the database.`)
-            database.queries.members.deleteUserFromDatabase(member.id)
+            daMembers.deleteUserFromDatabase(member.id)
         }
     })
 
     // TODO: Move this function to a different place which is generic
     // check if we can get an example country
-    const country = await database.queries.countries.getCountryByName('India')
+    const country = await daCountries.getCountryByName('India')
     if (!country) {
         // send a HTTP request to restcountries.eu to get information
         // about all countries
@@ -144,7 +146,7 @@ async function syncDatabase(config: Conf<any>): Promise<void> {
         
         // loop through all the countries and add them to the database
         await forEach(countryRestInfo, async (country) => {
-            await database.queries.countries.addCountry(country)
+            await daCountries.addCountry(country)
         })
     }
 
@@ -160,12 +162,12 @@ async function syncDatabase(config: Conf<any>): Promise<void> {
         } else {
             // now that we have the cash translation data
             // let's delete everything and freshly save it in our database
-            await database.queries.cashTranslate.resetCashTranslation()
+            await daCashTranslate.resetCashTranslation()
             for (const code in cashTranslationData.rates) {
                 const value = cashTranslationData.rates[code]
                 
                 // let's add to our database
-                await database.queries.cashTranslate.addCashTranslation(code, value)
+                await daCashTranslate.addCashTranslation(code, value)
             }
 
             config.set('fixer.lastFetch', parseInt(moment().format('YYYYMMDD')))

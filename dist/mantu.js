@@ -19,7 +19,7 @@ const cli_1 = __importDefault(require("./cli"));
 const help_1 = __importDefault(require("./cmd/help"));
 const version_1 = __importDefault(require("./cmd/version"));
 const online_1 = __importDefault(require("./online"));
-const database_1 = __importDefault(require("./database"));
+const database_1 = require("./database/database");
 const discord_1 = require("./discord/discord");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -42,7 +42,7 @@ function main() {
         if (typeof config.get('serverId') != 'string' && config.get('serverId').length != 18) {
             logger_1.default.error(`The server ID ${config.get('serverId')} is invalid.`, 3);
         }
-        yield database_1.default.connect();
+        yield database_1.connectToDatabase();
         discord_1.authenticate(config.get('token'), yield online_1.default(config));
     });
 }

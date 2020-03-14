@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
 const moment_1 = __importDefault(require("moment"));
-const database_1 = __importDefault(require("../database"));
+const members_1 = __importDefault(require("../database/members"));
 const cleanup_1 = require("../tasks/cleanup");
 const setCountry_1 = require("./setCountry");
 const roles_1 = __importDefault(require("../discord/roles"));
@@ -36,7 +36,7 @@ function respond(message, config) {
                 message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield roles_1.default.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`);
             }
             else {
-                const databaseInfo = yield database_1.default.queries.members.getMember(member.user.id);
+                const databaseInfo = yield members_1.default.getMember(member.user.id);
                 const response = new discord_js_1.default.RichEmbed()
                     .setColor(config.get('embedColor'))
                     .setTitle(`Activity information for ${member.displayName}`)

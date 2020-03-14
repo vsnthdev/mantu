@@ -12,7 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const database_1 = __importDefault(require("../database"));
+const members_1 = __importDefault(require("../database/members"));
+const countries_1 = __importDefault(require("../database/countries"));
 function setTitleCase(str) {
     const split = str.toLowerCase().split(' ');
     for (let i = 0; i < split.length; i++) {
@@ -26,20 +27,20 @@ function respond(command, message) {
         const countryParsed = command.substring(8);
         let countryInDB;
         if (countryParsed.length == 2) {
-            countryInDB = yield database_1.default.queries.countries.getCountryByAlpha2(countryParsed);
+            countryInDB = yield countries_1.default.getCountryByAlpha2(countryParsed);
         }
         else if (countryParsed.length == 3) {
-            countryInDB = yield database_1.default.queries.countries.getCountryByAlpha3(countryParsed);
+            countryInDB = yield countries_1.default.getCountryByAlpha3(countryParsed);
         }
         else {
-            countryInDB = yield database_1.default.queries.countries.getCountryByName(countryParsed.toLowerCase());
+            countryInDB = yield countries_1.default.getCountryByName(countryParsed.toLowerCase());
         }
         if (!countryInDB) {
             message.channel.send(`:beetle: **The country ${countryParsed} is either invalid or given in wrong format.**`);
             return false;
         }
         else {
-            yield database_1.default.queries.members.setCountry(message.author.id, countryInDB.name);
+            yield members_1.default.setCountry(message.author.id, countryInDB.name);
             message.channel.send(':gem: **Your country has been saved successfully.**');
             return true;
         }

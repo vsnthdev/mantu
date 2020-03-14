@@ -4,7 +4,7 @@ import Discord, { GuildMember } from 'discord.js'
 import moment from 'moment'
 import Conf from 'conf'
 
-import database from '../database'
+import daMembers from '../database/members'
 import { forEach } from '../tasks/cleanup'
 import { setTitleCase } from './setCountry'
 import { ConfigImpl } from '../config'
@@ -38,7 +38,7 @@ export default async function respond(message: Discord.Message, config: Conf<Con
             message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`)
         } else {
             // get the last activity from database
-            const databaseInfo = await database.queries.members.getMember(member.user.id)
+            const databaseInfo = await daMembers.getMember(member.user.id)
 
             // create a rich embed
             const response = new Discord.RichEmbed()

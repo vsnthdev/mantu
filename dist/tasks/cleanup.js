@@ -14,12 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = __importDefault(require("moment"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
-const database_1 = __importDefault(require("../database"));
 const logger_1 = __importDefault(require("../logger"));
 const templates_1 = __importDefault(require("../templates"));
 const members_1 = __importDefault(require("../discord/members"));
 const logging_1 = __importDefault(require("../discord/logging"));
 const events_1 = __importDefault(require("../discord/events"));
+const members_2 = __importDefault(require("../database/members"));
+const countries_1 = __importDefault(require("../database/countries"));
+const cashTranslate_1 = __importDefault(require("../database/cashTranslate"));
 function forEach(array, callback) {
     return __awaiter(this, void 0, void 0, function* () {
         for (let index = 0; index < array.length; index++) {
@@ -39,7 +41,7 @@ exports.forCollection = forCollection;
 function updateActivity(oldMember, newMember) {
     return __awaiter(this, void 0, void 0, function* () {
         if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
-            yield database_1.default.queries.members.updateLastActivity(newMember.user.id);
+            yield members_2.default.updateLastActivity(newMember.user.id);
             if (newMember.presence.status == 'online') {
                 logger_1.default.verbose(`${newMember.displayName} has come online.`);
             }
@@ -56,18 +58,18 @@ function updateUsersInDB(oldMember, newMember) {
             roles.push(role.name);
         });
         if (roles.includes('Member') == true) {
-            const exists = yield database_1.default.queries.members.memberExists(newMember.id);
+            const exists = yield members_2.default.memberExists(newMember.id);
             if (exists == false) {
-                yield database_1.default.queries.members.addUserToDatabase(newMember);
+                yield members_2.default.addUserToDatabase(newMember);
                 logger_1.default.verbose(`${newMember.displayName} has been added to the database.`);
             }
             else {
-                yield database_1.default.queries.members.updateDisplayName(newMember.id, newMember.displayName);
+                yield members_2.default.updateDisplayName(newMember.id, newMember.displayName);
                 logger_1.default.verbose(`${oldMember.displayName} has changed nickname to ${newMember.displayName}`);
             }
         }
         else {
-            yield database_1.default.queries.members.deleteUserFromDatabase(newMember.user.id);
+            yield members_2.default.deleteUserFromDatabase(newMember.user.id);
             logger_1.default.verbose(`${oldMember.displayName} is no longer a member.`);
         }
     });
@@ -88,7 +90,7 @@ function kickUserIfInactive(member, members, config) {
                 logger_1.default.warning(`Failed to send DM to ${member.displayName} before kicking.`);
             }
             yield member.kick('Inactive for 20+ days.');
-            yield database_1.default.queries.members.deleteUserFromDatabase(member.id);
+            yield members_2.default.deleteUserFromDatabase(member.id);
             yield logging_1.default.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}**`, config);
         }
         return false;
@@ -97,33 +99,33 @@ function kickUserIfInactive(member, members, config) {
 function syncDatabase(config) {
     return __awaiter(this, void 0, void 0, function* () {
         const discordMembers = yield members_1.default.getAllMembers(config);
-        const membersInDB = yield database_1.default.queries.members.getAllMembers();
+        const membersInDB = yield members_2.default.getAllMembers();
         const discordMembersId = [];
         yield forEach(discordMembers, (member) => __awaiter(this, void 0, void 0, function* () {
-            const exists = yield database_1.default.queries.members.memberExists(member.user.id);
+            const exists = yield members_2.default.memberExists(member.user.id);
             discordMembersId.push(member.user.id);
             if (exists == false) {
                 logger_1.default.verbose(`Adding user: ${member.displayName} to the database`);
-                database_1.default.queries.members.addUserToDatabase(member);
+                members_2.default.addUserToDatabase(member);
             }
             else {
                 const kicked = yield kickUserIfInactive(member, membersInDB, config);
                 if (kicked == false)
-                    yield database_1.default.queries.members.updateDisplayName(member.user.id, member.displayName);
+                    yield members_2.default.updateDisplayName(member.user.id, member.displayName);
             }
         }));
         yield forEach(membersInDB, (member) => __awaiter(this, void 0, void 0, function* () {
             const exists = discordMembersId.includes(member.id);
             if (exists == false) {
                 logger_1.default.verbose(`Removing user: ${member.name} from the database.`);
-                database_1.default.queries.members.deleteUserFromDatabase(member.id);
+                members_2.default.deleteUserFromDatabase(member.id);
             }
         }));
-        const country = yield database_1.default.queries.countries.getCountryByName('India');
+        const country = yield countries_1.default.getCountryByName('India');
         if (!country) {
             const countryRestInfo = yield (yield node_fetch_1.default('https://restcountries.eu/rest/v2/all')).json();
             yield forEach(countryRestInfo, (country) => __awaiter(this, void 0, void 0, function* () {
-                yield database_1.default.queries.countries.addCountry(country);
+                yield countries_1.default.addCountry(country);
             }));
         }
         const lastFetch = parseInt(config.get('fixer.lastFetch'));
@@ -134,10 +136,10 @@ function syncDatabase(config) {
                 logger_1.default.error(`Failed to connect to fixer.io api due to: "${cashTranslationData.error.info}"`, 5);
             }
             else {
-                yield database_1.default.queries.cashTranslate.resetCashTranslation();
+                yield cashTranslate_1.default.resetCashTranslation();
                 for (const code in cashTranslationData.rates) {
                     const value = cashTranslationData.rates[code];
-                    yield database_1.default.queries.cashTranslate.addCashTranslation(code, value);
+                    yield cashTranslate_1.default.addCashTranslation(code, value);
                 }
                 config.set('fixer.lastFetch', parseInt(moment_1.default().format('YYYYMMDD')));
                 logger_1.default.verbose('Finished fetching cash translation data from fixer.io');

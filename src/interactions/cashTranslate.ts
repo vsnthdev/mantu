@@ -3,7 +3,9 @@
 import Discord from 'discord.js'
 import { Cashify } from 'cashify'
 
-import database from '../database'
+import daMembers from '../database/members'
+import daCountries from '../database/countries'
+import daCashTranslate from '../database/cashTranslate'
 import { forEach } from '../tasks/cleanup'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
@@ -17,7 +19,7 @@ export default async function respond(command: string, message: Discord.Message)
     } else {
         // now that we know there is an actual number in the command
         // get the country and countryCode for the message author
-        const memberCountry = (await database.queries.members.getMember(message.author.id)).country
+        const memberCountry = (await daMembers.getMember(message.author.id)).country
 
         // check if we know the country of the author
         if (memberCountry == null) {
@@ -25,23 +27,23 @@ export default async function respond(command: string, message: Discord.Message)
             return false
         }
 
-        const countryShortCode = (await database.queries.countries.getCountryByName(memberCountry)).cashCode
+        const countryShortCode = (await daCountries.getCountryByName(memberCountry)).cashCode
         
         // check if there are any mentions
         const members = Array.from(message.mentions.members.values())
         await forEach(members, async (member: Discord.GuildMember) => {
             // check if the member has a country in his database
-            const memberCountry = (await database.queries.members.getMember(member.id)).country
+            const memberCountry = (await daMembers.getMember(member.id)).country
             
             if (memberCountry == null) {
                 message.channel.send(`:man_shrugging: **I don't know the country of ${member.displayName}.**`)
                 return false
             } else {
                 // get the country's short code
-                const countryInfo = await database.queries.countries.getCountryByName(memberCountry)
+                const countryInfo = await daCountries.getCountryByName(memberCountry)
 
                 // get conversion rates from our database
-                const ratesInDB = await database.queries.cashTranslate.getRates()
+                const ratesInDB = await daCashTranslate.getRates()
                 const rates = {}
                 await forEach(ratesInDB, async (rate) => {
                     rates[rate.code] = rate.value

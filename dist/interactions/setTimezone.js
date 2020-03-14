@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
-const database_1 = __importDefault(require("../database"));
+const members_1 = __importDefault(require("../database/members"));
 function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
         const timezoneParsed = moment_timezone_1.default.tz.zone(command.substring(9));
         if (timezoneParsed !== null) {
-            yield database_1.default.queries.members.setTimezone(message.author.id, timezoneParsed.name);
+            yield members_1.default.setTimezone(message.author.id, timezoneParsed.name);
             message.channel.send(':gem: **Your timezone has been saved successfully.**');
             return true;
         }

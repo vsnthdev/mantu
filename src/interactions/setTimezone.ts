@@ -3,7 +3,7 @@
 import Discord from 'discord.js'
 import moment from 'moment-timezone'
 
-import database from '../database'
+import daMembers from '../database/members'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     // parse the timezone string
@@ -12,7 +12,7 @@ export default async function respond(command: string, message: Discord.Message)
     // check if the timezone is valid, otherwise tell the user about it
     if (timezoneParsed !== null) {
         // update in the database
-        await database.queries.members.setTimezone(message.author.id, timezoneParsed.name)
+        await daMembers.setTimezone(message.author.id, timezoneParsed.name)
 
         // tell the user that the timezone was saved
         message.channel.send(':gem: **Your timezone has been saved successfully.**')
