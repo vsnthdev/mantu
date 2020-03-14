@@ -8,6 +8,8 @@ import logger from './logger'
 import events from './discord/events'
 import logging from './discord/logging'
 import { setStatus } from './discord/discord'
+import initDatabase from './database/init'
+import { ConfigImpl } from './config'
 
 // Tasks to be imported
 import cleanUpServer from './tasks/cleanup'
@@ -66,7 +68,7 @@ async function linkCommands(config: Conf<any>): Promise<void> {
     })
 }
 
-export default async function online(config: Conf<any>): Promise<Function> {
+export default async function online(config: Conf<ConfigImpl>): Promise<Function> {
     return async (): Promise<void> => {
         // Notify that the bot should be online now
         logger.success('The bot is online and ready')
@@ -74,10 +76,13 @@ export default async function online(config: Conf<any>): Promise<Function> {
         // Set the bot's status
         await setStatus()
 
+        // Synchronize our database with Discord
+        await initDatabase(config)
+
         // link the discord interactions
         await linkCommands(config)
     
         // Initial running of all the tasks
-        await cleanUpServer(config)()
+        await cleanUpServer(config)
     }
 }

@@ -16,6 +16,7 @@ const logger_1 = __importDefault(require("./logger"));
 const events_1 = __importDefault(require("./discord/events"));
 const logging_1 = __importDefault(require("./discord/logging"));
 const discord_1 = require("./discord/discord");
+const init_1 = __importDefault(require("./database/init"));
 const cleanup_1 = __importDefault(require("./tasks/cleanup"));
 const userActivityInfo_1 = __importDefault(require("./interactions/userActivityInfo"));
 const setTimezone_1 = __importDefault(require("./interactions/setTimezone"));
@@ -75,8 +76,9 @@ function online(config) {
         return () => __awaiter(this, void 0, void 0, function* () {
             logger_1.default.success('The bot is online and ready');
             yield discord_1.setStatus();
+            yield init_1.default(config);
             yield linkCommands(config);
-            yield cleanup_1.default(config)();
+            yield cleanup_1.default(config);
         });
     });
 }

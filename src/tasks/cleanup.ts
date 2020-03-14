@@ -5,17 +5,16 @@
 import Conf from 'conf'
 import Discord from 'discord.js'
 import moment from 'moment'
-import fetch from 'node-fetch'
 
-import { forEach, forCollection } from '../utilities/loops'
+import { forCollection, forEach } from '../utilities/loops'
+import { setInterval } from '../utilities/time'
+import { ConfigImpl } from '../config'
 import logger from '../logger'
 import getTemplate from '../templates'
-import diMembers from '../discord/members'
 import logging from '../discord/logging'
 import events from '../discord/events'
-import daMembers from '../database/members'
-import daCountries from '../database/countries'
-import daCashTranslate from '../database/cashTranslate'
+import daMembers, { Member } from '../database/members'
+import diMembers from '../discord/members'
 
 async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
     // check if the user came online
@@ -54,9 +53,8 @@ async function updateUsersInDB(oldMember: Discord.GuildMember, newMember: Discor
     }
 }
 
-async function kickUserIfInactive(member: Discord.GuildMember, members: Array<any>, config: Conf<any>): Promise<boolean> {
-    // get him in the database
-    const memberInDB = members.find((memberInDB) => memberInDB.id == member.id)
+async function kickUserIfInactive(member: Discord.GuildMember, memberInDB: Member, config: Conf<ConfigImpl>): Promise<boolean> {
+    // calculate the time of lastActivity
     const daysAgo = moment().diff(moment(memberInDB.lastActive, 'x'), 'days')
 
     // // check if he/she is 20 days older
@@ -85,93 +83,21 @@ async function kickUserIfInactive(member: Discord.GuildMember, members: Array<an
     return false
 }
 
-async function syncDatabase(config: Conf<any>): Promise<void> {
-    // get all members from my discord server
-    const discordMembers = await diMembers.getAllMembers(config)
+export default async function cleanUpServer(config: Conf<ConfigImpl>): Promise<void> {
+    // hookup the required events
+    events.presenceChanged(updateActivity)
+    events.guildUpdated(updateUsersInDB)
 
-    // get all the users from the database
-    const membersInDB = await daMembers.getAllMembers()
-    const discordMembersId: string[] = []
-
-    // loop through all the members from Discord and add new ones
-    // while updating existing one's names
-    await forEach(discordMembers, async (member: Discord.GuildMember) => {
-        // Check if the member exists in our database
-        const exists = await daMembers.memberExists(member.user.id)
-        discordMembersId.push(member.user.id)
+    // for every hour, check if there are are people that
+    // should be kick due to inactivity, if yes then run the function
+    setInterval(((1000 * 60) * 60), async () => {
+        const membersInDiscord = await diMembers.getAllMembers(config)
         
-        if (exists == false) {
-            // Add the user to our database
-            logger.verbose(`Adding user: ${member.displayName} to the database`)
-            daMembers.addUserToDatabase(member)
-        } else {
-            // check if he should be kicked due to inactivity
-            const kicked = await kickUserIfInactive(member, membersInDB, config)
-
-            // update their names in case it has been changed
-            if (kicked == false) await daMembers.updateDisplayName(member.user.id, member.displayName)
-        }
-    })
-
-    // loop through all the members in database and delete non-existent ones
-    await forEach(membersInDB, async (member) => {
-        // Check if the member exists in Discord
-        const exists = discordMembersId.includes(member.id)
-        if (exists == false) {
-            // delete the user from our database as he no longer is a member
-            // on the discord server
-            logger.verbose(`Removing user: ${member.name} from the database.`)
-            daMembers.deleteUserFromDatabase(member.id)
-        }
-    })
-
-    // TODO: Move this function to a different place which is generic
-    // check if we can get an example country
-    const country = await daCountries.getCountryByName('India')
-    if (!country) {
-        // send a HTTP request to restcountries.eu to get information
-        // about all countries
-        const countryRestInfo = await (await fetch('https://restcountries.eu/rest/v2/all')).json()
-        
-        // loop through all the countries and add them to the database
-        await forEach(countryRestInfo, async (country) => {
-            await daCountries.addCountry(country)
+        // loop through all the members in discord
+        await forEach(membersInDiscord, async (member: Discord.GuildMember) => {
+            // get the member's database entry
+            const memberInDB = await daMembers.getMember(member.id)
+            await kickUserIfInactive(member, memberInDB, config)
         })
-    }
-
-    // fetch the currency convertor information once per day
-    const lastFetch = parseInt(config.get('fixer.lastFetch'))
-    const todayId = parseInt(moment().format('YYYYMMDD'))
-    if (todayId > lastFetch) {
-        const cashTranslationData = await (await fetch(`http://data.fixer.io/api/latest&access_key=${config.get('fixer.token')}`)).json()
-        
-        // handle fixer api errors
-        if (cashTranslationData.success == false) {
-            logger.error(`Failed to connect to fixer.io api due to: "${cashTranslationData.error.info}"`, 5)
-        } else {
-            // now that we have the cash translation data
-            // let's delete everything and freshly save it in our database
-            await daCashTranslate.resetCashTranslation()
-            for (const code in cashTranslationData.rates) {
-                const value = cashTranslationData.rates[code]
-                
-                // let's add to our database
-                await daCashTranslate.addCashTranslation(code, value)
-            }
-
-            config.set('fixer.lastFetch', parseInt(moment().format('YYYYMMDD')))
-            logger.verbose('Finished fetching cash translation data from fixer.io')
-        }
-    }
-}
-
-export default function cleanUpServer(config): () => Promise<any> {
-    return async function(): Promise<void> {
-        await syncDatabase(config)
-        logger.info('The database has been synchronized')
-
-        // hookup the required events
-        events.presenceChanged(updateActivity)
-        events.guildUpdated(updateUsersInDB)
-    }
+    })
 }
