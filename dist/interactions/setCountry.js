@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
 function setTitleCase(str) {
-    let split = str.toLowerCase().split(' ');
-    for (var i = 0; i < split.length; i++) {
+    const split = str.toLowerCase().split(' ');
+    for (let i = 0; i < split.length; i++) {
         split[i] = split[i][0].toUpperCase() + split[i].slice(1);
     }
     return split.join(' ');

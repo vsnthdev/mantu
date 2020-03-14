@@ -14,10 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = __importDefault(require("moment"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
-const discord_1 = __importDefault(require("../discord"));
 const database_1 = __importDefault(require("../database"));
 const logger_1 = __importDefault(require("../logger"));
 const templates_1 = __importDefault(require("../templates"));
+const members_1 = __importDefault(require("../discord/members"));
+const logging_1 = __importDefault(require("../discord/logging"));
+const events_1 = __importDefault(require("../discord/events"));
 function forEach(array, callback) {
     return __awaiter(this, void 0, void 0, function* () {
         for (let index = 0; index < array.length; index++) {
@@ -34,68 +36,6 @@ function forCollection(collection, callback) {
     });
 }
 exports.forCollection = forCollection;
-function cleanUpServer(config) {
-    return function () {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield syncDatabase(config);
-            logger_1.default.info('The database has been synchronized');
-            discord_1.default.events.presenceChanged(updateActivity);
-            discord_1.default.events.guildUpdated(updateUsersInDB);
-        });
-    };
-}
-exports.default = cleanUpServer;
-function syncDatabase(config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const members = yield discord_1.default.members.getAllMembers(config);
-        const membersInDB = yield database_1.default.queries.members.getAllMembers();
-        let discordMembersId = [];
-        yield forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
-            let exists = yield database_1.default.queries.members.memberExists(member.user.id);
-            discordMembersId.push(member.user.id);
-            if (exists == false) {
-                logger_1.default.verbose(`Adding user: ${member.displayName} to the database`);
-                database_1.default.queries.members.addUserToDatabase(member);
-            }
-            else {
-                const kicked = yield kickUserIfInactive(member, membersInDB, config);
-                if (kicked == false)
-                    yield database_1.default.queries.members.updateDisplayName(member.user.id, member.displayName);
-            }
-        }));
-        yield forEach(membersInDB, (member) => __awaiter(this, void 0, void 0, function* () {
-            const exists = discordMembersId.includes(member.id);
-            if (exists == false) {
-                logger_1.default.verbose(`Removing user: ${member.name} from the database.`);
-                database_1.default.queries.members.deleteUserFromDatabase(member.id);
-            }
-        }));
-        const country = yield database_1.default.queries.countries.getCountryByName('India');
-        if (!country) {
-            const countryRestInfo = yield (yield node_fetch_1.default('https://restcountries.eu/rest/v2/all')).json();
-            yield forEach(countryRestInfo, (country) => __awaiter(this, void 0, void 0, function* () {
-                yield database_1.default.queries.countries.addCountry(country);
-            }));
-        }
-        const lastFetch = parseInt(config.get('fixer.lastFetch'));
-        const todayId = parseInt(moment_1.default().format('YYYYMMDD'));
-        if (todayId > lastFetch) {
-            const cashTranslationData = yield (yield node_fetch_1.default(`http://data.fixer.io/api/latest&access_key=${config.get('fixer.token')}`)).json();
-            if (cashTranslationData.success == false) {
-                logger_1.default.error(`Failed to connect to fixer.io api due to: "${cashTranslationData.error.info}"`, 5);
-            }
-            else {
-                yield database_1.default.queries.cashTranslate.resetCashTranslation();
-                for (let code in cashTranslationData.rates) {
-                    const value = cashTranslationData.rates[code];
-                    yield database_1.default.queries.cashTranslate.addCashTranslation(code, value);
-                }
-                config.set('fixer.lastFetch', parseInt(moment_1.default().format('YYYYMMDD')));
-                logger_1.default.verbose('Finished fetching cash translation data from fixer.io');
-            }
-        }
-    });
-}
 function updateActivity(oldMember, newMember) {
     return __awaiter(this, void 0, void 0, function* () {
         if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
@@ -111,7 +51,7 @@ function updateActivity(oldMember, newMember) {
 }
 function updateUsersInDB(oldMember, newMember) {
     return __awaiter(this, void 0, void 0, function* () {
-        let roles = [];
+        const roles = [];
         yield forCollection(newMember.roles, (role) => {
             roles.push(role.name);
         });
@@ -149,8 +89,70 @@ function kickUserIfInactive(member, members, config) {
             }
             yield member.kick('Inactive for 20+ days.');
             yield database_1.default.queries.members.deleteUserFromDatabase(member.id);
-            yield discord_1.default.logging.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}**`, config);
+            yield logging_1.default.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}**`, config);
         }
         return false;
     });
 }
+function syncDatabase(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const discordMembers = yield members_1.default.getAllMembers(config);
+        const membersInDB = yield database_1.default.queries.members.getAllMembers();
+        const discordMembersId = [];
+        yield forEach(discordMembers, (member) => __awaiter(this, void 0, void 0, function* () {
+            const exists = yield database_1.default.queries.members.memberExists(member.user.id);
+            discordMembersId.push(member.user.id);
+            if (exists == false) {
+                logger_1.default.verbose(`Adding user: ${member.displayName} to the database`);
+                database_1.default.queries.members.addUserToDatabase(member);
+            }
+            else {
+                const kicked = yield kickUserIfInactive(member, membersInDB, config);
+                if (kicked == false)
+                    yield database_1.default.queries.members.updateDisplayName(member.user.id, member.displayName);
+            }
+        }));
+        yield forEach(membersInDB, (member) => __awaiter(this, void 0, void 0, function* () {
+            const exists = discordMembersId.includes(member.id);
+            if (exists == false) {
+                logger_1.default.verbose(`Removing user: ${member.name} from the database.`);
+                database_1.default.queries.members.deleteUserFromDatabase(member.id);
+            }
+        }));
+        const country = yield database_1.default.queries.countries.getCountryByName('India');
+        if (!country) {
+            const countryRestInfo = yield (yield node_fetch_1.default('https://restcountries.eu/rest/v2/all')).json();
+            yield forEach(countryRestInfo, (country) => __awaiter(this, void 0, void 0, function* () {
+                yield database_1.default.queries.countries.addCountry(country);
+            }));
+        }
+        const lastFetch = parseInt(config.get('fixer.lastFetch'));
+        const todayId = parseInt(moment_1.default().format('YYYYMMDD'));
+        if (todayId > lastFetch) {
+            const cashTranslationData = yield (yield node_fetch_1.default(`http://data.fixer.io/api/latest&access_key=${config.get('fixer.token')}`)).json();
+            if (cashTranslationData.success == false) {
+                logger_1.default.error(`Failed to connect to fixer.io api due to: "${cashTranslationData.error.info}"`, 5);
+            }
+            else {
+                yield database_1.default.queries.cashTranslate.resetCashTranslation();
+                for (const code in cashTranslationData.rates) {
+                    const value = cashTranslationData.rates[code];
+                    yield database_1.default.queries.cashTranslate.addCashTranslation(code, value);
+                }
+                config.set('fixer.lastFetch', parseInt(moment_1.default().format('YYYYMMDD')));
+                logger_1.default.verbose('Finished fetching cash translation data from fixer.io');
+            }
+        }
+    });
+}
+function cleanUpServer(config) {
+    return function () {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield syncDatabase(config);
+            logger_1.default.info('The database has been synchronized');
+            events_1.default.presenceChanged(updateActivity);
+            events_1.default.guildUpdated(updateUsersInDB);
+        });
+    };
+}
+exports.default = cleanUpServer;

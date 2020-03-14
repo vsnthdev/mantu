@@ -13,8 +13,8 @@ import parseArgs from './cli'
 import helpMessage from './cmd/help'
 import versionInfo from './cmd/version'
 import online from './online'
-import discord from './discord'
 import database from './database'
+import { authenticate } from './discord/discord'
 
 async function main(): Promise<void> {
     // parse the arguments
@@ -54,7 +54,7 @@ async function main(): Promise<void> {
     await database.connect()
 
     // attempt to login
-    discord.authenticate(config.get('token'), await online(config))
+    authenticate(config.get('token'), await online(config))
 }
 
 main()

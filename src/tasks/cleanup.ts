@@ -7,10 +7,12 @@ import Discord from 'discord.js'
 import moment from 'moment'
 import fetch from 'node-fetch'
 
-import discord from '../discord'
 import database from '../database'
 import logger from '../logger'
 import getTemplate from '../templates'
+import members from '../discord/members'
+import logging from '../discord/logging'
+import events from '../discord/events'
 
 export async function forEach(array: any[], callback): Promise<void> {
     for (let index = 0; index < array.length; index++) {
@@ -86,7 +88,7 @@ async function kickUserIfInactive(member: Discord.GuildMember, members: Array<an
         await database.queries.members.deleteUserFromDatabase(member.id)
 
         // send this instance to server logs
-        await discord.logging.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }**`, config)
+        await logging.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }**`, config)
     }
 
     return false
@@ -94,7 +96,7 @@ async function kickUserIfInactive(member: Discord.GuildMember, members: Array<an
 
 async function syncDatabase(config: Conf<any>): Promise<void> {
     // get all members from my discord server
-    const members = await discord.members.getAllMembers(config)
+    const discordMembers = await members.getAllMembers(config)
 
     // get all the users from the database
     const membersInDB = await database.queries.members.getAllMembers()
@@ -102,7 +104,7 @@ async function syncDatabase(config: Conf<any>): Promise<void> {
 
     // loop through all the members from Discord and add new ones
     // while updating existing one's names
-    await forEach(members, async (member: Discord.GuildMember) => {
+    await forEach(discordMembers, async (member: Discord.GuildMember) => {
         // Check if the member exists in our database
         const exists = await database.queries.members.memberExists(member.user.id)
         discordMembersId.push(member.user.id)
@@ -178,7 +180,7 @@ export default function cleanUpServer(config): () => Promise<any> {
         logger.info('The database has been synchronized')
 
         // hookup the required events
-        discord.events.presenceChanged(updateActivity)
-        discord.events.guildUpdated(updateUsersInDB)
+        events.presenceChanged(updateActivity)
+        events.guildUpdated(updateUsersInDB)
     }
 }

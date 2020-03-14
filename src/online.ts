@@ -5,7 +5,9 @@ import Conf from 'conf'
 import Discord from 'discord.js'
 
 import logger from './logger'
-import discord from './discord'
+import events from './discord/events'
+import logging from './discord/logging'
+import { setStatus } from './discord/discord'
 
 // Tasks to be imported
 import cleanUpServer from './tasks/cleanup'
@@ -36,7 +38,7 @@ export function errorHandler(promiseToHandle: Promise<any>): Promise<any> {
 
 async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event
-    discord.events.commandReceived(config, async (command: string, message: Discord.Message) => {
+    events.commandReceived(config, async (command: string, message: Discord.Message) => {
         let commandExecutionSuccessful = false
 
         // act accordingly
@@ -58,7 +60,7 @@ async function linkCommands(config: Conf<any>): Promise<void> {
         if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
             const deleteMessage = await errorHandler(message.delete())
             if (deleteMessage.e) {
-                await discord.logging.sendDiscordError(deleteMessage.e, message.member, message.channel as Discord.TextChannel, config)
+                await logging.sendDiscordError(deleteMessage.e, message.member, message.channel as Discord.TextChannel, config)
             }
         }
     })
@@ -70,7 +72,7 @@ export default async function online(config: Conf<any>): Promise<Function> {
         logger.success('The bot is online and ready')
 
         // Set the bot's status
-        await discord.setStatus()
+        await setStatus()
 
         // link the discord interactions
         await linkCommands(config)

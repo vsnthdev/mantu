@@ -15,16 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
 const moment_1 = __importDefault(require("moment"));
 const database_1 = __importDefault(require("../database"));
-const discord_1 = __importDefault(require("../discord"));
 const cleanup_1 = require("../tasks/cleanup");
 const setCountry_1 = require("./setCountry");
+const roles_1 = __importDefault(require("../discord/roles"));
+const generic_1 = __importDefault(require("../discord/generic"));
 function respond(message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         let members = [];
         const parsed = message.content.split(' ');
         yield cleanup_1.forEach(parsed, (word) => __awaiter(this, void 0, void 0, function* () {
             if (isNaN(parseInt(word)) == false && word.length == 18) {
-                const member = yield discord_1.default.getAnyoneById(word);
+                const member = yield generic_1.default.getAnyoneById(word);
                 if (member)
                     members.push(member);
             }
@@ -32,7 +33,7 @@ function respond(message, config) {
         members = members.concat(Array.from(message.mentions.members.values()));
         yield cleanup_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
             if (!member.roles.find(r => r.id === config.get('roles').base)) {
-                message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield discord_1.default.roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`);
+                message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield roles_1.default.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`);
             }
             else {
                 const databaseInfo = yield database_1.default.queries.members.getMember(member.user.id);

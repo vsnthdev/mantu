@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
-const logger_1 = __importDefault(require("./logger"));
+const logger_1 = __importDefault(require("../logger"));
 const client = new discord_js_1.default.Client();
 function authenticate(token, callback) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -23,6 +23,7 @@ function authenticate(token, callback) {
         return;
     });
 }
+exports.authenticate = authenticate;
 function setStatus() {
     return __awaiter(this, void 0, void 0, function* () {
         const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
@@ -37,13 +38,5 @@ function setStatus() {
         });
     });
 }
-function getClient() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return client;
-    });
-}
-exports.default = {
-    authenticate,
-    setStatus,
-    getClient,
-};
+exports.setStatus = setStatus;
+exports.default = client;

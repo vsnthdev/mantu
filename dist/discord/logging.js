@@ -13,37 +13,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
-const logger_1 = __importDefault(require("./logger"));
-const client = new discord_js_1.default.Client();
-function authenticate(token, callback) {
+const discord_1 = __importDefault(require("./discord"));
+function sendServerLog(content, config) {
     return __awaiter(this, void 0, void 0, function* () {
-        client.on('ready', callback);
-        client.login(token)
-            .catch(err => logger_1.default.error(err, 2));
-        return;
+        const serverLog = yield discord_1.default.channels.find((channel) => channel.id == config.get('channels').log);
+        serverLog.send(content);
     });
 }
-function setStatus() {
+function sendDiscordError(e, author, channel, config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-        logger_1.default.verbose(`Running in ${environment} environment`);
-        client.user.setPresence({
-            game: {
-                name: (environment == 'production') ? 'this server.' : 'Vasanth Developer.',
-                type: (environment == 'production') ? 'WATCHING' : 'LISTENING',
-                url: (environment == 'production') ? 'https://vasanth.tech' : 'https://github.com/vasanthdeveloper/mantu'
-            },
-            status: (environment == 'production') ? 'online' : 'dnd'
-        });
-    });
-}
-function getClient() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return client;
+        const content = new discord_js_1.default.RichEmbed()
+            .setColor(config.get('embedColor'))
+            .setTitle(`A ${e.name} occurred in mantu`)
+            .addField('Name', e.name, true)
+            .addField('Code', e.code, true)
+            .addField('Action', e.method, true)
+            .addField('Triggered By', `<@${author.id}>`, true)
+            .addField('On Channel', `<#${channel.id}>`, true)
+            .addField('Message', e.message);
+        yield sendServerLog(content, config);
     });
 }
 exports.default = {
-    authenticate,
-    setStatus,
-    getClient,
+    sendServerLog,
+    sendDiscordError
 };

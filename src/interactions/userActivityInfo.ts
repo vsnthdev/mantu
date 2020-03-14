@@ -5,10 +5,11 @@ import moment from 'moment'
 import Conf from 'conf'
 
 import database from '../database'
-import discord from '../discord'
 import { forEach } from '../tasks/cleanup'
 import { setTitleCase } from './setCountry'
 import { ConfigImpl } from '../config'
+import roles from '../discord/roles'
+import generic from '../discord/generic'
 
 export default async function respond(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // loop through all the members
@@ -21,7 +22,7 @@ export default async function respond(message: Discord.Message, config: Conf<Con
     await forEach(parsed, async (word: string) => {
         if (isNaN(parseInt(word)) == false && word.length == 18) {
             // get the member by id
-            const member = await discord.getAnyoneById(word)
+            const member = await generic.getAnyoneById(word)
             if (member) members.push(member)
         }
     })
@@ -34,7 +35,7 @@ export default async function respond(message: Discord.Message, config: Conf<Con
         if (!member.roles.find(r => r.id === config.get('roles').base)) {
             // as this member doesn't have a member role, he/she/it won't be in the database
             // in which case we simply tell the user about it
-            message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await discord.roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`)
+            message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`)
         } else {
             // get the last activity from database
             const databaseInfo = await database.queries.members.getMember(member.user.id)

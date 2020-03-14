@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const logger_1 = __importDefault(require("./logger"));
-const discord_1 = __importDefault(require("./discord"));
+const events_1 = __importDefault(require("./discord/events"));
+const logging_1 = __importDefault(require("./discord/logging"));
+const discord_1 = require("./discord/discord");
 const cleanup_1 = __importDefault(require("./tasks/cleanup"));
 const userActivityInfo_1 = __importDefault(require("./interactions/userActivityInfo"));
 const setTimezone_1 = __importDefault(require("./interactions/setTimezone"));
@@ -37,20 +39,9 @@ function errorHandler(promiseToHandle) {
     });
 }
 exports.errorHandler = errorHandler;
-function online(config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return () => __awaiter(this, void 0, void 0, function* () {
-            logger_1.default.success('The bot is online and ready');
-            yield discord_1.default.setStatus();
-            yield linkCommands(config);
-            yield cleanup_1.default(config)();
-        });
-    });
-}
-exports.default = online;
 function linkCommands(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        discord_1.default.events.commandReceived(config, (command, message) => __awaiter(this, void 0, void 0, function* () {
+        events_1.default.commandReceived(config, (command, message) => __awaiter(this, void 0, void 0, function* () {
             let commandExecutionSuccessful = false;
             if (command.startsWith('info ')) {
                 commandExecutionSuccessful = yield userActivityInfo_1.default(message, config);
@@ -73,9 +64,20 @@ function linkCommands(config) {
             if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
                 const deleteMessage = yield errorHandler(message.delete());
                 if (deleteMessage.e) {
-                    yield discord_1.default.logging.sendDiscordError(deleteMessage.e, message.member, message.channel, config);
+                    yield logging_1.default.sendDiscordError(deleteMessage.e, message.member, message.channel, config);
                 }
             }
         }));
     });
 }
+function online(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return () => __awaiter(this, void 0, void 0, function* () {
+            logger_1.default.success('The bot is online and ready');
+            yield discord_1.setStatus();
+            yield linkCommands(config);
+            yield cleanup_1.default(config)();
+        });
+    });
+}
+exports.default = online;

@@ -39,7 +39,7 @@ function respond(command, message) {
                 else {
                     const countryInfo = yield database_1.default.queries.countries.getCountryByName(memberCountry);
                     const ratesInDB = yield database_1.default.queries.cashTranslate.getRates();
-                    let rates = {};
+                    const rates = {};
                     yield cleanup_1.forEach(ratesInDB, (rate) => __awaiter(this, void 0, void 0, function* () {
                         rates[rate.code] = rate.value;
                     }));
