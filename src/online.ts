@@ -34,26 +34,10 @@ export function errorHandler(promiseToHandle: Promise<any>): Promise<any> {
     })
 }
 
-export default async function online(config: Conf<any>): Promise<Function> {
-    return async () => {
-        // Notify that the bot should be online now
-        logger.success('The bot is online and ready')
-
-        // Set the bot's status
-        await discord.setStatus()
-
-        // link the discord interactions
-        await linkCommands(config)
-    
-        // Initial running of all the tasks
-        await cleanUpServer(config)()
-    }
-}
-
 async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event
     discord.events.commandReceived(config, async (command: string, message: Discord.Message) => {
-        let commandExecutionSuccessful: boolean = false
+        let commandExecutionSuccessful = false
 
         // act accordingly
         if (command.startsWith('info ')) {
@@ -78,4 +62,20 @@ async function linkCommands(config: Conf<any>): Promise<void> {
             }
         }
     })
+}
+
+export default async function online(config: Conf<any>): Promise<Function> {
+    return async (): Promise<void> => {
+        // Notify that the bot should be online now
+        logger.success('The bot is online and ready')
+
+        // Set the bot's status
+        await discord.setStatus()
+
+        // link the discord interactions
+        await linkCommands(config)
+    
+        // Initial running of all the tasks
+        await cleanUpServer(config)()
+    }
 }

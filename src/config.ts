@@ -5,29 +5,29 @@ import path from 'path'
 import Conf from 'conf'
 
 export interface ConfigImpl {
-    token: string
-    serverId: string
-    prefix: string
-    embedColor: string
-    deleteCommandAfterExecution: boolean
+    token: string;
+    serverId: string;
+    prefix: string;
+    embedColor: string;
+    deleteCommandAfterExecution: boolean;
     database: {
-        host: string
-        port: number
-        user: string
-        password: string
-        database: string
-    },
+        host: string;
+        port: number;
+        user: string;
+        password: string;
+        database: string;
+    };
     fixer: {
-        lastFetch: number
-        token: string
-    },
+        lastFetch: number;
+        token: string;
+    };
     roles: {
-        moderators: string[]
-        base: string
-    },
+        moderators: string[];
+        base: string;
+    };
     channels: {
-        log: string
-    }
+        log: string;
+    };
 }
 
 const defaultConfig: ConfigImpl = {

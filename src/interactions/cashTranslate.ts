@@ -42,7 +42,7 @@ export default async function respond(command: string, message: Discord.Message)
 
                 // get conversion rates from our database
                 const ratesInDB = await database.queries.cashTranslate.getRates()
-                let rates = {}
+                const rates = {}
                 await forEach(ratesInDB, async (rate) => {
                     rates[rate.code] = rate.value
                 })

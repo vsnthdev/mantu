@@ -5,8 +5,8 @@ import Discord from 'discord.js'
 import database from '../database'
 
 export function setTitleCase(str: string): string {
-    let split = str.toLowerCase().split(' ')
-    for(var i = 0; i< split.length; i++) {
+    const split = str.toLowerCase().split(' ')
+    for(let i = 0; i< split.length; i++) {
         split[i] = split[i][0].toUpperCase() + split[i].slice(1)
     }
 

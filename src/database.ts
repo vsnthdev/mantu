@@ -15,6 +15,15 @@ const config = (process.env.NODE_ENV == 'production') ? knexfile['production'] :
 // which can used across this file
 let database
 
+async function initializeTables(): Promise<any> {
+    try {
+        await execa(path.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest'])
+        logger.success('Finished syncing database structure')
+    } catch(e) {
+        logger.error(e, 2)
+    }
+}
+
 async function connectToDatabase(): Promise<void> {
     const tempDatabase = await knex(config)
 
@@ -31,15 +40,6 @@ async function connectToDatabase(): Promise<void> {
         database = tempDatabase
     } catch(e) {
         logger.error(`Failed to connect to the database due to: ${e.message}`, 4)
-    }
-}
-
-async function initializeTables(): Promise<any> {
-    try {
-        await execa(path.join(process.cwd(), 'node_modules', '.bin', 'knex'), ['migrate:latest'])
-        logger.success('Finished syncing database structure')
-    } catch(e) {
-        logger.error(e, 2)
     }
 }
 

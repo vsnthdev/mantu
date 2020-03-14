@@ -24,17 +24,73 @@ export async function forCollection(collection: Discord.Collection<any, any>, ca
     })
 }
 
-export default function cleanUpServer(config): () => Promise<any> {
-    return async function() {
-        await syncDatabase(config)
-        logger.info('The database has been synchronized')
+async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
+    // check if the user came online
+    if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
+        // update the database accordingly!
+        await database.queries.members.updateLastActivity(newMember.user.id)
 
-        // hookup the required events
-        discord.events.presenceChanged(updateActivity)
-        discord.events.guildUpdated(updateUsersInDB)
+        // just so that we know the database was changed
+        if (newMember.presence.status == 'online') {
+            logger.verbose(`${newMember.displayName} has come online.`)
+        } else {
+            logger.verbose(`${newMember.displayName} went ${newMember.presence.status}.`)
+        }
     }
 }
 
+async function updateUsersInDB(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
+    // determine if the Member role was added or removed
+    const roles: string[] = []
+    await forCollection(newMember.roles, (role: Discord.Role) => {
+        roles.push(role.name)
+    })
+
+    if (roles.includes('Member') == true) {
+        const exists = await database.queries.members.memberExists(newMember.id)
+        if (exists == false) {
+            await database.queries.members.addUserToDatabase(newMember)
+            logger.verbose(`${newMember.displayName} has been added to the database.`)
+        } else {
+            await database.queries.members.updateDisplayName(newMember.id, newMember.displayName)
+            logger.verbose(`${oldMember.displayName} has changed nickname to ${newMember.displayName}`)
+        }
+    } else {
+        await database.queries.members.deleteUserFromDatabase(newMember.user.id)
+        logger.verbose(`${oldMember.displayName} is no longer a member.`)
+    }
+}
+
+async function kickUserIfInactive(member: Discord.GuildMember, members: Array<any>, config: Conf<any>): Promise<boolean> {
+    // get him in the database
+    const memberInDB = members.find((memberInDB) => memberInDB.id == member.id)
+    const daysAgo = moment().diff(moment(memberInDB.lastActive, 'x'), 'days')
+
+    // // check if he/she is 20 days older
+    if (daysAgo >= 20) {
+        // get the DM message template
+        const template = await getTemplate('inactiveKick')
+
+        // try to send a DM
+        let memberDMed = false
+        try {
+            const channel = await member.createDM()
+            await channel.send(template)
+            memberDMed = true
+        } catch(e) {
+            logger.warning(`Failed to send DM to ${member.displayName} before kicking.`)
+        }
+
+        // kick the member
+        await member.kick('Inactive for 20+ days.')
+        await database.queries.members.deleteUserFromDatabase(member.id)
+
+        // send this instance to server logs
+        await discord.logging.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }**`, config)
+    }
+
+    return false
+}
 
 async function syncDatabase(config: Conf<any>): Promise<void> {
     // get all members from my discord server
@@ -42,13 +98,13 @@ async function syncDatabase(config: Conf<any>): Promise<void> {
 
     // get all the users from the database
     const membersInDB = await database.queries.members.getAllMembers()
-    let discordMembersId: string[] = []
+    const discordMembersId: string[] = []
 
     // loop through all the members from Discord and add new ones
     // while updating existing one's names
     await forEach(members, async (member: Discord.GuildMember) => {
         // Check if the member exists in our database
-        let exists = await database.queries.members.memberExists(member.user.id)
+        const exists = await database.queries.members.memberExists(member.user.id)
         discordMembersId.push(member.user.id)
         
         if (exists == false) {
@@ -103,7 +159,7 @@ async function syncDatabase(config: Conf<any>): Promise<void> {
             // now that we have the cash translation data
             // let's delete everything and freshly save it in our database
             await database.queries.cashTranslate.resetCashTranslation()
-            for (let code in cashTranslationData.rates) {
+            for (const code in cashTranslationData.rates) {
                 const value = cashTranslationData.rates[code]
                 
                 // let's add to our database
@@ -116,70 +172,13 @@ async function syncDatabase(config: Conf<any>): Promise<void> {
     }
 }
 
-async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
-    // check if the user came online
-    if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
-        // update the database accordingly!
-        await database.queries.members.updateLastActivity(newMember.user.id)
+export default function cleanUpServer(config): () => Promise<any> {
+    return async function(): Promise<void> {
+        await syncDatabase(config)
+        logger.info('The database has been synchronized')
 
-        // just so that we know the database was changed
-        if (newMember.presence.status == 'online') {
-            logger.verbose(`${newMember.displayName} has come online.`)
-        } else {
-            logger.verbose(`${newMember.displayName} went ${newMember.presence.status}.`)
-        }
+        // hookup the required events
+        discord.events.presenceChanged(updateActivity)
+        discord.events.guildUpdated(updateUsersInDB)
     }
-}
-
-async function updateUsersInDB(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
-    // determine if the Member role was added or removed
-    let roles: string[] = []
-    await forCollection(newMember.roles, (role: Discord.Role) => {
-        roles.push(role.name)
-    })
-
-    if (roles.includes('Member') == true) {
-        const exists = await database.queries.members.memberExists(newMember.id)
-        if (exists == false) {
-            await database.queries.members.addUserToDatabase(newMember)
-            logger.verbose(`${newMember.displayName} has been added to the database.`)
-        } else {
-            await database.queries.members.updateDisplayName(newMember.id, newMember.displayName)
-            logger.verbose(`${oldMember.displayName} has changed nickname to ${newMember.displayName}`)
-        }
-    } else {
-        await database.queries.members.deleteUserFromDatabase(newMember.user.id)
-        logger.verbose(`${oldMember.displayName} is no longer a member.`)
-    }
-}
-
-async function kickUserIfInactive(member: Discord.GuildMember, members: Array<any>, config: Conf<any>): Promise<boolean> {
-    // get him in the database
-    const memberInDB = members.find((memberInDB) => memberInDB.id == member.id)
-    const daysAgo = moment().diff(moment(memberInDB.lastActive, 'x'), 'days')
-
-    // // check if he/she is 20 days older
-    if (daysAgo >= 20) {
-        // get the DM message template
-        const template = await getTemplate('inactiveKick')
-
-        // try to send a DM
-        let memberDMed = false
-        try {
-            const channel = await member.createDM()
-            await channel.send(template)
-            memberDMed = true
-        } catch(e) {
-            logger.warning(`Failed to send DM to ${member.displayName} before kicking.`)
-        }
-
-        // kick the member
-        await member.kick('Inactive for 20+ days.')
-        await database.queries.members.deleteUserFromDatabase(member.id)
-
-        // send this instance to server logs
-        await discord.logging.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }**`, config)
-    }
-
-    return false
 }
