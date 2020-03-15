@@ -20,6 +20,9 @@ const sections = [
         header: 'App Options',
         group: '_none',
         optionList: cli_1.optionList
+    },
+    {
+        content: 'Project homepage: {underline https://github.com/vasanthdeveloper/mantu}'
     }
 ];
 exports.default = command_line_usage_1.default(sections);

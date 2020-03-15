@@ -21,6 +21,9 @@ const sections = [
         header: 'App Options',
         group: '_none',
         optionList
+    },
+    {
+        content: 'Project homepage: {underline https://github.com/vasanthdeveloper/mantu}'
     }
 ]
 

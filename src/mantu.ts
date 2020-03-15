@@ -15,6 +15,7 @@ import versionInfo from './cmd/version'
 import online from './online'
 import { connectToDatabase } from './database/database'
 import { authenticate } from './discord/discord'
+import { sleep } from './utilities/time'
 
 async function main(): Promise<void> {
     // parse the arguments
@@ -31,6 +32,16 @@ async function main(): Promise<void> {
     if (args.version) {
         await versionInfo()
         process.exit(0)
+    }
+
+    // handle the delay
+    if (typeof args.delay !== 'undefined') {
+        if (isNaN(args.delay) == true || args.delay == null) {
+            logger.error('Invalid delay value provided.', 7)
+        } else {
+            logger.info(`Waiting for ${args.delay} seconds before starting`)
+            await sleep((args.delay * 1000))
+        }
     }
 
     // notify that the application has been started

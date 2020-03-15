@@ -21,6 +21,7 @@ const version_1 = __importDefault(require("./cmd/version"));
 const online_1 = __importDefault(require("./online"));
 const database_1 = require("./database/database");
 const discord_1 = require("./discord/discord");
+const time_1 = require("./utilities/time");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         const args = yield cli_1.default();
@@ -32,6 +33,15 @@ function main() {
         if (args.version) {
             yield version_1.default();
             process.exit(0);
+        }
+        if (typeof args.delay !== 'undefined') {
+            if (isNaN(args.delay) == true || args.delay == null) {
+                logger_1.default.error('Invalid delay value provided.', 7);
+            }
+            else {
+                logger_1.default.info(`Waiting for ${args.delay} seconds before starting`);
+                yield time_1.sleep((args.delay * 1000));
+            }
         }
         logger_1.default.okay(`Application boot on ${moment_1.default().format('llll')}`);
         logger_1.default.verbose('Loading configuration file');

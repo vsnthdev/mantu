@@ -3,3 +3,4 @@
 4 = Failed to connect to the database
 5 = Failed to connect to fixer api
 6 = Invalid baseRole provided
+7 = Invalid command line arguments provided

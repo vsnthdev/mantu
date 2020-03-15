@@ -7,6 +7,14 @@ import logger from './logger'
 // the definition of all possible arguments
 export const optionList = [
     {
+        name: 'delay',
+        alias: 'D',
+        type: Number,
+        typeLabel: '{underline <seconds>}',
+        default: 0,
+        description: 'Wait for number of seconds before starting up.'
+    },
+    {
         name: 'verbose',
         alias: 'V',
         type: Boolean,

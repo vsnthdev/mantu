@@ -16,6 +16,14 @@ const command_line_args_1 = __importDefault(require("command-line-args"));
 const logger_1 = __importDefault(require("./logger"));
 exports.optionList = [
     {
+        name: 'delay',
+        alias: 'D',
+        type: Number,
+        typeLabel: '{underline <seconds>}',
+        default: 0,
+        description: 'Wait for number of seconds before starting up.'
+    },
+    {
         name: 'verbose',
         alias: 'V',
         type: Boolean,
