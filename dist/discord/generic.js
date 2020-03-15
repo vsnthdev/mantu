@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_1 = __importDefault(require("./discord"));
 function getAnyoneById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const guild = discord_1.default.guilds.first();
-        return guild.members.find(anyone => anyone.id == id);
+        const guild = discord_1.default.guilds.cache.first();
+        return guild.members.cache.find(anyone => anyone.id == id);
     });
 }
 exports.default = {

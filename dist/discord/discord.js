@@ -29,7 +29,7 @@ function setStatus() {
         const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
         logger_1.default.verbose(`Running in ${environment} environment`);
         client.user.setPresence({
-            game: {
+            activity: {
                 name: (environment == 'production') ? 'this server.' : 'Vasanth Developer.',
                 type: (environment == 'production') ? 'WATCHING' : 'LISTENING',
                 url: (environment == 'production') ? 'https://vasanth.tech' : 'https://github.com/vasanthdeveloper/mantu'

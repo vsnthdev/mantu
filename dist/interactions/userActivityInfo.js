@@ -24,7 +24,7 @@ function onlyModerators(message, config) {
         const mods = config.get('roles').moderators;
         let giveAccess = false;
         yield loops_1.forEach(mods, (roleId) => __awaiter(this, void 0, void 0, function* () {
-            const roleExists = message.member.roles.find(role => role.id == roleId);
+            const roleExists = message.member.roles.cache.find(role => role.id == roleId);
             if (roleExists) {
                 giveAccess = true;
             }
@@ -56,14 +56,14 @@ function respond(command, message, config) {
         }));
         members = members.concat(Array.from(message.mentions.members.values()));
         yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
-            if (!member.roles.find(r => r.id === config.get('roles').base)) {
+            if (!member.roles.cache.find(r => r.id === config.get('roles').base)) {
                 message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield roles_1.default.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`);
             }
             else {
                 const databaseInfo = yield members_1.default.getMember(member.user.id);
                 const roles = [];
                 const baseRole = yield roles_1.default.getBaseRole(config);
-                yield loops_1.forCollection(member.roles, (role) => __awaiter(this, void 0, void 0, function* () {
+                yield loops_1.forCollection(member.roles.cache, (role) => __awaiter(this, void 0, void 0, function* () {
                     if (role.name !== '@everyone' && role.name !== baseRole.name) {
                         roles.push(`<@&${role.id}>`);
                     }
@@ -71,16 +71,28 @@ function respond(command, message, config) {
                 if (roles.length == 0) {
                     roles.push(`<@&${baseRole.id}>`);
                 }
-                const response = new discord_js_1.default.RichEmbed()
-                    .setColor(config.get('embedColor'))
+                const response = new discord_js_1.default.MessageEmbed()
+                    .setColor(member.displayColor)
                     .setTitle(`Activity information for ${member.displayName}`)
-                    .setThumbnail(member.user.avatarURL)
+                    .setAuthor(message.member.displayName, message.author.displayAvatarURL({
+                    dynamic: true,
+                    format: 'webp',
+                    size: 256
+                }))
+                    .setThumbnail(member.user.displayAvatarURL({
+                    dynamic: true,
+                    format: 'webp',
+                    size: 512
+                }))
+                    .setTimestamp()
                     .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow(), true)
                     .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
                     .addField('Country', (databaseInfo.country) ? setCountry_1.setTitleCase(databaseInfo.country) : 'Unknown', true)
                     .addField('ID', member.user.id, false)
                     .addField('Roles', roles.join(' '), false);
-                message.channel.send(response);
+                message.channel.send('', {
+                    embed: response
+                });
             }
         }));
         return true;

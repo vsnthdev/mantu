@@ -16,17 +16,17 @@ import events from '../discord/events'
 import daMembers, { Member } from '../database/members'
 import diMembers from '../discord/members'
 
-async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
+async function updateActivity(oldPresence: Discord.Presence, newPresence: Discord.Presence): Promise<void> {
     // check if the user came online
-    if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
+    if (newPresence.status === 'offline' || newPresence.status == 'online') {
         // update the database accordingly!
-        await daMembers.updateLastActivity(newMember.user.id)
+        await daMembers.updateLastActivity(newPresence.user.id)
 
         // just so that we know the database was changed
-        if (newMember.presence.status == 'online') {
-            logger.verbose(`${newMember.displayName} has come online.`)
+        if (newPresence.status == 'online') {
+            logger.verbose(`${newPresence.member.displayName} has come online.`)
         } else {
-            logger.verbose(`${newMember.displayName} went ${newMember.presence.status}.`)
+            logger.verbose(`${newPresence.member.displayName} went ${newPresence.status}.`)
         }
     }
 }
@@ -34,7 +34,7 @@ async function updateActivity(oldMember: Discord.GuildMember, newMember: Discord
 async function updateUsersInDB(oldMember: Discord.GuildMember, newMember: Discord.GuildMember): Promise<void> {
     // determine if the Member role was added or removed
     const roles: string[] = []
-    await forCollection(newMember.roles, (role: Discord.Role) => {
+    await forCollection(newMember.roles.cache, (role: Discord.Role) => {
         roles.push(role.name)
     })
 
@@ -86,7 +86,7 @@ async function kickUserIfInactive(member: Discord.GuildMember, memberInDB: Membe
 export default async function cleanUpServer(config: Conf<ConfigImpl>): Promise<void> {
     // hookup the required events
     events.presenceChanged(updateActivity)
-    events.guildUpdated(updateUsersInDB)
+    events.guildMemberUpdate(updateUsersInDB)
 
     // for every hour, check if there are are people that
     // should be kick due to inactivity, if yes then run the function

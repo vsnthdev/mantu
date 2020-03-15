@@ -16,8 +16,8 @@ const logger_1 = __importDefault(require("../logger"));
 const discord_1 = __importDefault(require("./discord"));
 function getBaseRole(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const guild = discord_1.default.guilds.first();
-        const baseRole = guild.roles.find(role => role.id === config.get('roles').base);
+        const guild = discord_1.default.guilds.cache.first();
+        const baseRole = guild.roles.cache.find(role => role.id === config.get('roles').base);
         if (!baseRole) {
             logger_1.default.error(`A role with id ${config.get('roles').base} does not exist.`, 6);
         }

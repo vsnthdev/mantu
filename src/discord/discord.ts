@@ -7,7 +7,7 @@ import logger from '../logger'
 
 const client = new Discord.Client()
 
-export async function authenticate(token: string, callback: Function): Promise<void> {
+export async function authenticate(token: string, callback): Promise<void> {
     client.on('ready', callback)
     client.login(token)
         .catch(err => logger.error(err, 2))
@@ -21,7 +21,7 @@ export async function setStatus(): Promise<void> {
 
     // Set the status
     client.user.setPresence({
-        game: {
+        activity: {
             name: (environment == 'production') ? 'this server.' : 'Vasanth Developer.',
             type: (environment == 'production') ? 'WATCHING' : 'LISTENING',
             url: (environment == 'production') ? 'https://vasanth.tech' : 'https://github.com/vasanthdeveloper/mantu'

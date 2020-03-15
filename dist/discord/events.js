@@ -9,7 +9,7 @@ function presenceChanged(callback) {
         callback(oldMember, newMember);
     });
 }
-function guildUpdated(callback) {
+function guildMemberUpdate(callback) {
     discord_1.default.on('guildMemberUpdate', (oldMember, newMember) => {
         callback(oldMember, newMember);
     });
@@ -23,6 +23,6 @@ function commandReceived(config, callback) {
 }
 exports.default = {
     presenceChanged,
-    guildUpdated,
+    guildMemberUpdate,
     commandReceived
 };

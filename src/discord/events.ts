@@ -12,7 +12,7 @@ function presenceChanged(callback): void {
     })
 }
 
-function guildUpdated(callback): void {
+function guildMemberUpdate(callback): void {
     client.on('guildMemberUpdate', (oldMember, newMember) => {
         callback(oldMember, newMember)
     })
@@ -30,6 +30,6 @@ function commandReceived(config: Conf<ConfigImpl>, callback): void {
 
 export default {
     presenceChanged,
-    guildUpdated,
+    guildMemberUpdate,
     commandReceived
 }

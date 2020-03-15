@@ -21,15 +21,15 @@ const logging_1 = __importDefault(require("../discord/logging"));
 const events_1 = __importDefault(require("../discord/events"));
 const members_1 = __importDefault(require("../database/members"));
 const members_2 = __importDefault(require("../discord/members"));
-function updateActivity(oldMember, newMember) {
+function updateActivity(oldPresence, newPresence) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (newMember.presence.status === 'offline' || newMember.presence.status == 'online') {
-            yield members_1.default.updateLastActivity(newMember.user.id);
-            if (newMember.presence.status == 'online') {
-                logger_1.default.verbose(`${newMember.displayName} has come online.`);
+        if (newPresence.status === 'offline' || newPresence.status == 'online') {
+            yield members_1.default.updateLastActivity(newPresence.user.id);
+            if (newPresence.status == 'online') {
+                logger_1.default.verbose(`${newPresence.member.displayName} has come online.`);
             }
             else {
-                logger_1.default.verbose(`${newMember.displayName} went ${newMember.presence.status}.`);
+                logger_1.default.verbose(`${newPresence.member.displayName} went ${newPresence.status}.`);
             }
         }
     });
@@ -37,7 +37,7 @@ function updateActivity(oldMember, newMember) {
 function updateUsersInDB(oldMember, newMember) {
     return __awaiter(this, void 0, void 0, function* () {
         const roles = [];
-        yield loops_1.forCollection(newMember.roles, (role) => {
+        yield loops_1.forCollection(newMember.roles.cache, (role) => {
             roles.push(role.name);
         });
         if (roles.includes('Member') == true) {
@@ -81,7 +81,7 @@ function kickUserIfInactive(member, memberInDB, config) {
 function cleanUpServer(config) {
     return __awaiter(this, void 0, void 0, function* () {
         events_1.default.presenceChanged(updateActivity);
-        events_1.default.guildUpdated(updateUsersInDB);
+        events_1.default.guildMemberUpdate(updateUsersInDB);
         time_1.setInterval(((1000 * 60) * 60), () => __awaiter(this, void 0, void 0, function* () {
             const membersInDiscord = yield members_2.default.getAllMembers(config);
             yield loops_1.forEach(membersInDiscord, (member) => __awaiter(this, void 0, void 0, function* () {

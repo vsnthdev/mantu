@@ -18,7 +18,7 @@ export async function onlyModerators(message: Discord.Message, config: Conf<Conf
     
     // loop through all the mod roles
     await forEach(mods, async (roleId: string) => {
-        const roleExists = message.member.roles.find(role => role.id == roleId)
+        const roleExists = message.member.roles.cache.find(role => role.id == roleId)
         if (roleExists) {
             giveAccess = true
         }
@@ -61,7 +61,7 @@ export default async function respond(command: string, message: Discord.Message,
 
     await forEach(members, async (member: Discord.GuildMember) => {
         // check if the provided role is a member
-        if (!member.roles.find(r => r.id === config.get('roles').base)) {
+        if (!member.roles.cache.find(r => r.id === config.get('roles').base)) {
             // as this member doesn't have a member role, he/she/it won't be in the database
             // in which case we simply tell the user about it
             message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await diRoles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`)
@@ -72,7 +72,7 @@ export default async function respond(command: string, message: Discord.Message,
             // get all of his/her roles
             const roles: string[] = []
             const baseRole = await diRoles.getBaseRole(config)
-            await forCollection(member.roles, async (role: Discord.Role) => {
+            await forCollection(member.roles.cache, async (role: Discord.Role) => {
                 if (role.name !== '@everyone' && role.name !== baseRole.name) {
                     roles.push(`<@&${role.id}>`)
                 }
@@ -84,10 +84,20 @@ export default async function respond(command: string, message: Discord.Message,
             }
 
             // create a rich embed
-            const response = new Discord.RichEmbed()
-                .setColor(config.get('embedColor'))
+            const response = new Discord.MessageEmbed()
+                .setColor(member.displayColor)
                 .setTitle(`Activity information for ${member.displayName}`)
-                .setThumbnail(member.user.avatarURL)
+                .setAuthor(message.member.displayName, message.author.displayAvatarURL({
+                    dynamic: true,
+                    format: 'webp',
+                    size: 256
+                }))
+                .setThumbnail(member.user.displayAvatarURL({
+                    dynamic: true,
+                    format: 'webp',
+                    size: 512
+                }))
+                .setTimestamp()
                 .addField('Last Activity', moment(databaseInfo.lastActive, 'x').fromNow(), true)
                 .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
                 .addField('Country', (databaseInfo.country) ? setTitleCase(databaseInfo.country) : 'Unknown', true)
@@ -95,7 +105,9 @@ export default async function respond(command: string, message: Discord.Message,
                 .addField('Roles', roles.join(' '), false)
 
             // send the response
-            message.channel.send(response)
+            message.channel.send('', {
+                embed: response
+            })
         }
     })
 

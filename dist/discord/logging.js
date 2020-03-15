@@ -16,15 +16,16 @@ const discord_js_1 = __importDefault(require("discord.js"));
 const discord_1 = __importDefault(require("./discord"));
 function sendServerLog(content, config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const serverLog = yield discord_1.default.channels.find((channel) => channel.id == config.get('channels').log);
+        const serverLog = yield discord_1.default.channels.cache.find((channel) => channel.id == config.get('channels').log);
         serverLog.send(content);
     });
 }
 function sendDiscordError(e, author, channel, config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const content = new discord_js_1.default.RichEmbed()
+        const content = new discord_js_1.default.MessageEmbed()
             .setColor(config.get('embedColor'))
-            .setTitle(`A ${e.name} occurred in mantu`)
+            .setTitle(`${e.name} occurred in mantu`)
+            .setTimestamp()
             .addField('Name', e.name, true)
             .addField('Code', e.code, true)
             .addField('Action', e.method, true)
