@@ -47,7 +47,7 @@ function initMembers(config) {
 }
 function initCountries() {
     return __awaiter(this, void 0, void 0, function* () {
-        const country = yield countries_1.default.getCountryByName('India');
+        const country = yield countries_1.default.getCountryByName('india');
         if (!country) {
             const countryRestInfo = yield (yield node_fetch_1.default('https://restcountries.eu/rest/v2/all')).json();
             yield loops_1.forEach(countryRestInfo, (country) => __awaiter(this, void 0, void 0, function* () {

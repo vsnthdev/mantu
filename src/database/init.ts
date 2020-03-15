@@ -53,7 +53,7 @@ async function initMembers(config: Conf<ConfigImpl>): Promise<void> {
 }
 
 async function initCountries(): Promise<void> {
-    const country = await daCountries.getCountryByName('India')
+    const country = await daCountries.getCountryByName('india')
     if (!country) {
         // send a HTTP request to restcountries.eu to get information
         // about all countries
