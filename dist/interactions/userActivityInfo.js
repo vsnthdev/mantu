@@ -61,14 +61,22 @@ function respond(command, message, config) {
             }
             else {
                 const databaseInfo = yield members_1.default.getMember(member.user.id);
+                const roles = [];
+                const baseRoleName = (yield roles_1.default.getBaseRole(config)).name;
+                yield loops_1.forCollection(member.roles, (role) => __awaiter(this, void 0, void 0, function* () {
+                    if (role.name !== '@everyone' && role.name !== baseRoleName) {
+                        roles.push(`<@&${role.id}>`);
+                    }
+                }));
                 const response = new discord_js_1.default.RichEmbed()
                     .setColor(config.get('embedColor'))
                     .setTitle(`Activity information for ${member.displayName}`)
                     .setThumbnail(member.user.avatarURL)
-                    .addField('ID', member.user.id, true)
                     .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow(), true)
                     .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
-                    .addField('Country', (databaseInfo.country) ? setCountry_1.setTitleCase(databaseInfo.country) : 'Unknown');
+                    .addField('Country', (databaseInfo.country) ? setCountry_1.setTitleCase(databaseInfo.country) : 'Unknown', true)
+                    .addField('ID', member.user.id, false)
+                    .addField('Roles', roles.join(' '), false);
                 message.channel.send(response);
             }
         }));

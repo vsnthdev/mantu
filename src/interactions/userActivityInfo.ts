@@ -8,7 +8,7 @@ import daMembers from '../database/members'
 import { forEach, forCollection } from '../utilities/loops'
 import { setTitleCase } from './setCountry'
 import { ConfigImpl } from '../config'
-import roles from '../discord/roles'
+import diRoles from '../discord/roles'
 import generic from '../discord/generic'
 
 // onlyModerators() will ensures only mods can access the commands
@@ -64,20 +64,30 @@ export default async function respond(command: string, message: Discord.Message,
         if (!member.roles.find(r => r.id === config.get('roles').base)) {
             // as this member doesn't have a member role, he/she/it won't be in the database
             // in which case we simply tell the user about it
-            message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await roles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`)
+            message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(await diRoles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`)
         } else {
             // get the last activity from database
             const databaseInfo = await daMembers.getMember(member.user.id)
+
+            // get all of his/her roles
+            const roles: string[] = []
+            const baseRoleName = (await diRoles.getBaseRole(config)).name
+            await forCollection(member.roles, async (role: Discord.Role) => {
+                if (role.name !== '@everyone' && role.name !== baseRoleName) {
+                    roles.push(`<@&${role.id}>`)
+                }
+            })
 
             // create a rich embed
             const response = new Discord.RichEmbed()
                 .setColor(config.get('embedColor'))
                 .setTitle(`Activity information for ${member.displayName}`)
                 .setThumbnail(member.user.avatarURL)
-                .addField('ID', member.user.id, true)
                 .addField('Last Activity', moment(databaseInfo.lastActive, 'x').fromNow(), true)
                 .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
-                .addField('Country', (databaseInfo.country) ? setTitleCase(databaseInfo.country) : 'Unknown')
+                .addField('Country', (databaseInfo.country) ? setTitleCase(databaseInfo.country) : 'Unknown', true)
+                .addField('ID', member.user.id, false)
+                .addField('Roles', roles.join(' '), false)
 
             // send the response
             message.channel.send(response)
