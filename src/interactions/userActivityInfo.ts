@@ -71,12 +71,17 @@ export default async function respond(command: string, message: Discord.Message,
 
             // get all of his/her roles
             const roles: string[] = []
-            const baseRoleName = (await diRoles.getBaseRole(config)).name
+            const baseRole = await diRoles.getBaseRole(config)
             await forCollection(member.roles, async (role: Discord.Role) => {
-                if (role.name !== '@everyone' && role.name !== baseRoleName) {
+                if (role.name !== '@everyone' && role.name !== baseRole.name) {
                     roles.push(`<@&${role.id}>`)
                 }
             })
+
+            // if there are no addition roles, simply add back the member role
+            if (roles.length == 0) {
+                roles.push(`<@&${baseRole.id}>`)
+            }
 
             // create a rich embed
             const response = new Discord.RichEmbed()

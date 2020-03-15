@@ -62,12 +62,15 @@ function respond(command, message, config) {
             else {
                 const databaseInfo = yield members_1.default.getMember(member.user.id);
                 const roles = [];
-                const baseRoleName = (yield roles_1.default.getBaseRole(config)).name;
+                const baseRole = yield roles_1.default.getBaseRole(config);
                 yield loops_1.forCollection(member.roles, (role) => __awaiter(this, void 0, void 0, function* () {
-                    if (role.name !== '@everyone' && role.name !== baseRoleName) {
+                    if (role.name !== '@everyone' && role.name !== baseRole.name) {
                         roles.push(`<@&${role.id}>`);
                     }
                 }));
+                if (roles.length == 0) {
+                    roles.push(`<@&${baseRole.id}>`);
+                }
                 const response = new discord_js_1.default.RichEmbed()
                     .setColor(config.get('embedColor'))
                     .setTitle(`Activity information for ${member.displayName}`)
