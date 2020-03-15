@@ -66,8 +66,8 @@ async function initCountries(): Promise<void> {
     }
 }
 
-async function initCashTranslate(config: Conf<ConfigImpl>): Promise<void> {
-    const lastFetch = config.get('fixer').lastFetch
+async function initCashTranslate(config: Conf<any>): Promise<void> {
+    const lastFetch = config.get('fixer.lastFetch')
     const todayId = parseInt(moment().format('YYYYMMDD'))
     if (todayId > lastFetch) {
         const cashTranslationData = await (await fetch(`http://data.fixer.io/api/latest&access_key=${config.get('fixer').token}`)).json()
@@ -86,7 +86,7 @@ async function initCashTranslate(config: Conf<ConfigImpl>): Promise<void> {
                 await daCashTranslate.addCashTranslation(code, value)
             }
 
-            config.get('fixer').lastFetch = parseInt(moment().format('YYYYMMDD'))
+            config.set('fixer.lastFetch', parseInt(moment().format('YYYYMMDD')))
             logger.verbose('Finished fetching cash translation data from fixer.io')
         }
     }

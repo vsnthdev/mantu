@@ -33,7 +33,7 @@ const defaultConfig = {
 const config = new conf_1.default({
     projectSuffix: '',
     cwd: path_1.default.join(process.cwd(), 'data'),
-    defaults: defaultConfig
+    defaults: defaultConfig,
 });
 function loadConfig() {
     return config;

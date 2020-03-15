@@ -5,15 +5,44 @@ import moment from 'moment'
 import Conf from 'conf'
 
 import daMembers from '../database/members'
-import { forEach } from '../utilities/loops'
+import { forEach, forCollection } from '../utilities/loops'
 import { setTitleCase } from './setCountry'
 import { ConfigImpl } from '../config'
 import roles from '../discord/roles'
 import generic from '../discord/generic'
 
-export default async function respond(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
+// onlyModerators() will ensures only mods can access the commands
+export async function onlyModerators(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
+    const mods = config.get('roles').moderators
+    let giveAccess = false
+    
+    // loop through all the mod roles
+    await forEach(mods, async (roleId: string) => {
+        const roleExists = message.member.roles.find(role => role.id == roleId)
+        if (roleExists) {
+            giveAccess = true
+        }
+    })
+
+    // return the giveAccess variable
+    return giveAccess
+}
+
+export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // loop through all the members
     let members: GuildMember[] = []
+
+    // check if the command was only to see his/her only info
+    if (command == 'info') {
+        members.push(message.member)
+    } else {
+        // only allow mods to access this command
+        const access = await onlyModerators(message, config)
+        if (access == false) {
+            message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:')
+            return true
+        }
+    }
 
     // determine if we have received a list of IDs or mentions
     const parsed = message.content.split(' ')

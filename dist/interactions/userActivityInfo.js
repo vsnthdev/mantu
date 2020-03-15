@@ -19,9 +19,33 @@ const loops_1 = require("../utilities/loops");
 const setCountry_1 = require("./setCountry");
 const roles_1 = __importDefault(require("../discord/roles"));
 const generic_1 = __importDefault(require("../discord/generic"));
-function respond(message, config) {
+function onlyModerators(message, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const mods = config.get('roles').moderators;
+        let giveAccess = false;
+        yield loops_1.forEach(mods, (roleId) => __awaiter(this, void 0, void 0, function* () {
+            const roleExists = message.member.roles.find(role => role.id == roleId);
+            if (roleExists) {
+                giveAccess = true;
+            }
+        }));
+        return giveAccess;
+    });
+}
+exports.onlyModerators = onlyModerators;
+function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         let members = [];
+        if (command == 'info') {
+            members.push(message.member);
+        }
+        else {
+            const access = yield onlyModerators(message, config);
+            if (access == false) {
+                message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:');
+                return true;
+            }
+        }
         const parsed = message.content.split(' ');
         yield loops_1.forEach(parsed, (word) => __awaiter(this, void 0, void 0, function* () {
             if (isNaN(parseInt(word)) == false && word.length == 18) {

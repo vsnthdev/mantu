@@ -29,8 +29,8 @@ function linkCommands(config) {
     return __awaiter(this, void 0, void 0, function* () {
         events_1.default.commandReceived(config, (command, message) => __awaiter(this, void 0, void 0, function* () {
             let commandExecutionSuccessful = false;
-            if (command.startsWith('info ')) {
-                commandExecutionSuccessful = yield userActivityInfo_1.default(message, config);
+            if (command.startsWith('info')) {
+                commandExecutionSuccessful = yield userActivityInfo_1.default(command, message, config);
             }
             else if (command.startsWith('timezone ')) {
                 commandExecutionSuccessful = yield setTimezone_1.default(command, message);

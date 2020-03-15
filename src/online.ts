@@ -29,8 +29,8 @@ async function linkCommands(config: Conf<any>): Promise<void> {
         let commandExecutionSuccessful = false
 
         // act accordingly
-        if (command.startsWith('info ')) {
-            commandExecutionSuccessful = await userActivityInfo(message, config)
+        if (command.startsWith('info')) {
+            commandExecutionSuccessful = await userActivityInfo(command, message, config)
         } else if (command.startsWith('timezone ')) {
             commandExecutionSuccessful = await setTimezone(command, message)
         } else if (command.startsWith('time ') || command == 'time') {

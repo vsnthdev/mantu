@@ -18,8 +18,8 @@ export interface ConfigImpl {
         database: string;
     };
     fixer: {
-        lastFetch: number;
-        token: string;
+        lastFetch?: number;
+        token?: string;
     };
     roles: {
         moderators: string[];
@@ -59,7 +59,8 @@ const defaultConfig: ConfigImpl = {
 const config = new Conf({
     projectSuffix: '',
     cwd: path.join(process.cwd(), 'data'),
-    defaults: defaultConfig
+    defaults: defaultConfig,
+    
 })
 
 export default function loadConfig(): Conf<ConfigImpl> {

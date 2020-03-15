@@ -58,7 +58,7 @@ function initCountries() {
 }
 function initCashTranslate(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const lastFetch = config.get('fixer').lastFetch;
+        const lastFetch = config.get('fixer.lastFetch');
         const todayId = parseInt(moment_1.default().format('YYYYMMDD'));
         if (todayId > lastFetch) {
             const cashTranslationData = yield (yield node_fetch_1.default(`http://data.fixer.io/api/latest&access_key=${config.get('fixer').token}`)).json();
@@ -71,7 +71,7 @@ function initCashTranslate(config) {
                     const value = cashTranslationData.rates[code];
                     yield cashTranslate_1.default.addCashTranslation(code, value);
                 }
-                config.get('fixer').lastFetch = parseInt(moment_1.default().format('YYYYMMDD'));
+                config.set('fixer.lastFetch', parseInt(moment_1.default().format('YYYYMMDD')));
                 logger_1.default.verbose('Finished fetching cash translation data from fixer.io');
             }
         }
