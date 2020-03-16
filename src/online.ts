@@ -40,7 +40,7 @@ async function linkCommands(config: Conf<any>): Promise<void> {
         } else if (command.startsWith('cash ')) {
             commandExecutionSuccessful = await cashTranslate(command, message)
         } else if (command.startsWith('github ')) {
-            commandExecutionSuccessful = await github(command, message)
+            commandExecutionSuccessful = await github(command, message, config)
         }
 
         // delete the message if the config has it

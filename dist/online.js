@@ -45,7 +45,7 @@ function linkCommands(config) {
                 commandExecutionSuccessful = yield cashTranslate_1.default(command, message);
             }
             else if (command.startsWith('github ')) {
-                commandExecutionSuccessful = yield github_1.default(command, message);
+                commandExecutionSuccessful = yield github_1.default(command, message, config);
             }
             if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
                 const deleteMessage = yield error_1.errorHandler(message.delete());
