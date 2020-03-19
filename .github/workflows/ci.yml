@@ -15,10 +15,10 @@ jobs:
           tags: latest
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Get commit message
+        run: export COMMIT_MESSAGE="$(git show-branch --no-name HEAD)"
       - name: Deploying to publicserver
         uses: appleboy/ssh-action@master
-        env:
-          COMMIT_MESSAGE: "$(git show-branch --no-name HEAD)"
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
