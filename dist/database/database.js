@@ -43,4 +43,11 @@ function connectToDatabase() {
     });
 }
 exports.connectToDatabase = connectToDatabase;
+function destroy() {
+    return __awaiter(this, void 0, void 0, function* () {
+        logger_1.default.info('Detached from the database');
+        return (yield knex_1.default(config)).destroy();
+    });
+}
+exports.destroy = destroy;
 exports.default = knex_1.default(config);

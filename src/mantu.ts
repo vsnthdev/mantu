@@ -6,6 +6,7 @@
 //                       |
 
 import moment from 'moment'
+import clearLine from 'clear-terminal-line'
 
 import loadConfig from './config'
 import logger from './logger'
@@ -13,8 +14,8 @@ import parseArgs from './cli'
 import helpMessage from './cmd/help'
 import versionInfo from './cmd/version'
 import online from './online'
-import { connectToDatabase } from './database/database'
-import { authenticate } from './discord/discord'
+import { connectToDatabase, destroy } from './database/database'
+import { authenticate, logout } from './discord/discord'
 import { sleep } from './utilities/time'
 
 async function main(): Promise<void> {
@@ -66,6 +67,18 @@ async function main(): Promise<void> {
 
     // attempt to login
     authenticate(config.get('token'), await online(config))
+
+    // handle the application exit
+    process.on('SIGINT', () => {
+        clearLine()
+        process.stdout.write('\r')
+        logout()
+        destroy()
+            .then(() => {
+                logger.okay(`Application boot on ${moment().format('llll')}`)
+                process.exit()
+            })
+    })
 }
 
 main()

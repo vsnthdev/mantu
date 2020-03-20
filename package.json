@@ -27,6 +27,7 @@
     "dependencies": {
         "cashify": "^2.4.1",
         "chalk": "^3.0.0",
+        "clear-terminal-line": "0.0.1",
         "command-line-args": "^5.1.1",
         "command-line-usage": "^6.1.0",
         "conf": "^6.2.1",

@@ -22,6 +22,7 @@ import timeTranslate from './interactions/timezoneTranslate'
 import setCountry from './interactions/setCountry'
 import cashTranslate from './interactions/cashTranslate'
 import github from './interactions/github'
+import clear from './interactions/clear'
 
 async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event
@@ -41,6 +42,8 @@ async function linkCommands(config: Conf<any>): Promise<void> {
             commandExecutionSuccessful = await cashTranslate(command, message)
         } else if (command.startsWith('github ')) {
             commandExecutionSuccessful = await github(command, message, config)
+        } else if (command.startsWith('clear ')) {
+            await clear(command, message, config)
         }
 
         // delete the message if the config has it

@@ -37,4 +37,9 @@ export async function connectToDatabase(): Promise<void> {
     }
 }
 
+export async function destroy(): Promise<void> {
+    logger.info('Detached from the database')
+    return (await knex(config)).destroy()
+}
+
 export default knex(config)

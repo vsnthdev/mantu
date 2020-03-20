@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = __importDefault(require("moment"));
+const clear_terminal_line_1 = __importDefault(require("clear-terminal-line"));
 const config_1 = __importDefault(require("./config"));
 const logger_1 = __importDefault(require("./logger"));
 const cli_1 = __importDefault(require("./cli"));
@@ -54,6 +55,16 @@ function main() {
         }
         yield database_1.connectToDatabase();
         discord_1.authenticate(config.get('token'), yield online_1.default(config));
+        process.on('SIGINT', () => {
+            clear_terminal_line_1.default();
+            process.stdout.write('\r');
+            discord_1.logout();
+            database_1.destroy()
+                .then(() => {
+                logger_1.default.okay(`Application boot on ${moment_1.default().format('llll')}`);
+                process.exit();
+            });
+        });
     });
 }
 main();

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
 const logger_1 = __importDefault(require("../logger"));
+const time_1 = require("../utilities/time");
 const client = new discord_js_1.default.Client();
 function authenticate(token, callback) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -28,10 +29,26 @@ function setStatus() {
     return __awaiter(this, void 0, void 0, function* () {
         const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
         logger_1.default.verbose(`Running in ${environment} environment`);
+        const presences = [
+            [3, 'this server.'],
+            [3, 'for a command.'],
+            [1, 'with cupcakes.']
+        ];
+        time_1.setInterval(30000, () => __awaiter(this, void 0, void 0, function* () {
+            const presence = presences[Math.floor(Math.random() * presences.length)];
+            client.user.setPresence({
+                status: (environment == 'production') ? 'online' : 'dnd',
+                activity: {
+                    name: presence[1],
+                    type: presence[0],
+                    url: (environment == 'production') ? 'https://vasanth.tech' : 'https://github.com/vasanthdeveloper/mantu'
+                },
+            });
+        }));
         client.user.setPresence({
             activity: {
-                name: (environment == 'production') ? 'this server.' : 'Vasanth Developer.',
-                type: (environment == 'production') ? 'WATCHING' : 'LISTENING',
+                name: 'this server.',
+                type: 'WATCHING',
                 url: (environment == 'production') ? 'https://vasanth.tech' : 'https://github.com/vasanthdeveloper/mantu'
             },
             status: (environment == 'production') ? 'online' : 'dnd'
@@ -39,4 +56,9 @@ function setStatus() {
     });
 }
 exports.setStatus = setStatus;
+function logout() {
+    logger_1.default.info('Logged out from Discord');
+    client.destroy();
+}
+exports.logout = logout;
 exports.default = client;
