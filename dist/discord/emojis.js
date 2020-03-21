@@ -19,6 +19,28 @@ function getAllEmojis() {
         return Array.from(guild.emojis.cache.values());
     });
 }
+function getEmojiByName(name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const emojis = yield getAllEmojis();
+        return emojis.find(emo => emo.name == name);
+    });
+}
+function renderString(input) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const emojis = yield getAllEmojis();
+        return input.replace(/:\w+:/g, (emojiName) => {
+            const emoji = emojis.find(emo => emo.name == emojiName.replace(/:/g, ''));
+            if (emoji) {
+                return `<${emojiName}${emoji.id}>`;
+            }
+            else {
+                return emojiName;
+            }
+        });
+    });
+}
 exports.default = {
-    getAllEmojis
+    getAllEmojis,
+    getEmojiByName,
+    renderString
 };

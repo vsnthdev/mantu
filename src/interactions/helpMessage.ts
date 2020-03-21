@@ -10,6 +10,7 @@ import Conf from 'conf'
 import { ConfigImpl, appInfo } from '../config'
 import { onlyModerators } from './userActivityInfo'
 import diChannels from '../discord/channels'
+import diEmojis from '../discord/emojis'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // act accordingly
@@ -29,10 +30,11 @@ export default async function respond(command: string, message: Discord.Message,
         await helpChannel.bulkDelete(100)
 
         // insert the new help message
-        const helpString = await fs.promises.readFile(path.join(process.cwd(), 'help.md'), { encoding: 'UTF-8' })
+        let helpString = await fs.promises.readFile(path.join(process.cwd(), 'help.md'), { encoding: 'UTF-8' }) as string
+        helpString = await diEmojis.renderString(helpString)
 
         // send the help message
-        await helpChannel.send(`${helpString}\n**\`mantu v${appInfo.version}\` **`.replace(/{prefix}/g, config.get('prefix')))
+        await helpChannel.send(`${helpString}**\`mantu v${appInfo.version}\` **`.replace(/{prefix}/g, config.get('prefix')))
 
         // notify the user that the help message has been updated.
         message.channel.send(`:blue_book: **The help message has been updated at** <#${config.get('channels').help}>`)

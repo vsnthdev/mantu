@@ -1,5 +1,5 @@
 Hey :wave:
-I am **`mantu`**, a <:discord:690973850405437450> bot developed to maintain Vasanth Developer server.
+I am **`mantu`**, a :discord: bot developed to maintain Vasanth Developer server.
 The prefix to send commands is **`{prefix}`**
 
 :scales: **MODERATION**
@@ -11,7 +11,7 @@ The prefix to send commands is **`{prefix}`**
 :tools: **UTILITIES**
 ** `{prefix}server invite` **- Responds with the universal invite link.
 
-<:github:690970096948084736> **GITHUB**
+:github: **GITHUB**
 ** `{prefix}github <username>` **- Shows the information of a GitHub user.
 ** `{prefix}github <username/repo>` **- Shows information about a GitHub repository.
 
@@ -25,4 +25,5 @@ The prefix to send commands is **`{prefix}`**
 [02]:  Values in <angle brackets> have to be provided by you.
 [03]:  Values in 'quotes' are literal.
 [04]:  The | pipe symbol means one or the other.
+[05]:  Commands ending with ... 3 dots can have multiple inputs in the same format.
 ```

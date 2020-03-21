@@ -17,6 +17,7 @@ const path_1 = __importDefault(require("path"));
 const config_1 = require("../config");
 const userActivityInfo_1 = require("./userActivityInfo");
 const channels_1 = __importDefault(require("../discord/channels"));
+const emojis_1 = __importDefault(require("../discord/emojis"));
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         if (command == 'help') {
@@ -31,8 +32,9 @@ function respond(command, message, config) {
             }
             const helpChannel = yield channels_1.default.getHelpChannel(config);
             yield helpChannel.bulkDelete(100);
-            const helpString = yield fs_1.default.promises.readFile(path_1.default.join(process.cwd(), 'help.md'), { encoding: 'UTF-8' });
-            yield helpChannel.send(`${helpString}\n**\`mantu v${config_1.appInfo.version}\` **`.replace(/{prefix}/g, config.get('prefix')));
+            let helpString = yield fs_1.default.promises.readFile(path_1.default.join(process.cwd(), 'help.md'), { encoding: 'UTF-8' });
+            helpString = yield emojis_1.default.renderString(helpString);
+            yield helpChannel.send(`${helpString}**\`mantu v${config_1.appInfo.version}\` **`.replace(/{prefix}/g, config.get('prefix')));
             message.channel.send(`:blue_book: **The help message has been updated at** <#${config.get('channels').help}>`);
             return true;
         }
