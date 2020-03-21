@@ -5,9 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const conf_1 = __importDefault(require("conf"));
+exports.appInfo = require('../package.json');
 const defaultConfig = {
     token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     serverId: '100000000000000000',
+    inviteLink: 'https://vasanth.tech/discord',
     prefix: ';',
     embedColor: '0x00b0ff',
     deleteCommandAfterExecution: true,

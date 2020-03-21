@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const logger_1 = __importDefault(require("../logger"));
 const discord_1 = __importDefault(require("./discord"));
+const loops_1 = require("../utilities/loops");
 function getBaseRole(config) {
     return __awaiter(this, void 0, void 0, function* () {
         const guild = discord_1.default.guilds.cache.first();
@@ -26,6 +27,30 @@ function getBaseRole(config) {
         }
     });
 }
+function getModeratorRoles(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const guild = discord_1.default.guilds.cache.first();
+        const returnable = [];
+        if (config.get('roles').moderators.length < 1) {
+            logger_1.default.error('No moderators specified in the configuration.');
+            return [];
+        }
+        else {
+            yield loops_1.forEach(config.get('roles').moderators, (moderator) => __awaiter(this, void 0, void 0, function* () {
+                returnable.push(guild.roles.cache.find(role => role.id == moderator));
+            }));
+            return returnable;
+        }
+    });
+}
+function getAllRoles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const guild = discord_1.default.guilds.cache.first();
+        return Array.from(guild.roles.cache.values());
+    });
+}
 exports.default = {
-    getBaseRole
+    getBaseRole,
+    getAllRoles,
+    getModeratorRoles
 };

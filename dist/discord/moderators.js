@@ -12,27 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const loops_1 = require("../utilities/loops");
 const roles_1 = __importDefault(require("./roles"));
-function getAllMembers(config) {
+function getAllModerators(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const role = yield roles_1.default.getBaseRole(config);
-        return Array.from(role.members.values());
-    });
-}
-function getMemberById(userId, config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const members = yield getAllMembers(config);
-        return members.find(member => member.id == userId);
-    });
-}
-function getOnlineMembers(config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const role = yield roles_1.default.getBaseRole(config);
-        return Array.from(role.members.filter(member => member.presence.status == 'online').values());
+        const moderatorRoles = yield roles_1.default.getModeratorRoles(config);
+        const moderators = [];
+        yield loops_1.forEach(moderatorRoles, (moderatorRole) => __awaiter(this, void 0, void 0, function* () {
+            const moderatorsInRole = Array.from(moderatorRole.members.values());
+            yield loops_1.forEach(moderatorsInRole, (moderator) => __awaiter(this, void 0, void 0, function* () {
+                const exists = moderators.find(mod => mod.id == moderator.id);
+                if (!exists) {
+                    moderators.push(moderator);
+                }
+            }));
+        }));
+        return moderators;
     });
 }
 exports.default = {
-    getAllMembers,
-    getMemberById,
-    getOnlineMembers
+    getAllModerators
 };

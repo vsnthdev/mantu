@@ -12,27 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const roles_1 = __importDefault(require("./roles"));
-function getAllMembers(config) {
+const discord_1 = __importDefault(require("./discord"));
+function getAllEmojis() {
     return __awaiter(this, void 0, void 0, function* () {
-        const role = yield roles_1.default.getBaseRole(config);
-        return Array.from(role.members.values());
-    });
-}
-function getMemberById(userId, config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const members = yield getAllMembers(config);
-        return members.find(member => member.id == userId);
-    });
-}
-function getOnlineMembers(config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const role = yield roles_1.default.getBaseRole(config);
-        return Array.from(role.members.filter(member => member.presence.status == 'online').values());
+        const guild = discord_1.default.guilds.cache.first();
+        return Array.from(guild.emojis.cache.values());
     });
 }
 exports.default = {
-    getAllMembers,
-    getMemberById,
-    getOnlineMembers
+    getAllEmojis
 };

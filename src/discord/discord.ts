@@ -22,13 +22,14 @@ export async function setStatus(): Promise<void> {
     logger.verbose(`Running in ${environment} environment`)
 
     // the list of presences
-    // 0, 1 = PLAYING
+    // 0 = PLAYING
+    // 1 = STREAMING
     // 2 = LISTENING
     // 3 = WATCHING
     const presences = [
         [3, 'this server.'],
         [3, 'for a command.'],
-        [1, 'with cupcakes.']
+        [0, 'with cupcakes.']
     ]
 
     // change the presence for every 30 seconds

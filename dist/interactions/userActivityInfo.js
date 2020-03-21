@@ -17,6 +17,7 @@ const moment_1 = __importDefault(require("moment"));
 const members_1 = __importDefault(require("../database/members"));
 const loops_1 = require("../utilities/loops");
 const setCountry_1 = require("./setCountry");
+const config_1 = require("../config");
 const roles_1 = __importDefault(require("../discord/roles"));
 const generic_1 = __importDefault(require("../discord/generic"));
 function onlyModerators(message, config) {
@@ -89,7 +90,8 @@ function respond(command, message, config) {
                     .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
                     .addField('Country', (databaseInfo.country) ? setCountry_1.setTitleCase(databaseInfo.country) : 'Unknown', true)
                     .addField('ID', member.user.id, false)
-                    .addField('Roles', roles.join(' '), false);
+                    .addField('Roles', roles.join(' '), false)
+                    .setFooter(`mantu v${config_1.appInfo.version}`);
                 message.channel.send('', {
                     embed: response
                 });

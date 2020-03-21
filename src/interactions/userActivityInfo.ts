@@ -7,7 +7,7 @@ import Conf from 'conf'
 import daMembers from '../database/members'
 import { forEach, forCollection } from '../utilities/loops'
 import { setTitleCase } from './setCountry'
-import { ConfigImpl } from '../config'
+import { ConfigImpl, appInfo } from '../config'
 import diRoles from '../discord/roles'
 import generic from '../discord/generic'
 
@@ -103,6 +103,7 @@ export default async function respond(command: string, message: Discord.Message,
                 .addField('Country', (databaseInfo.country) ? setTitleCase(databaseInfo.country) : 'Unknown', true)
                 .addField('ID', member.user.id, false)
                 .addField('Roles', roles.join(' '), false)
+                .setFooter(`mantu v${appInfo.version}`)
 
             // send the response
             message.channel.send('', {

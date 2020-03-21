@@ -6,7 +6,7 @@ import moment from 'moment'
 import Conf from 'conf'
 import filesize from 'filesize'
 
-import { ConfigImpl } from '../config'
+import { ConfigImpl, appInfo } from '../config'
 import { errorHandler } from '../utilities/error'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
@@ -30,6 +30,7 @@ export default async function respond(command: string, message: Discord.Message,
             format: 'webp',
             size: 256
         }))
+        .setFooter(`mantu v${appInfo.version}`)
 
     // determine if we got a user or a repository
     if (parse.length == 1) {

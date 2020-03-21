@@ -16,6 +16,7 @@ const discord_js_1 = __importDefault(require("discord.js"));
 const github_api_1 = __importDefault(require("github-api"));
 const moment_1 = __importDefault(require("moment"));
 const filesize_1 = __importDefault(require("filesize"));
+const config_1 = require("../config");
 const error_1 = require("../utilities/error");
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -31,7 +32,8 @@ function respond(command, message, config) {
             dynamic: true,
             format: 'webp',
             size: 256
-        }));
+        }))
+            .setFooter(`mantu v${config_1.appInfo.version}`);
         if (parse.length == 1) {
             const user = yield error_1.errorHandler((yield git.getUser(parse[0])).getProfile());
             if (user.e) {

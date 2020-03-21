@@ -4,9 +4,12 @@ import path from 'path'
 
 import Conf from 'conf'
 
+export const appInfo = require('../package.json')
+
 export interface ConfigImpl {
     token: string;
     serverId: string;
+    inviteLink: string;
     prefix: string;
     embedColor: string;
     deleteCommandAfterExecution: boolean;
@@ -33,6 +36,7 @@ export interface ConfigImpl {
 const defaultConfig: ConfigImpl = {
     token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     serverId: '100000000000000000',
+    inviteLink: 'https://vasanth.tech/discord',
     prefix: ';',
     embedColor: '0x00b0ff',
     deleteCommandAfterExecution: true,

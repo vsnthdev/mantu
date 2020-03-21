@@ -23,6 +23,7 @@ import setCountry from './interactions/setCountry'
 import cashTranslate from './interactions/cashTranslate'
 import github from './interactions/github'
 import clear from './interactions/clear'
+import serverStats from './interactions/serverStats'
 
 async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event
@@ -44,6 +45,8 @@ async function linkCommands(config: Conf<any>): Promise<void> {
             commandExecutionSuccessful = await github(command, message, config)
         } else if (command.startsWith('clear ')) {
             await clear(command, message, config)
+        } else if (command == 'server stats') {
+            commandExecutionSuccessful = await serverStats(message, config)
         }
 
         // delete the message if the config has it
