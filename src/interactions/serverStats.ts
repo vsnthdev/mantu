@@ -23,7 +23,7 @@ export default async function respond(message: Discord.Message, config: Conf<Con
     // prepares the values we need
     const totalMembers = (await diMembers.getAllMembers(config)).length
     const onlineMembers = (await diMembers.getOnlineMembers(config)).length
-    const onlinePercent = (onlineMembers / totalMembers) * 100
+    const onlinePercent = Math.round((onlineMembers / totalMembers) * 100)
 
     // prepare the response
     const response = new Discord.MessageEmbed()

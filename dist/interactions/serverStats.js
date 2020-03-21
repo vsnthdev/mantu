@@ -30,7 +30,7 @@ function respond(message, config) {
         }
         const totalMembers = (yield members_1.default.getAllMembers(config)).length;
         const onlineMembers = (yield members_1.default.getOnlineMembers(config)).length;
-        const onlinePercent = (onlineMembers / totalMembers) * 100;
+        const onlinePercent = Math.round((onlineMembers / totalMembers) * 100);
         const response = new discord_js_1.default.MessageEmbed()
             .setColor(config.get('embedColor'))
             .setTitle('Server Statistics')
