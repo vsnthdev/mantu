@@ -25,6 +25,7 @@ import github from './interactions/github'
 import clear from './interactions/clear'
 import serverStats from './interactions/serverStats'
 import inviteLink from './interactions/inviteLink'
+import helpHandler from './interactions/helpMessage'
 
 async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event
@@ -50,6 +51,8 @@ async function linkCommands(config: Conf<any>): Promise<void> {
             commandExecutionSuccessful = await serverStats(message, config)
         } else if (command == 'server invite') {
             commandExecutionSuccessful = await inviteLink(message, config)
+        } else if (command == 'help' || command == 'helpMessage') {
+            commandExecutionSuccessful = await helpHandler(command, message, config)
         }
 
         // delete the message if the config has it

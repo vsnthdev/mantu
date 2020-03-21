@@ -85,12 +85,12 @@ function respond(command, message, config) {
                     format: 'webp',
                     size: 512
                 }))
-                    .setTimestamp()
                     .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow(), true)
                     .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
                     .addField('Country', (databaseInfo.country) ? setCountry_1.setTitleCase(databaseInfo.country) : 'Unknown', true)
                     .addField('ID', member.user.id, false)
                     .addField('Roles', roles.join(' '), false)
+                    .setTimestamp()
                     .setFooter(`mantu v${config_1.appInfo.version}`);
                 message.channel.send('', {
                     embed: response

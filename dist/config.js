@@ -29,7 +29,8 @@ const defaultConfig = {
         moderators: []
     },
     channels: {
-        log: '100000000000000000'
+        log: '100000000000000000',
+        help: '100000000000000000'
     }
 };
 const config = new conf_1.default({

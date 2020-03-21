@@ -30,6 +30,7 @@ export interface ConfigImpl {
     };
     channels: {
         log: string;
+        help: string;
     };
 }
 
@@ -56,7 +57,8 @@ const defaultConfig: ConfigImpl = {
         moderators: []
     },
     channels: {
-        log: '100000000000000000'
+        log: '100000000000000000',
+        help: '100000000000000000'
     }
 }
 

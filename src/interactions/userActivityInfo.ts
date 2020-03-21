@@ -97,12 +97,12 @@ export default async function respond(command: string, message: Discord.Message,
                     format: 'webp',
                     size: 512
                 }))
-                .setTimestamp()
                 .addField('Last Activity', moment(databaseInfo.lastActive, 'x').fromNow(), true)
                 .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
                 .addField('Country', (databaseInfo.country) ? setTitleCase(databaseInfo.country) : 'Unknown', true)
                 .addField('ID', member.user.id, false)
                 .addField('Roles', roles.join(' '), false)
+                .setTimestamp()
                 .setFooter(`mantu v${appInfo.version}`)
 
             // send the response
