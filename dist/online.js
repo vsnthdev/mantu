@@ -27,6 +27,7 @@ const cashTranslate_1 = __importDefault(require("./interactions/cashTranslate"))
 const github_1 = __importDefault(require("./interactions/github"));
 const clear_1 = __importDefault(require("./interactions/clear"));
 const serverStats_1 = __importDefault(require("./interactions/serverStats"));
+const inviteLink_1 = __importDefault(require("./interactions/inviteLink"));
 function linkCommands(config) {
     return __awaiter(this, void 0, void 0, function* () {
         events_1.default.commandReceived(config, (command, message) => __awaiter(this, void 0, void 0, function* () {
@@ -54,6 +55,9 @@ function linkCommands(config) {
             }
             else if (command == 'server stats') {
                 commandExecutionSuccessful = yield serverStats_1.default(message, config);
+            }
+            else if (command == 'server invite') {
+                commandExecutionSuccessful = yield inviteLink_1.default(message, config);
             }
             if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
                 const deleteMessage = yield error_1.errorHandler(message.delete());
