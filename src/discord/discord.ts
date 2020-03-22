@@ -64,11 +64,45 @@ export function logout(): void {
     client.destroy()
 }
 
+export function getRandomEmoji(isGood: boolean): string {
+    const good = [
+        ':dolphin:',
+        ':koala:',
+        ':gem:',
+        ':mouse:',
+        ':penguin:',
+        ':whale:',
+        ':ocean:',
+        ':hatched_chick:',
+        ':butterfly:',
+        ':couch:'
+    ]
+
+    const bad = [
+        ':dragon_face:',
+        ':poop:',
+        ':alien:',
+        ':snake:',
+        ':bug:',
+        ':lobster:',
+        ':skull_crossbones:',
+        ':octopus:',
+        ':cactus:',
+        ':drop_of_blood:'
+    ]
+
+    if (isGood == true) {
+        return good[Math.floor(Math.random() * good.length)]
+    } else {
+        return bad[Math.floor(Math.random() * bad.length)]
+    }
+}
+
 export async function sendMessage(content: string | Discord.MessageEmbed, channel: Discord.Channel): Promise<Discord.Message> {
     const textChannel = channel as TextChannel
     if (typeof content == 'string') {
         const emojiRendered = await diEmojis.renderString(content)
-        return await textChannel.send(emojiRendered)
+        return await textChannel.send(`**${emojiRendered}**`)
     } else {
         if (content.description) content.setDescription(await diEmojis.renderString(content.description))
         if (content.title) content.setTitle(await diEmojis.renderString(content.title))

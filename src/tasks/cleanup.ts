@@ -15,6 +15,7 @@ import logging from '../discord/logging'
 import events from '../discord/events'
 import daMembers, { Member } from '../database/members'
 import diMembers from '../discord/members'
+import { getRandomEmoji } from '../discord/discord'
 
 async function updateActivity(oldPresence: Discord.Presence, newPresence: Discord.Presence): Promise<void> {
     // check if the user came online
@@ -77,7 +78,7 @@ async function kickUserIfInactive(member: Discord.GuildMember, memberInDB: Membe
         await daMembers.deleteUserFromDatabase(member.id)
 
         // send this instance to server logs
-        await logging.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }**`, config)
+        await logging.sendServerLog(`${getRandomEmoji(true)} ${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }`, config)
     }
 
     return false

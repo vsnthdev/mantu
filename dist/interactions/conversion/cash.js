@@ -22,13 +22,13 @@ function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
         const cashToTranslate = parseFloat(command.substring(5).split('<')[0]);
         if (isNaN(cashToTranslate)) {
-            discord_1.sendMessage(':beetle: **Invalid cash amount was sent.**', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} Invalid cash amount was sent.`, message.channel);
             return false;
         }
         else {
             const memberCountry = (yield members_1.default.getMember(message.author.id)).country;
             if (memberCountry == null) {
-                discord_1.sendMessage(':face_with_raised_eyebrow: **You haven\'t told me your country. How did you think, I can do currency conversion? Issue the command** `;country [the country you live in]` **without brackets first.**', message.channel);
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} You haven't told me your country. How did you think, I can do currency conversion?`, message.channel);
                 return false;
             }
             const countryShortCode = (yield countries_1.default.getCountryByName(memberCountry)).cashCode;
@@ -36,7 +36,7 @@ function respond(command, message) {
             yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
                 const memberCountry = (yield members_1.default.getMember(member.id)).country;
                 if (memberCountry == null) {
-                    discord_1.sendMessage(`:man_shrugging: **I don't know the country of ${member.displayName}.**`, message.channel);
+                    discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} I don't know the country of ${member.displayName}.`, message.channel);
                     return false;
                 }
                 else {
@@ -51,7 +51,7 @@ function respond(command, message) {
                         rates: rates
                     });
                     const converted = (yield cashify.convert(cashToTranslate, { from: countryShortCode, to: countryInfo.cashCode })).toFixed(3);
-                    discord_1.sendMessage(`:moneybag: <@${member.id}> **for you the amount would be ${converted}${countryInfo.cashSymbol}.**`, message.channel);
+                    discord_1.sendMessage(`${discord_1.getRandomEmoji(true)} <@${member.id}>*for you the amount would be ${converted}${countryInfo.cashSymbol}.`, message.channel);
                 }
             }));
             return true;

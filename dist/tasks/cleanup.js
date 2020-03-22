@@ -21,6 +21,7 @@ const logging_1 = __importDefault(require("../discord/logging"));
 const events_1 = __importDefault(require("../discord/events"));
 const members_1 = __importDefault(require("../database/members"));
 const members_2 = __importDefault(require("../discord/members"));
+const discord_1 = require("../discord/discord");
 function updateActivity(oldPresence, newPresence) {
     return __awaiter(this, void 0, void 0, function* () {
         if (newPresence.status === 'offline' || newPresence.status == 'online') {
@@ -73,7 +74,7 @@ function kickUserIfInactive(member, memberInDB, config) {
             }
             yield member.kick('Inactive for 20+ days.');
             yield members_1.default.deleteUserFromDatabase(member.id);
-            yield logging_1.default.sendServerLog(`:recycle: **${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}**`, config);
+            yield logging_1.default.sendServerLog(`${discord_1.getRandomEmoji(true)} ${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}`, config);
         }
         return false;
     });

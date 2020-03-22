@@ -20,14 +20,18 @@ function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const parsed = parseInt(command.substring(6));
         if (isNaN(parsed)) {
-            discord_1.sendMessage(':beetle: **Invalid number provided with clear command.**', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} Invalid number provided with clear command.`, message.channel);
         }
         else {
             const access = yield moderators_1.default.onlyModerators(message, config);
             if (access == false)
                 return;
+            if (parsed <= 0) {
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} Do you think I am stupid?`, message.channel);
+                return;
+            }
             if (parsed >= 1000) {
-                discord_1.sendMessage(':beetle: **Deleting more than 1000 messages isn\'t supported.**', message.channel);
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} Deleting more than 1000 messages isn't supported.`, message.channel);
                 return;
             }
             const blocks = parsed / 100;
@@ -67,7 +71,7 @@ function respond(command, message, config) {
                 yield logging_1.default.sendDiscordError(error, message.member, message.channel, config);
             }
             else {
-                yield (yield discord_1.sendMessage(`:koala: **Deleted ${deletedCount - 1} messages.**`, message.channel)).delete({ timeout: 2000 });
+                yield (yield discord_1.sendMessage(`${discord_1.getRandomEmoji(true)} Deleted ${deletedCount - 1} messages.`, message.channel)).delete({ timeout: 2000 });
             }
         }
     });

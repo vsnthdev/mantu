@@ -7,22 +7,28 @@ import { errorHandler } from '../../utilities/error'
 import { ConfigImpl } from '../../config'
 import diModerators from '../../discord/moderators'
 import logging from '../../discord/logging'
-import { sendMessage } from '../../discord/discord'
+import { sendMessage, getRandomEmoji } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<void> {
     const parsed = parseInt(command.substring(6))
 
     // check if we got an actual number
     if (isNaN(parsed)) {
-        sendMessage(':beetle: **Invalid number provided with clear command.**', message.channel)
+        sendMessage(`${getRandomEmoji(false)} Invalid number provided with clear command.`, message.channel)
     } else {
         // only allow mods to access this command
         const access = await diModerators.onlyModerators(message, config)
         if (access == false) return
 
+        // check if the parsed number is zero!
+        if (parsed <= 0) {
+            sendMessage(`${getRandomEmoji(false)} Do you think I am stupid?`, message.channel)
+            return
+        }
+
         // check if parsed is equal to or below 1000
         if (parsed >= 1000) {
-            sendMessage(':beetle: **Deleting more than 1000 messages isn\'t supported.**', message.channel)
+            sendMessage(`${getRandomEmoji(false)} Deleting more than 1000 messages isn't supported.`, message.channel)
             return
         }
 
@@ -68,7 +74,7 @@ export default async function respond(command: string, message: Discord.Message,
         if (error) {
             await logging.sendDiscordError(error, message.member, message.channel as Discord.TextChannel, config)
         } else {
-            await (await sendMessage(`:koala: **Deleted ${deletedCount - 1} messages.**`, message.channel)).delete({ timeout: 2000 })
+            await (await sendMessage(`${getRandomEmoji(true)} Deleted ${deletedCount - 1} messages.`, message.channel)).delete({ timeout: 2000 })
         }
     }
 }

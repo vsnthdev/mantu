@@ -20,11 +20,11 @@ function respond(command, message) {
         const timezoneParsed = moment_timezone_1.default.tz.zone(command.substring(9));
         if (timezoneParsed !== null) {
             yield members_1.default.setTimezone(message.author.id, timezoneParsed.name);
-            discord_1.sendMessage(':gem: **Your timezone has been saved successfully.**', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(true)} Your timezone has been saved successfully.`, message.channel);
             return true;
         }
         else {
-            discord_1.sendMessage(':beetle: **Invalid timezone provided. Please issue the command once again with timezone in the following format:** `Continent/Place`', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} Invalid timezone provided. Please issue the command once again with timezone in the following format: \`Continent/Place\``, message.channel);
             return false;
         }
     });

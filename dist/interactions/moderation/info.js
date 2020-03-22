@@ -44,7 +44,7 @@ function respond(command, message, config) {
         members = members.concat(Array.from(message.mentions.members.values()));
         yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
             if (!member.roles.cache.find(r => r.id === config.get('roles').base)) {
-                discord_1.sendMessage(`:beetle: **${member.displayName} doesn't have a ${(yield roles_1.default.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`, message.channel);
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} ${member.displayName} doesn't have a ${(yield roles_1.default.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.`, message.channel);
             }
             else {
                 const databaseInfo = yield members_1.default.getMember(member.user.id);

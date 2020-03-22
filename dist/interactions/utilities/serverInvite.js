@@ -14,11 +14,11 @@ function respond(message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const inviteLink = config.get('inviteLink');
         if (inviteLink !== '') {
-            discord_1.sendMessage(`:mouse: **Here you go <${inviteLink}>.**`, message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(true)} Here you go <${inviteLink}>.`, message.channel);
             return true;
         }
         else {
-            discord_1.sendMessage(':crab: **No invite link was configured.**', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} No invite link was configured.`, message.channel);
             return false;
         }
     });

@@ -63,12 +63,45 @@ function logout() {
     client.destroy();
 }
 exports.logout = logout;
+function getRandomEmoji(isGood) {
+    const good = [
+        ':dolphin:',
+        ':koala:',
+        ':gem:',
+        ':mouse:',
+        ':penguin:',
+        ':whale:',
+        ':ocean:',
+        ':hatched_chick:',
+        ':butterfly:',
+        ':couch:'
+    ];
+    const bad = [
+        ':dragon_face:',
+        ':poop:',
+        ':alien:',
+        ':snake:',
+        ':bug:',
+        ':lobster:',
+        ':skull_crossbones:',
+        ':octopus:',
+        ':cactus:',
+        ':drop_of_blood:'
+    ];
+    if (isGood == true) {
+        return good[Math.floor(Math.random() * good.length)];
+    }
+    else {
+        return bad[Math.floor(Math.random() * bad.length)];
+    }
+}
+exports.getRandomEmoji = getRandomEmoji;
 function sendMessage(content, channel) {
     return __awaiter(this, void 0, void 0, function* () {
         const textChannel = channel;
         if (typeof content == 'string') {
             const emojiRendered = yield emojis_1.default.renderString(content);
-            return yield textChannel.send(emojiRendered);
+            return yield textChannel.send(`**${emojiRendered}**`);
         }
         else {
             if (content.description)

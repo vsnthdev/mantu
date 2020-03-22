@@ -37,12 +37,12 @@ function respond(command, message) {
             countryInDB = yield countries_1.default.getCountryByName(countryParsed.toLowerCase());
         }
         if (!countryInDB) {
-            discord_1.sendMessage(`:beetle: **The country ${countryParsed} is either invalid or given in wrong format.**`, message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} The country ${countryParsed} is either invalid or given in wrong format.`, message.channel);
             return false;
         }
         else {
             yield members_1.default.setCountry(message.author.id, countryInDB.name);
-            discord_1.sendMessage(':gem: **Your country has been saved successfully.**', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(true)} Your country has been saved successfully.`, message.channel);
             return true;
         }
     });

@@ -11,7 +11,7 @@ import { ConfigImpl, appInfo } from '../../config'
 import diRoles from '../../discord/roles'
 import diGeneric from '../../discord/generic'
 import diModerators from '../../discord/moderators'
-import { sendMessage } from '../../discord/discord'
+import { sendMessage, getRandomEmoji } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // loop through all the members
@@ -46,7 +46,7 @@ export default async function respond(command: string, message: Discord.Message,
         if (!member.roles.cache.find(r => r.id === config.get('roles').base)) {
             // as this member doesn't have a member role, he/she/it won't be in the database
             // in which case we simply tell the user about it
-            sendMessage(`:beetle: **${member.displayName} doesn't have a ${(await diRoles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`, message.channel)
+            sendMessage(`${getRandomEmoji(false)} ${member.displayName} doesn't have a ${(await diRoles.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.`, message.channel)
         } else {
             // get the last activity from database
             const databaseInfo = await daMembers.getMember(member.user.id)

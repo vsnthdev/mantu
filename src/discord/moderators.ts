@@ -6,7 +6,7 @@ import Conf from 'conf'
 import { ConfigImpl } from '../config'
 import { forEach } from '../utilities/loops'
 import diRoles from './roles'
-import { sendMessage } from './discord'
+import { sendMessage, getRandomEmoji  } from './discord'
 
 async function getAllModerators(config: Conf<ConfigImpl>): Promise<Discord.GuildMember[]> {
     const moderatorRoles = await diRoles.getModeratorRoles(config)
@@ -44,7 +44,7 @@ export async function onlyModerators(message: Discord.Message, config: Conf<Conf
     })
 
     // tell the user the access has been denied
-    if (giveAccess == false) sendMessage(':beetle: **You don\'t have access to this command.** :person_shrugging:', message.channel)
+    if (giveAccess == false) sendMessage(`${getRandomEmoji(false)} You don't have access to this command.`, message.channel)
 
     // return the giveAccess variable
     return giveAccess

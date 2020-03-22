@@ -42,7 +42,7 @@ function onlyModerators(message, config) {
             }
         }));
         if (giveAccess == false)
-            discord_1.sendMessage(':beetle: **You don\'t have access to this command.** :person_shrugging:', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} You don't have access to this command.`, message.channel);
         return giveAccess;
     });
 }

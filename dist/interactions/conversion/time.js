@@ -21,11 +21,11 @@ function respond(command, message) {
         if (command == 'time') {
             const timezone = (yield members_1.default.getMember(message.author.id)).timezone;
             if (timezone !== null) {
-                discord_1.sendMessage(`:clock5: <@${message.author.id}> **the time right now is ${moment_timezone_1.default().tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`, message.channel);
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(true)} <@${message.author.id}> the time right now is ${moment_timezone_1.default().tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.`, message.channel);
                 return true;
             }
             else {
-                discord_1.sendMessage(`:man_shrugging: **I don't know the timezone of ${message.member.displayName}.**`, message.channel);
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} I don't know the timezone of ${message.member.displayName}.`, message.channel);
                 return false;
             }
         }
@@ -35,16 +35,16 @@ function respond(command, message) {
             yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
                 const timezone = (yield members_1.default.getMember(member.id)).timezone;
                 if (timezone !== null) {
-                    discord_1.sendMessage(`:clock5: <@${member.id}> **time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`, message.channel);
+                    discord_1.sendMessage(`${discord_1.getRandomEmoji(true)} <@${member.id}> time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.`, message.channel);
                 }
                 else {
-                    discord_1.sendMessage(`:man_shrugging: **I don't know the timezone of ${member.displayName}.**`, message.channel);
+                    discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} I don't know the timezone of ${member.displayName}.`, message.channel);
                 }
             }));
             return true;
         }
         else {
-            discord_1.sendMessage(':beetle: **Invalid time provided. Please provide the time in formats:** `hh:mm a DD/MM/YYYY`, `DD/MM/YYYY`**.**', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} Invalid time provided. Please provide the time in formats: \`hh:mm a DD/MM/YYYY\`, \`DD/MM/YYYY\`.`, message.channel);
             return false;
         }
     });

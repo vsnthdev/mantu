@@ -24,7 +24,7 @@ function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const parse = command.substring(7).split('/');
         if (parse.length > 2) {
-            discord_1.sendMessage(':beetle: **Invalid input provided. Run for example** `;github vasanthdeveloper/samaya`', message.channel);
+            discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} Invalid input provided. Run for example \`;github vasanthdeveloper/samaya\``, message.channel);
             return false;
         }
         const git = new github_api_1.default();
@@ -39,7 +39,7 @@ function respond(command, message, config) {
         if (parse.length == 1) {
             const user = yield error_1.errorHandler((yield git.getUser(parse[0])).getProfile());
             if (user.e) {
-                discord_1.sendMessage(`:beetle: **A user with username ${parse[0]} does not exist.**`, message.channel);
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} A user with username ${parse[0]} does not exist.`, message.channel);
                 return false;
             }
             response.setTitle(`github.com/${user.data.data.login}`)
@@ -62,7 +62,7 @@ function respond(command, message, config) {
             const ogData = yield error_1.errorHandler(open_graph_scraper_1.default({ url: repo.data.data.html_url, encoding: 'UTF-8' }));
             const repoImage = (ogData.data.success == true) ? ogData.data.data.ogImage.url : null;
             if (repo.e) {
-                discord_1.sendMessage(`:beetle: **The repository ${parse.join('/')} could not be found.**`, message.channel);
+                discord_1.sendMessage(`${discord_1.getRandomEmoji(false)} The repository ${parse.join('/')} could not be found.`, message.channel);
                 return false;
             }
             response.setTitle(repo.data.data.full_name)

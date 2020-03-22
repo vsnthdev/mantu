@@ -9,14 +9,14 @@ import openGraph from 'open-graph-scraper'
 
 import { ConfigImpl, appInfo } from '../../config'
 import { errorHandler } from '../../utilities/error'
-import { sendMessage } from '../../discord/discord'
+import { sendMessage, getRandomEmoji } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     const parse = command.substring(7).split('/')
     
     // check if that is a valid command string
     if (parse.length > 2) {
-        sendMessage(':beetle: **Invalid input provided. Run for example** `;github vasanthdeveloper/samaya`', message.channel)
+        sendMessage(`${getRandomEmoji(false)} Invalid input provided. Run for example \`;github vasanthdeveloper/samaya\``, message.channel)
         return false
     }
 
@@ -41,7 +41,7 @@ export default async function respond(command: string, message: Discord.Message,
 
         // handle if there is an API error
         if (user.e) {
-            sendMessage(`:beetle: **A user with username ${parse[0]} does not exist.**`, message.channel)
+            sendMessage(`${getRandomEmoji(false)} A user with username ${parse[0]} does not exist.`, message.channel)
             return false
         }
 
@@ -68,7 +68,7 @@ export default async function respond(command: string, message: Discord.Message,
 
         // handle if there is an API error
         if (repo.e) {
-            sendMessage(`:beetle: **The repository ${parse.join('/')} could not be found.**`, message.channel)
+            sendMessage(`${getRandomEmoji(false)} The repository ${parse.join('/')} could not be found.`, message.channel)
             return false
         }
 

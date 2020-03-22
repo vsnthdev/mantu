@@ -4,7 +4,7 @@ import Discord from 'discord.js'
 import moment from 'moment-timezone'
 
 import daMembers from '../../database/members'
-import { sendMessage } from '../../discord/discord'
+import { sendMessage, getRandomEmoji } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     // parse the timezone string
@@ -16,12 +16,12 @@ export default async function respond(command: string, message: Discord.Message)
         await daMembers.setTimezone(message.author.id, timezoneParsed.name)
 
         // tell the user that the timezone was saved
-        sendMessage(':gem: **Your timezone has been saved successfully.**', message.channel)
+        sendMessage(`${getRandomEmoji(true)} Your timezone has been saved successfully.`, message.channel)
 
         return true
     } else {
         // tell the user the timezone is wrong!
-        sendMessage(':beetle: **Invalid timezone provided. Please issue the command once again with timezone in the following format:** `Continent/Place`', message.channel)
+        sendMessage(`${getRandomEmoji(false)} Invalid timezone provided. Please issue the command once again with timezone in the following format: \`Continent/Place\``, message.channel)
 
         return false
     }
