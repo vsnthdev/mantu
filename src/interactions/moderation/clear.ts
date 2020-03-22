@@ -7,13 +7,14 @@ import { errorHandler } from '../../utilities/error'
 import { ConfigImpl } from '../../config'
 import diModerators from '../../discord/moderators'
 import logging from '../../discord/logging'
+import { sendMessage } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<void> {
     const parsed = parseInt(command.substring(6))
 
     // check if we got an actual number
     if (isNaN(parsed)) {
-        message.channel.send(':beetle: **Invalid number provided with clear command.**')
+        sendMessage(':beetle: **Invalid number provided with clear command.**', message.channel)
     } else {
         // only allow mods to access this command
         const access = await diModerators.onlyModerators(message, config)
@@ -21,7 +22,7 @@ export default async function respond(command: string, message: Discord.Message,
 
         // check if parsed is equal to or below 1000
         if (parsed >= 1000) {
-            message.channel.send(':beetle: **Deleting more than 1000 messages isn\'t supported.**')
+            sendMessage(':beetle: **Deleting more than 1000 messages isn\'t supported.**', message.channel)
             return
         }
 
@@ -67,7 +68,7 @@ export default async function respond(command: string, message: Discord.Message,
         if (error) {
             await logging.sendDiscordError(error, message.member, message.channel as Discord.TextChannel, config)
         } else {
-            await (await message.channel.send(`:koala: **Deleted ${deletedCount - 1} messages.**`)).delete({ timeout: 2000 })
+            await (await sendMessage(`:koala: **Deleted ${deletedCount - 1} messages.**`, message.channel)).delete({ timeout: 2000 })
         }
     }
 }

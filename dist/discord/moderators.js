@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const loops_1 = require("../utilities/loops");
 const roles_1 = __importDefault(require("./roles"));
+const discord_1 = require("./discord");
 function getAllModerators(config) {
     return __awaiter(this, void 0, void 0, function* () {
         const moderatorRoles = yield roles_1.default.getModeratorRoles(config);
@@ -41,7 +42,7 @@ function onlyModerators(message, config) {
             }
         }));
         if (giveAccess == false)
-            message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:');
+            discord_1.sendMessage(':beetle: **You don\'t have access to this command.** :person_shrugging:', message.channel);
         return giveAccess;
     });
 }

@@ -19,11 +19,12 @@ const filesize_1 = __importDefault(require("filesize"));
 const open_graph_scraper_1 = __importDefault(require("open-graph-scraper"));
 const config_1 = require("../../config");
 const error_1 = require("../../utilities/error");
+const discord_1 = require("../../discord/discord");
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const parse = command.substring(7).split('/');
         if (parse.length > 2) {
-            message.channel.send(':beetle: **Invalid input provided. Run for example** `;github vasanthdeveloper/samaya`');
+            discord_1.sendMessage(':beetle: **Invalid input provided. Run for example** `;github vasanthdeveloper/samaya`', message.channel);
             return false;
         }
         const git = new github_api_1.default();
@@ -38,7 +39,7 @@ function respond(command, message, config) {
         if (parse.length == 1) {
             const user = yield error_1.errorHandler((yield git.getUser(parse[0])).getProfile());
             if (user.e) {
-                message.channel.send(`:beetle: **A user with username ${parse[0]} does not exist.**`);
+                discord_1.sendMessage(`:beetle: **A user with username ${parse[0]} does not exist.**`, message.channel);
                 return false;
             }
             response.setTitle(`github.com/${user.data.data.login}`)
@@ -54,16 +55,14 @@ function respond(command, message, config) {
                 response.setDescription(user.data.data.bio);
             if (user.data.data.avatar_url != '')
                 response.setThumbnail(user.data.data.avatar_url);
-            message.channel.send('', {
-                embed: response
-            });
+            discord_1.sendMessage(response, message.channel);
         }
         else {
             const repo = yield error_1.errorHandler((yield git.getRepo(parse[0], parse[1])).getDetails());
             const ogData = yield error_1.errorHandler(open_graph_scraper_1.default({ url: repo.data.data.html_url, encoding: 'UTF-8' }));
             const repoImage = (ogData.data.success == true) ? ogData.data.data.ogImage.url : null;
             if (repo.e) {
-                message.channel.send(`:beetle: **The repository ${parse.join('/')} could not be found.**`);
+                discord_1.sendMessage(`:beetle: **The repository ${parse.join('/')} could not be found.**`, message.channel);
                 return false;
             }
             response.setTitle(repo.data.data.full_name)
@@ -81,9 +80,7 @@ function respond(command, message, config) {
             if (repo.data.data.license)
                 response.addField('License', repo.data.data.license.spdx_id == 'NOASSERTION' ? 'Unknown' : repo.data.data.license.spdx_id, true);
             response.addField('Links', `${(repo.data.data.homepage) ? `[Homepage](${repo.data.data.homepage}) | ` : ''}[Issues](${repo.data.data.html_url}/issues) | [Pull Requests](${repo.data.data.html_url}/pulls)${(repo.data.data.has_wiki) ? ` | [Wiki](${repo.data.data.html_url}/wiki)` : ''}`);
-            message.channel.send('', {
-                embed: response
-            });
+            discord_1.sendMessage(response, message.channel);
         }
         return true;
     });

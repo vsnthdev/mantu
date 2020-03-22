@@ -4,6 +4,7 @@ import Discord from 'discord.js'
 import moment from 'moment-timezone'
 
 import daMembers from '../../database/members'
+import { sendMessage } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     // parse the timezone string
@@ -15,12 +16,12 @@ export default async function respond(command: string, message: Discord.Message)
         await daMembers.setTimezone(message.author.id, timezoneParsed.name)
 
         // tell the user that the timezone was saved
-        message.channel.send(':gem: **Your timezone has been saved successfully.**')
+        sendMessage(':gem: **Your timezone has been saved successfully.**', message.channel)
 
         return true
     } else {
         // tell the user the timezone is wrong!
-        message.channel.send(':beetle: **Invalid timezone provided. Please issue the command once again with timezone in the following format:** `Continent/Place`')
+        sendMessage(':beetle: **Invalid timezone provided. Please issue the command once again with timezone in the following format:** `Continent/Place`', message.channel)
 
         return false
     }

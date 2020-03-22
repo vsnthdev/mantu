@@ -1,11 +1,13 @@
 // This file will manage the initial things on Discord
 // and every file depends on this file to get the client
 
-import Discord from 'discord.js'
+import Discord, { TextChannel } from 'discord.js'
 import moment from 'moment'
 
 import logger from '../logger'
 import { setInterval } from '../utilities/time'
+import diEmojis from './emojis'
+import { forEach } from '../utilities/loops'
 
 const client = new Discord.Client()
 
@@ -60,6 +62,25 @@ export async function setStatus(): Promise<void> {
 export function logout(): void {
     logger.info('Logged out from Discord')
     client.destroy()
+}
+
+export async function sendMessage(content: string | Discord.MessageEmbed, channel: Discord.Channel): Promise<Discord.Message> {
+    const textChannel = channel as TextChannel
+    if (typeof content == 'string') {
+        const emojiRendered = await diEmojis.renderString(content)
+        return await textChannel.send(emojiRendered)
+    } else {
+        if (content.description) content.setDescription(await diEmojis.renderString(content.description))
+        if (content.title) content.setTitle(await diEmojis.renderString(content.title))
+        
+        await forEach(content.fields, async (field: Discord.EmbedField) => {
+            content.fields.find(field2 => field2.name == field.name).value = await diEmojis.renderString(field.value)
+        })
+
+        return await textChannel.send('',  {
+            embed: content
+        })
+    }
 }
 
 export default client

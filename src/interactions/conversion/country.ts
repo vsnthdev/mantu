@@ -4,6 +4,7 @@ import Discord from 'discord.js'
 
 import daMembers from '../../database/members'
 import daCountries from '../../database/countries'
+import { sendMessage } from '../../discord/discord'
 
 export function setTitleCase(str: string): string {
     const split = str.toLowerCase().split(' ')
@@ -33,14 +34,14 @@ export default async function respond(command: string, message: Discord.Message)
     
     // check that is a valid country
     if (!countryInDB) {
-        message.channel.send(`:beetle: **The country ${countryParsed} is either invalid or given in wrong format.**`)
+        sendMessage(`:beetle: **The country ${countryParsed} is either invalid or given in wrong format.**`, message.channel)
         return false
     } else {
         // now that we know his country. Let's save it in the database
         await daMembers.setCountry(message.author.id, countryInDB.name)
 
         // tell the user that country has been updated
-        message.channel.send(':gem: **Your country has been saved successfully.**')
+        sendMessage(':gem: **Your country has been saved successfully.**', message.channel)
 
         return true
     }

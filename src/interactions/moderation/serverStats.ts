@@ -10,6 +10,7 @@ import diRoles from '../../discord/roles'
 import diEmojis from '../../discord/emojis'
 import diModerators from '../../discord/moderators'
 import { setTitleCase } from '../conversion/country'
+import { sendMessage } from '../../discord/discord'
 
 export default async function respond(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // check if this command was issued by a mod
@@ -45,9 +46,7 @@ export default async function respond(message: Discord.Message, config: Conf<Con
         .setFooter(`mantu v${appInfo.version}`).setTimestamp()
 
     // send the response
-    message.channel.send('', {
-        embed: response
-    })
+    sendMessage(response, message.channel)
 
     return true
 }

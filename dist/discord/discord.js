@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
 const logger_1 = __importDefault(require("../logger"));
 const time_1 = require("../utilities/time");
+const emojis_1 = __importDefault(require("./emojis"));
+const loops_1 = require("../utilities/loops");
 const client = new discord_js_1.default.Client();
 function authenticate(token, callback) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -61,4 +63,26 @@ function logout() {
     client.destroy();
 }
 exports.logout = logout;
+function sendMessage(content, channel) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const textChannel = channel;
+        if (typeof content == 'string') {
+            const emojiRendered = yield emojis_1.default.renderString(content);
+            return yield textChannel.send(emojiRendered);
+        }
+        else {
+            if (content.description)
+                content.setDescription(yield emojis_1.default.renderString(content.description));
+            if (content.title)
+                content.setTitle(yield emojis_1.default.renderString(content.title));
+            yield loops_1.forEach(content.fields, (field) => __awaiter(this, void 0, void 0, function* () {
+                content.fields.find(field2 => field2.name == field.name).value = yield emojis_1.default.renderString(field.value);
+            }));
+            return yield textChannel.send('', {
+                embed: content
+            });
+        }
+    });
+}
+exports.sendMessage = sendMessage;
 exports.default = client;

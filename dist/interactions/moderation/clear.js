@@ -15,18 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const error_1 = require("../../utilities/error");
 const moderators_1 = __importDefault(require("../../discord/moderators"));
 const logging_1 = __importDefault(require("../../discord/logging"));
+const discord_1 = require("../../discord/discord");
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const parsed = parseInt(command.substring(6));
         if (isNaN(parsed)) {
-            message.channel.send(':beetle: **Invalid number provided with clear command.**');
+            discord_1.sendMessage(':beetle: **Invalid number provided with clear command.**', message.channel);
         }
         else {
             const access = yield moderators_1.default.onlyModerators(message, config);
             if (access == false)
                 return;
             if (parsed >= 1000) {
-                message.channel.send(':beetle: **Deleting more than 1000 messages isn\'t supported.**');
+                discord_1.sendMessage(':beetle: **Deleting more than 1000 messages isn\'t supported.**', message.channel);
                 return;
             }
             const blocks = parsed / 100;
@@ -66,7 +67,7 @@ function respond(command, message, config) {
                 yield logging_1.default.sendDiscordError(error, message.member, message.channel, config);
             }
             else {
-                yield (yield message.channel.send(`:koala: **Deleted ${deletedCount - 1} messages.**`)).delete({ timeout: 2000 });
+                yield (yield discord_1.sendMessage(`:koala: **Deleted ${deletedCount - 1} messages.**`, message.channel)).delete({ timeout: 2000 });
             }
         }
     });

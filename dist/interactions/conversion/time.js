@@ -15,16 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const members_1 = __importDefault(require("../../database/members"));
 const loops_1 = require("../../utilities/loops");
+const discord_1 = require("../../discord/discord");
 function respond(command, message) {
     return __awaiter(this, void 0, void 0, function* () {
         if (command == 'time') {
             const timezone = (yield members_1.default.getMember(message.author.id)).timezone;
             if (timezone !== null) {
-                message.channel.send(`:clock5: <@${message.author.id}> **the time right now is ${moment_timezone_1.default().tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`);
+                discord_1.sendMessage(`:clock5: <@${message.author.id}> **the time right now is ${moment_timezone_1.default().tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`, message.channel);
                 return true;
             }
             else {
-                message.channel.send(`:man_shrugging: **I don't know the timezone of ${message.member.displayName}.**`);
+                discord_1.sendMessage(`:man_shrugging: **I don't know the timezone of ${message.member.displayName}.**`, message.channel);
                 return false;
             }
         }
@@ -34,16 +35,16 @@ function respond(command, message) {
             yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
                 const timezone = (yield members_1.default.getMember(member.id)).timezone;
                 if (timezone !== null) {
-                    message.channel.send(`:clock5: <@${member.id}> **time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`);
+                    discord_1.sendMessage(`:clock5: <@${member.id}> **time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`, message.channel);
                 }
                 else {
-                    message.channel.send(`:man_shrugging: **I don't know the timezone of ${member.displayName}.**`);
+                    discord_1.sendMessage(`:man_shrugging: **I don't know the timezone of ${member.displayName}.**`, message.channel);
                 }
             }));
             return true;
         }
         else {
-            message.channel.send(':beetle: **Invalid time provided. Please provide the time in formats:** `hh:mm a DD/MM/YYYY`, `DD/MM/YYYY`**.**');
+            discord_1.sendMessage(':beetle: **Invalid time provided. Please provide the time in formats:** `hh:mm a DD/MM/YYYY`, `DD/MM/YYYY`**.**', message.channel);
             return false;
         }
     });

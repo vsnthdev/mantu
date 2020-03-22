@@ -7,6 +7,7 @@ import daMembers from '../../database/members'
 import daCountries from '../../database/countries'
 import daCashTranslate from '../../database/cashTranslate'
 import { forEach } from '../../utilities/loops'
+import { sendMessage } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     const cashToTranslate = parseFloat(command.substring(5).split('<')[0])
@@ -14,7 +15,7 @@ export default async function respond(command: string, message: Discord.Message)
     // check if the cash is a valid integer
     if (isNaN(cashToTranslate)) {
         // tell the user that the number was invalid
-        message.channel.send(':beetle: **Invalid cash amount was sent.**')
+        sendMessage(':beetle: **Invalid cash amount was sent.**', message.channel)
         return false
     } else {
         // now that we know there is an actual number in the command
@@ -23,7 +24,7 @@ export default async function respond(command: string, message: Discord.Message)
 
         // check if we know the country of the author
         if (memberCountry == null) {
-            message.channel.send(':face_with_raised_eyebrow: **You haven\'t told me your country. How did you think, I can do currency conversion? Issue the command** `;country [the country you live in]` **without brackets first.**')
+            sendMessage(':face_with_raised_eyebrow: **You haven\'t told me your country. How did you think, I can do currency conversion? Issue the command** `;country [the country you live in]` **without brackets first.**', message.channel)
             return false
         }
 
@@ -36,7 +37,7 @@ export default async function respond(command: string, message: Discord.Message)
             const memberCountry = (await daMembers.getMember(member.id)).country
             
             if (memberCountry == null) {
-                message.channel.send(`:man_shrugging: **I don't know the country of ${member.displayName}.**`)
+                sendMessage(`:man_shrugging: **I don't know the country of ${member.displayName}.**`, message.channel)
                 return false
             } else {
                 // get the country's short code
@@ -59,7 +60,7 @@ export default async function respond(command: string, message: Discord.Message)
                 const converted = (await cashify.convert(cashToTranslate, { from: countryShortCode, to: countryInfo.cashCode })).toFixed(3)
                 
                 // reply to the user
-                message.channel.send(`:moneybag: <@${member.id}> **for you the amount would be ${converted}${countryInfo.cashSymbol}.**`)
+                sendMessage(`:moneybag: <@${member.id}> **for you the amount would be ${converted}${countryInfo.cashSymbol}.**`, message.channel)
             }
         })
 

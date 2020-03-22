@@ -11,11 +11,12 @@ import { ConfigImpl, appInfo } from '../../config'
 import diModerators from '../../discord/moderators'
 import diChannels from '../../discord/channels'
 import diEmojis from '../../discord/emojis'
+import { sendMessage } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // act accordingly
     if (command == 'help') {
-        message.channel.send(`:blue_book: **A list of commands and what they do can be found at** <#${config.get('channels').help}>`)
+        sendMessage(`:blue_book: **A list of commands and what they do can be found at** <#${config.get('channels').help}>`, message.channel)
         return true
     } else {
         // only allow mods to access this command
@@ -34,7 +35,7 @@ export default async function respond(command: string, message: Discord.Message,
         await helpChannel.send(`${helpString}**\`mantu v${appInfo.version}\` **`.replace(/{prefix}/g, config.get('prefix')))
 
         // notify the user that the help message has been updated.
-        message.channel.send(`:blue_book: **The help message has been updated at** <#${config.get('channels').help}>`)
+        sendMessage(`:blue_book: **The help message has been updated at** <#${config.get('channels').help}>`, message.channel)
         return true
     }
 }

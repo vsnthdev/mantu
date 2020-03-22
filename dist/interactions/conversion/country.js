@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const members_1 = __importDefault(require("../../database/members"));
 const countries_1 = __importDefault(require("../../database/countries"));
+const discord_1 = require("../../discord/discord");
 function setTitleCase(str) {
     const split = str.toLowerCase().split(' ');
     for (let i = 0; i < split.length; i++) {
@@ -36,12 +37,12 @@ function respond(command, message) {
             countryInDB = yield countries_1.default.getCountryByName(countryParsed.toLowerCase());
         }
         if (!countryInDB) {
-            message.channel.send(`:beetle: **The country ${countryParsed} is either invalid or given in wrong format.**`);
+            discord_1.sendMessage(`:beetle: **The country ${countryParsed} is either invalid or given in wrong format.**`, message.channel);
             return false;
         }
         else {
             yield members_1.default.setCountry(message.author.id, countryInDB.name);
-            message.channel.send(':gem: **Your country has been saved successfully.**');
+            discord_1.sendMessage(':gem: **Your country has been saved successfully.**', message.channel);
             return true;
         }
     });

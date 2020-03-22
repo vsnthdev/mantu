@@ -5,16 +5,17 @@ import moment from 'moment-timezone'
 
 import daMembers from '../../database/members'
 import { forEach } from '../../utilities/loops'
+import { sendMessage } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     // check if it is just a time command
     if (command == 'time') {
         const timezone = (await daMembers.getMember(message.author.id)).timezone
         if (timezone !== null) {
-            message.channel.send(`:clock5: <@${message.author.id}> **the time right now is ${moment().tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`)
+            sendMessage(`:clock5: <@${message.author.id}> **the time right now is ${moment().tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`, message.channel)
             return true
         } else {
-            message.channel.send(`:man_shrugging: **I don't know the timezone of ${message.member.displayName}.**`)
+            sendMessage(`:man_shrugging: **I don't know the timezone of ${message.member.displayName}.**`, message.channel)
             return false
         }
     }
@@ -31,15 +32,15 @@ export default async function respond(command: string, message: Discord.Message)
             const timezone = (await daMembers.getMember(member.id)).timezone
             if (timezone !== null) {
                 // do the conversion
-                message.channel.send(`:clock5: <@${member.id}> **time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`)
+                sendMessage(`:clock5: <@${member.id}> **time for you will be ${timeToTranslate.tz(timezone).format('MMMM Do YYYY, h:mm:ss A')}.**`, message.channel)
             } else {
-                message.channel.send(`:man_shrugging: **I don't know the timezone of ${member.displayName}.**`)
+                sendMessage(`:man_shrugging: **I don't know the timezone of ${member.displayName}.**`, message.channel)
             }
         })
 
         return true
     } else {
-        message.channel.send(':beetle: **Invalid time provided. Please provide the time in formats:** `hh:mm a DD/MM/YYYY`, `DD/MM/YYYY`**.**')
+        sendMessage(':beetle: **Invalid time provided. Please provide the time in formats:** `hh:mm a DD/MM/YYYY`, `DD/MM/YYYY`**.**', message.channel)
         return false
     }
 }

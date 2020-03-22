@@ -20,6 +20,7 @@ const roles_1 = __importDefault(require("../../discord/roles"));
 const emojis_1 = __importDefault(require("../../discord/emojis"));
 const moderators_1 = __importDefault(require("../../discord/moderators"));
 const country_1 = require("../conversion/country");
+const discord_1 = require("../../discord/discord");
 function respond(message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const access = yield moderators_1.default.onlyModerators(message, config);
@@ -49,9 +50,7 @@ function respond(message, config) {
             .addField('Level', message.guild.premiumTier, true)
             .addField('Invite Link', config.get('inviteLink'), false)
             .setFooter(`mantu v${config_1.appInfo.version}`).setTimestamp();
-        message.channel.send('', {
-            embed: response
-        });
+        discord_1.sendMessage(response, message.channel);
         return true;
     });
 }

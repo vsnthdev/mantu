@@ -21,6 +21,7 @@ const config_1 = require("../../config");
 const roles_1 = __importDefault(require("../../discord/roles"));
 const generic_1 = __importDefault(require("../../discord/generic"));
 const moderators_1 = __importDefault(require("../../discord/moderators"));
+const discord_1 = require("../../discord/discord");
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         let members = [];
@@ -43,7 +44,7 @@ function respond(command, message, config) {
         members = members.concat(Array.from(message.mentions.members.values()));
         yield loops_1.forEach(members, (member) => __awaiter(this, void 0, void 0, function* () {
             if (!member.roles.cache.find(r => r.id === config.get('roles').base)) {
-                message.channel.send(`:beetle: **${member.displayName} doesn't have a ${(yield roles_1.default.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`);
+                discord_1.sendMessage(`:beetle: **${member.displayName} doesn't have a ${(yield roles_1.default.getBaseRole(config)).name} role, so ${member.displayName} isn't tracked my me.**`, message.channel);
             }
             else {
                 const databaseInfo = yield members_1.default.getMember(member.user.id);
@@ -77,9 +78,7 @@ function respond(command, message, config) {
                     .addField('Roles', roles.join(' '), false)
                     .setTimestamp()
                     .setFooter(`mantu v${config_1.appInfo.version}`);
-                message.channel.send('', {
-                    embed: response
-                });
+                discord_1.sendMessage(response, message.channel);
             }
         }));
         return true;

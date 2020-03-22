@@ -9,15 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_1 = require("../../discord/discord");
 function respond(message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const inviteLink = config.get('inviteLink');
         if (inviteLink !== '') {
-            message.channel.send(`:mouse: **Here you go <${inviteLink}>.**`);
+            discord_1.sendMessage(`:mouse: **Here you go <${inviteLink}>.**`, message.channel);
             return true;
         }
         else {
-            message.channel.send(':crab: **No invite link was configured.**');
+            discord_1.sendMessage(':crab: **No invite link was configured.**', message.channel);
             return false;
         }
     });

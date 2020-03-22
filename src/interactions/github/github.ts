@@ -9,13 +9,14 @@ import openGraph from 'open-graph-scraper'
 
 import { ConfigImpl, appInfo } from '../../config'
 import { errorHandler } from '../../utilities/error'
+import { sendMessage } from '../../discord/discord'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     const parse = command.substring(7).split('/')
     
     // check if that is a valid command string
     if (parse.length > 2) {
-        message.channel.send(':beetle: **Invalid input provided. Run for example** `;github vasanthdeveloper/samaya`')
+        sendMessage(':beetle: **Invalid input provided. Run for example** `;github vasanthdeveloper/samaya`', message.channel)
         return false
     }
 
@@ -40,7 +41,7 @@ export default async function respond(command: string, message: Discord.Message,
 
         // handle if there is an API error
         if (user.e) {
-            message.channel.send(`:beetle: **A user with username ${parse[0]} does not exist.**`)
+            sendMessage(`:beetle: **A user with username ${parse[0]} does not exist.**`, message.channel)
             return false
         }
 
@@ -58,9 +59,7 @@ export default async function respond(command: string, message: Discord.Message,
         if (user.data.data.avatar_url != '') response.setThumbnail(user.data.data.avatar_url)
 
         // send the response
-        message.channel.send('', {
-            embed: response
-        })
+        sendMessage(response, message.channel)
     } else {
         // it's a repository
         const repo = await errorHandler((await git.getRepo(parse[0], parse[1])).getDetails())
@@ -69,7 +68,7 @@ export default async function respond(command: string, message: Discord.Message,
 
         // handle if there is an API error
         if (repo.e) {
-            message.channel.send(`:beetle: **The repository ${parse.join('/')} could not be found.**`)
+            sendMessage(`:beetle: **The repository ${parse.join('/')} could not be found.**`, message.channel)
             return false
         }
 
@@ -92,9 +91,7 @@ export default async function respond(command: string, message: Discord.Message,
         response.addField('Links', `${(repo.data.data.homepage) ? `[Homepage](${repo.data.data.homepage}) | ` : ''}[Issues](${repo.data.data.html_url}/issues) | [Pull Requests](${repo.data.data.html_url}/pulls)${(repo.data.data.has_wiki) ? ` | [Wiki](${repo.data.data.html_url}/wiki)` : ''}`)
         
         // send the response
-        message.channel.send('', {
-            embed: response
-        })
+        sendMessage(response, message.channel)
     }
     
     return true
