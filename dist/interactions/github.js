@@ -16,6 +16,7 @@ const discord_js_1 = __importDefault(require("discord.js"));
 const github_api_1 = __importDefault(require("github-api"));
 const moment_1 = __importDefault(require("moment"));
 const filesize_1 = __importDefault(require("filesize"));
+const open_graph_scraper_1 = __importDefault(require("open-graph-scraper"));
 const config_1 = require("../config");
 const error_1 = require("../utilities/error");
 function respond(command, message, config) {
@@ -40,36 +41,48 @@ function respond(command, message, config) {
                 message.channel.send(`:beetle: **A user with username ${parse[0]} does not exist.**`);
                 return false;
             }
-            response.setTitle(`${user.data.data.name}'s profile on GitHub`)
+            response.setTitle(`github.com/${user.data.data.login}`)
                 .setURL(user.data.data.html_url)
-                .setDescription(user.data.data.bio ? user.data.data.bio : 'No bio provided.')
-                .setThumbnail(user.data.data.avatar_url ? user.data.data.avatar_url : '')
                 .addField('Following', user.data.data.following, true)
                 .addField('Followers', user.data.data.followers, true)
                 .addField('Joined on', moment_1.default(user.data.data.created_at).format('l'), true)
-                .addField('Lives in', user.data.data.location ? user.data.data.location : 'Unknown', true)
-                .addField('Blog', user.data.data.blog, true)
                 .setFooter(`Updated on ${moment_1.default(user.data.data.updated_at).format('LL')}`);
+            if (user.data.data.location != '')
+                response.addField('Location', user.data.data.location, true);
+            if (user.data.data.blog != '')
+                response.addField('Web', user.data.data.blog, true);
+            if (user.data.data.bio != null && user.data.data.bio != '')
+                response.setDescription(user.data.data.bio);
+            if (user.data.data.avatar_url != '')
+                response.setThumbnail(user.data.data.avatar_url);
             message.channel.send('', {
                 embed: response
             });
         }
         else {
             const repo = yield error_1.errorHandler((yield git.getRepo(parse[0], parse[1])).getDetails());
+            const ogData = yield error_1.errorHandler(open_graph_scraper_1.default({ url: repo.data.data.html_url, encoding: 'UTF-8' }));
+            const repoImage = (ogData.data.success == true) ? ogData.data.data.ogImage.url : null;
             if (repo.e) {
                 message.channel.send(`:beetle: **The repository ${parse.join('/')} could not be found.**`);
                 return false;
             }
-            response.setTitle(`${repo.data.data.name} on GitHub`)
-                .setURL(repo.data.data.html_url)
-                .setDescription(repo.data.data.description)
-                .addField('Language', repo.data.data.language, true)
-                .addField('Created On', moment_1.default(repo.data.data.created_at).format('l'), true)
+            console.log(repo.data.data);
+            response.setTitle(repo.data.data.full_name)
+                .setURL(repo.data.data.html_url);
+            if (repoImage.startsWith('https://avatars') == false)
+                response.setImage(repoImage);
+            if (repo.data.data.description)
+                response.setDescription(repo.data.data.description);
+            if (repo.data.data.language)
+                response.addField('Language', repo.data.data.language, true);
+            response.addField('Created On', moment_1.default(repo.data.data.created_at).format('l'), true)
                 .addField('Branch', repo.data.data.default_branch, true)
                 .addField('Author', `[${repo.data.data.owner.login}](${repo.data.data.owner.html_url})`, true)
-                .addField('Size', filesize_1.default((repo.data.data.size * 1000)), true)
-                .addField('License', repo.data.data.license.spdx_id == 'NOASSERTION' ? 'Unknown' : repo.data.data.license.spdx_id, true)
-                .addField('Links', `${(repo.data.data.homepage) ? `[Homepage](${repo.data.data.homepage}) | ` : ''}[Issues](${repo.data.data.html_url}/issues) | [Pull Requests](${repo.data.data.html_url}/pulls)${(repo.data.data.has_wiki) ? ` | [Wiki](${repo.data.data.html_url}/wiki)` : ''}`)
+                .addField('Size', filesize_1.default((repo.data.data.size * 1000)), true);
+            if (repo.data.data.license)
+                response.addField('License', repo.data.data.license.spdx_id == 'NOASSERTION' ? 'Unknown' : repo.data.data.license.spdx_id, true);
+            response.addField('Links', `${(repo.data.data.homepage) ? `[Homepage](${repo.data.data.homepage}) | ` : ''}[Issues](${repo.data.data.html_url}/issues) | [Pull Requests](${repo.data.data.html_url}/pulls)${(repo.data.data.has_wiki) ? ` | [Wiki](${repo.data.data.html_url}/wiki)` : ''}`)
                 .setFooter(`Pushed on ${moment_1.default(repo.data.data.pushed_at).format('LL')}`);
             message.channel.send('', {
                 embed: response
