@@ -4,21 +4,17 @@ import Conf from 'conf'
 import moment from 'moment'
 import Discord from 'discord.js'
 
-import { ConfigImpl, appInfo } from '../config'
-import { onlyModerators } from './userActivityInfo'
-import diMembers from '../discord/members'
-import diRoles from '../discord/roles'
-import diEmojis from '../discord/emojis'
-import diModerators from '../discord/moderators'
-import { setTitleCase } from './setCountry'
+import { ConfigImpl, appInfo } from '../../config'
+import diMembers from '../../discord/members'
+import diRoles from '../../discord/roles'
+import diEmojis from '../../discord/emojis'
+import diModerators from '../../discord/moderators'
+import { setTitleCase } from '../conversion/country'
 
 export default async function respond(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // check if this command was issued by a mod
-    const access = await onlyModerators(message, config)
-    if (access == false) {
-        message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:')
-        return false
-    }
+    const access = await diModerators.onlyModerators(message, config)
+    if (access == false) return false
 
     // prepares the values we need
     const totalMembers = (await diMembers.getAllMembers(config)).length
@@ -34,6 +30,7 @@ export default async function respond(message: Discord.Message, config: Conf<Con
             format: 'webp',
             size: 256
         }))
+        .setThumbnail(message.guild.icon)
         .addField('Server ID', config.get('serverId'), false)
         .addField('Members', totalMembers, true)
         .addField('Online', `${onlinePercent}% (${onlineMembers})`, true)

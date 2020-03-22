@@ -4,29 +4,13 @@ import Discord, { GuildMember } from 'discord.js'
 import moment from 'moment'
 import Conf from 'conf'
 
-import daMembers from '../database/members'
-import { forEach, forCollection } from '../utilities/loops'
-import { setTitleCase } from './setCountry'
-import { ConfigImpl, appInfo } from '../config'
-import diRoles from '../discord/roles'
-import generic from '../discord/generic'
-
-// onlyModerators() will ensures only mods can access the commands
-export async function onlyModerators(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
-    const mods = config.get('roles').moderators
-    let giveAccess = false
-    
-    // loop through all the mod roles
-    await forEach(mods, async (roleId: string) => {
-        const roleExists = message.member.roles.cache.find(role => role.id == roleId)
-        if (roleExists) {
-            giveAccess = true
-        }
-    })
-
-    // return the giveAccess variable
-    return giveAccess
-}
+import daMembers from '../../database/members'
+import { forEach, forCollection } from '../../utilities/loops'
+import { setTitleCase } from '../conversion/country'
+import { ConfigImpl, appInfo } from '../../config'
+import diRoles from '../../discord/roles'
+import diGeneric from '../../discord/generic'
+import diModerators from '../../discord/moderators'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // loop through all the members
@@ -37,11 +21,8 @@ export default async function respond(command: string, message: Discord.Message,
         members.push(message.member)
     } else {
         // only allow mods to access this command
-        const access = await onlyModerators(message, config)
-        if (access == false) {
-            message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:')
-            return true
-        }
+        const access = await diModerators.onlyModerators(message, config)
+        if (access == false) return false
     }
 
     // determine if we have received a list of IDs or mentions
@@ -51,7 +32,7 @@ export default async function respond(command: string, message: Discord.Message,
     await forEach(parsed, async (word: string) => {
         if (isNaN(parseInt(word)) == false && word.length == 18) {
             // get the member by id
-            const member = await generic.getAnyoneById(word)
+            const member = await diGeneric.getAnyoneById(word)
             if (member) members.push(member)
         }
     })

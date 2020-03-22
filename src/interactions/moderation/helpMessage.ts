@@ -7,10 +7,10 @@ import path from 'path'
 import Discord from 'discord.js'
 import Conf from 'conf'
 
-import { ConfigImpl, appInfo } from '../config'
-import { onlyModerators } from './userActivityInfo'
-import diChannels from '../discord/channels'
-import diEmojis from '../discord/emojis'
+import { ConfigImpl, appInfo } from '../../config'
+import diModerators from '../../discord/moderators'
+import diChannels from '../../discord/channels'
+import diEmojis from '../../discord/emojis'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     // act accordingly
@@ -19,11 +19,8 @@ export default async function respond(command: string, message: Discord.Message,
         return true
     } else {
         // only allow mods to access this command
-        const access = await onlyModerators(message, config)
-        if (access == false) {
-            message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:')
-            return true
-        }
+        const access = await diModerators.onlyModerators(message, config)
+        if (access == false) return false
 
         // delete all the messages in the help channel
         const helpChannel = await diChannels.getHelpChannel(config)

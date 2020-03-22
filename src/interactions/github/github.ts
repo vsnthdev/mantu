@@ -7,8 +7,8 @@ import Conf from 'conf'
 import filesize from 'filesize'
 import openGraph from 'open-graph-scraper'
 
-import { ConfigImpl, appInfo } from '../config'
-import { errorHandler } from '../utilities/error'
+import { ConfigImpl, appInfo } from '../../config'
+import { errorHandler } from '../../utilities/error'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     const parse = command.substring(7).split('/')
@@ -50,7 +50,6 @@ export default async function respond(command: string, message: Discord.Message,
             .addField('Following', user.data.data.following, true)
             .addField('Followers', user.data.data.followers, true)
             .addField('Joined on', moment(user.data.data.created_at).format('l'), true)
-            .setFooter(`Updated on ${moment(user.data.data.updated_at).format('LL')}`)
         
         // dynamically add sections that may be empty
         if (user.data.data.location != '') response.addField('Location', user.data.data.location, true)
@@ -74,8 +73,6 @@ export default async function respond(command: string, message: Discord.Message,
             return false
         }
 
-        console.log(repo.data.data)
-
         // create a rich embed
         response.setTitle(repo.data.data.full_name)
             .setURL(repo.data.data.html_url)
@@ -93,7 +90,6 @@ export default async function respond(command: string, message: Discord.Message,
         if (repo.data.data.license) response.addField('License', repo.data.data.license.spdx_id == 'NOASSERTION' ? 'Unknown' : repo.data.data.license.spdx_id, true)
 
         response.addField('Links', `${(repo.data.data.homepage) ? `[Homepage](${repo.data.data.homepage}) | ` : ''}[Issues](${repo.data.data.html_url}/issues) | [Pull Requests](${repo.data.data.html_url}/pulls)${(repo.data.data.has_wiki) ? ` | [Wiki](${repo.data.data.html_url}/wiki)` : ''}`)
-            .setFooter(`Pushed on ${moment(repo.data.data.pushed_at).format('LL')}`)
         
         // send the response
         message.channel.send('', {

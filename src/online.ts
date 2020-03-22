@@ -11,21 +11,10 @@ import { setStatus } from './discord/discord'
 import initDatabase from './database/init'
 import { ConfigImpl } from './config'
 import { errorHandler } from './utilities/error'
+import interactions from './interactions/index'
 
 // Tasks to be imported
 import cleanUpServer from './tasks/cleanup'
-
-// Interactions to be imported
-import userActivityInfo from './interactions/userActivityInfo'
-import setTimezone from './interactions/setTimezone'
-import timeTranslate from './interactions/timezoneTranslate'
-import setCountry from './interactions/setCountry'
-import cashTranslate from './interactions/cashTranslate'
-import github from './interactions/github'
-import clear from './interactions/clear'
-import serverStats from './interactions/serverStats'
-import inviteLink from './interactions/inviteLink'
-import helpHandler from './interactions/helpMessage'
 
 async function linkCommands(config: Conf<any>): Promise<void> {
     // hookup the commandReceived event
@@ -34,25 +23,25 @@ async function linkCommands(config: Conf<any>): Promise<void> {
 
         // act accordingly
         if (command.startsWith('info')) {
-            commandExecutionSuccessful = await userActivityInfo(command, message, config)
+            commandExecutionSuccessful = await interactions.moderation.info(command, message, config)
         } else if (command.startsWith('timezone ')) {
-            commandExecutionSuccessful = await setTimezone(command, message)
+            commandExecutionSuccessful = await interactions.conversion.timezone(command, message)
         } else if (command.startsWith('time ') || command == 'time') {
-            commandExecutionSuccessful = await timeTranslate(command, message)
+            commandExecutionSuccessful = await interactions.conversion.time(command, message)
         } else if (command.startsWith('country ')) {
-            commandExecutionSuccessful = await setCountry(command, message)
+            commandExecutionSuccessful = await interactions.conversion.country(command, message)
         } else if (command.startsWith('cash ')) {
-            commandExecutionSuccessful = await cashTranslate(command, message)
+            commandExecutionSuccessful = await interactions.conversion.cash(command, message)
         } else if (command.startsWith('github ')) {
-            commandExecutionSuccessful = await github(command, message, config)
+            commandExecutionSuccessful = await interactions.github.github(command, message, config)
         } else if (command.startsWith('clear ')) {
-            await clear(command, message, config)
+            await interactions.moderation.clear(command, message, config)
         } else if (command == 'server stats') {
-            commandExecutionSuccessful = await serverStats(message, config)
+            commandExecutionSuccessful = await interactions.moderation.serverStats(message, config)
         } else if (command == 'server invite') {
-            commandExecutionSuccessful = await inviteLink(message, config)
+            commandExecutionSuccessful = await interactions.utilities.serverLink(message, config)
         } else if (command == 'help' || command == 'helpMessage') {
-            commandExecutionSuccessful = await helpHandler(command, message, config)
+            commandExecutionSuccessful = await interactions.moderation.help(command, message, config)
         }
 
         // delete the message if the config has it

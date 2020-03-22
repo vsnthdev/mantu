@@ -14,12 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = __importDefault(require("moment"));
 const discord_js_1 = __importDefault(require("discord.js"));
-const config_1 = require("../config");
-const members_1 = __importDefault(require("../discord/members"));
-const roles_1 = __importDefault(require("../discord/roles"));
-const emojis_1 = __importDefault(require("../discord/emojis"));
-const moderators_1 = __importDefault(require("../discord/moderators"));
-const setCountry_1 = require("./setCountry");
+const config_1 = require("../../config");
+const members_1 = __importDefault(require("../../discord/members"));
+const roles_1 = __importDefault(require("../../discord/roles"));
+const emojis_1 = __importDefault(require("../../discord/emojis"));
+const moderators_1 = __importDefault(require("../../discord/moderators"));
+const country_1 = require("../conversion/country");
 function respond(message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const access = yield moderators_1.default.onlyModerators(message, config);
@@ -36,11 +36,12 @@ function respond(message, config) {
             format: 'webp',
             size: 256
         }))
+            .setThumbnail(message.guild.icon)
             .addField('Server ID', config.get('serverId'), false)
             .addField('Members', totalMembers, true)
             .addField('Online', `${onlinePercent}% (${onlineMembers})`, true)
             .addField('Moderators', (yield moderators_1.default.getAllModerators(config)).length, true)
-            .addField('Region', setCountry_1.setTitleCase(message.guild.region), true)
+            .addField('Region', country_1.setTitleCase(message.guild.region), true)
             .addField('Roles', ((yield roles_1.default.getAllRoles()).length - 1), true)
             .addField('Emojis', (yield emojis_1.default.getAllEmojis()).length, true)
             .addField('Created On', moment_1.default(message.guild.createdTimestamp, 'x').format('ll'), true)

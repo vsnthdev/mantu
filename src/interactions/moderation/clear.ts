@@ -3,10 +3,10 @@
 import Discord from 'discord.js'
 import Conf from 'conf'
 
-import { errorHandler } from '../utilities/error'
-import { ConfigImpl } from '../config'
-import { onlyModerators } from './userActivityInfo'
-import logging from '../discord/logging'
+import { errorHandler } from '../../utilities/error'
+import { ConfigImpl } from '../../config'
+import diModerators from '../../discord/moderators'
+import logging from '../../discord/logging'
 
 export default async function respond(command: string, message: Discord.Message, config: Conf<ConfigImpl>): Promise<void> {
     const parsed = parseInt(command.substring(6))
@@ -16,11 +16,8 @@ export default async function respond(command: string, message: Discord.Message,
         message.channel.send(':beetle: **Invalid number provided with clear command.**')
     } else {
         // only allow mods to access this command
-        const access = await onlyModerators(message, config)
-        if (access == false) {
-            message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:')
-            return
-        }
+        const access = await diModerators.onlyModerators(message, config)
+        if (access == false) return
 
         // check if parsed is equal to or below 1000
         if (parsed >= 1000) {

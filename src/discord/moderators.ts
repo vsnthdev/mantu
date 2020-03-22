@@ -29,6 +29,27 @@ async function getAllModerators(config: Conf<ConfigImpl>): Promise<Discord.Guild
     return moderators
 }
 
+// onlyModerators() will ensures only mods can access the commands
+export async function onlyModerators(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
+    const mods = config.get('roles').moderators
+    let giveAccess = false
+    
+    // loop through all the mod roles
+    await forEach(mods, async (roleId: string) => {
+        const roleExists = message.member.roles.cache.find(role => role.id == roleId)
+        if (roleExists) {
+            giveAccess = true
+        }
+    })
+
+    // tell the user the access has been denied
+    if (giveAccess == false) message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:')
+
+    // return the giveAccess variable
+    return giveAccess
+}
+
 export default {
-    getAllModerators
+    getAllModerators,
+    onlyModerators
 }

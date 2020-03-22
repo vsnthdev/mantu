@@ -3,7 +3,7 @@
 import Discord from 'discord.js'
 import Conf from 'conf'
 
-import { ConfigImpl } from '../config'
+import { ConfigImpl } from '../../config'
 
 export default async function respond(message: Discord.Message, config: Conf<ConfigImpl>): Promise<boolean> {
     const inviteLink = config.get('inviteLink')

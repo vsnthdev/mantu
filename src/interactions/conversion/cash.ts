@@ -3,10 +3,10 @@
 import Discord from 'discord.js'
 import { Cashify } from 'cashify'
 
-import daMembers from '../database/members'
-import daCountries from '../database/countries'
-import daCashTranslate from '../database/cashTranslate'
-import { forEach } from '../utilities/loops'
+import daMembers from '../../database/members'
+import daCountries from '../../database/countries'
+import daCashTranslate from '../../database/cashTranslate'
+import { forEach } from '../../utilities/loops'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     const cashToTranslate = parseFloat(command.substring(5).split('<')[0])

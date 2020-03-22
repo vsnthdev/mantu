@@ -14,10 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const config_1 = require("../config");
-const moderators_1 = __importDefault(require("../discord/moderators"));
-const channels_1 = __importDefault(require("../discord/channels"));
-const emojis_1 = __importDefault(require("../discord/emojis"));
+const config_1 = require("../../config");
+const moderators_1 = __importDefault(require("../../discord/moderators"));
+const channels_1 = __importDefault(require("../../discord/channels"));
+const emojis_1 = __importDefault(require("../../discord/emojis"));
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         if (command == 'help') {

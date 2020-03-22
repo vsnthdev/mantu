@@ -14,13 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = __importDefault(require("discord.js"));
 const moment_1 = __importDefault(require("moment"));
-const members_1 = __importDefault(require("../database/members"));
-const loops_1 = require("../utilities/loops");
-const setCountry_1 = require("./setCountry");
-const config_1 = require("../config");
-const roles_1 = __importDefault(require("../discord/roles"));
-const generic_1 = __importDefault(require("../discord/generic"));
-const moderators_1 = __importDefault(require("../discord/moderators"));
+const members_1 = __importDefault(require("../../database/members"));
+const loops_1 = require("../../utilities/loops");
+const country_1 = require("../conversion/country");
+const config_1 = require("../../config");
+const roles_1 = __importDefault(require("../../discord/roles"));
+const generic_1 = __importDefault(require("../../discord/generic"));
+const moderators_1 = __importDefault(require("../../discord/moderators"));
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         let members = [];
@@ -72,7 +72,7 @@ function respond(command, message, config) {
                 }))
                     .addField('Last Activity', moment_1.default(databaseInfo.lastActive, 'x').fromNow(), true)
                     .addField('Timezone', (databaseInfo.timezone) ? databaseInfo.timezone : 'Unknown', true)
-                    .addField('Country', (databaseInfo.country) ? setCountry_1.setTitleCase(databaseInfo.country) : 'Unknown', true)
+                    .addField('Country', (databaseInfo.country) ? country_1.setTitleCase(databaseInfo.country) : 'Unknown', true)
                     .addField('ID', member.user.id, false)
                     .addField('Roles', roles.join(' '), false)
                     .setTimestamp()

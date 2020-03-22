@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_1 = require("../utilities/error");
-const moderators_1 = __importDefault(require("../discord/moderators"));
-const logging_1 = __importDefault(require("../discord/logging"));
+const error_1 = require("../../utilities/error");
+const moderators_1 = __importDefault(require("../../discord/moderators"));
+const logging_1 = __importDefault(require("../../discord/logging"));
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const parsed = parseInt(command.substring(6));

@@ -2,8 +2,8 @@
 
 import Discord from 'discord.js'
 
-import daMembers from '../database/members'
-import daCountries from '../database/countries'
+import daMembers from '../../database/members'
+import daCountries from '../../database/countries'
 
 export function setTitleCase(str: string): string {
     const split = str.toLowerCase().split(' ')

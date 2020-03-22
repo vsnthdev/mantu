@@ -3,7 +3,7 @@
 import Discord from 'discord.js'
 import moment from 'moment-timezone'
 
-import daMembers from '../database/members'
+import daMembers from '../../database/members'
 
 export default async function respond(command: string, message: Discord.Message): Promise<boolean> {
     // parse the timezone string

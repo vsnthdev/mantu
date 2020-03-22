@@ -17,8 +17,8 @@ const github_api_1 = __importDefault(require("github-api"));
 const moment_1 = __importDefault(require("moment"));
 const filesize_1 = __importDefault(require("filesize"));
 const open_graph_scraper_1 = __importDefault(require("open-graph-scraper"));
-const config_1 = require("../config");
-const error_1 = require("../utilities/error");
+const config_1 = require("../../config");
+const error_1 = require("../../utilities/error");
 function respond(command, message, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const parse = command.substring(7).split('/');

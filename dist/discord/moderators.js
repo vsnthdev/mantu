@@ -30,6 +30,23 @@ function getAllModerators(config) {
         return moderators;
     });
 }
+function onlyModerators(message, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const mods = config.get('roles').moderators;
+        let giveAccess = false;
+        yield loops_1.forEach(mods, (roleId) => __awaiter(this, void 0, void 0, function* () {
+            const roleExists = message.member.roles.cache.find(role => role.id == roleId);
+            if (roleExists) {
+                giveAccess = true;
+            }
+        }));
+        if (giveAccess == false)
+            message.channel.send(':beetle: **You don\'t have access to this command.** :person_shrugging:');
+        return giveAccess;
+    });
+}
+exports.onlyModerators = onlyModerators;
 exports.default = {
-    getAllModerators
+    getAllModerators,
+    onlyModerators
 };

@@ -18,50 +18,41 @@ const logging_1 = __importDefault(require("./discord/logging"));
 const discord_1 = require("./discord/discord");
 const init_1 = __importDefault(require("./database/init"));
 const error_1 = require("./utilities/error");
+const index_1 = __importDefault(require("./interactions/index"));
 const cleanup_1 = __importDefault(require("./tasks/cleanup"));
-const userActivityInfo_1 = __importDefault(require("./interactions/userActivityInfo"));
-const setTimezone_1 = __importDefault(require("./interactions/setTimezone"));
-const timezoneTranslate_1 = __importDefault(require("./interactions/timezoneTranslate"));
-const setCountry_1 = __importDefault(require("./interactions/setCountry"));
-const cashTranslate_1 = __importDefault(require("./interactions/cashTranslate"));
-const github_1 = __importDefault(require("./interactions/github"));
-const clear_1 = __importDefault(require("./interactions/clear"));
-const serverStats_1 = __importDefault(require("./interactions/serverStats"));
-const inviteLink_1 = __importDefault(require("./interactions/inviteLink"));
-const helpMessage_1 = __importDefault(require("./interactions/helpMessage"));
 function linkCommands(config) {
     return __awaiter(this, void 0, void 0, function* () {
         events_1.default.commandReceived(config, (command, message) => __awaiter(this, void 0, void 0, function* () {
             let commandExecutionSuccessful = false;
             if (command.startsWith('info')) {
-                commandExecutionSuccessful = yield userActivityInfo_1.default(command, message, config);
+                commandExecutionSuccessful = yield index_1.default.moderation.info(command, message, config);
             }
             else if (command.startsWith('timezone ')) {
-                commandExecutionSuccessful = yield setTimezone_1.default(command, message);
+                commandExecutionSuccessful = yield index_1.default.conversion.timezone(command, message);
             }
             else if (command.startsWith('time ') || command == 'time') {
-                commandExecutionSuccessful = yield timezoneTranslate_1.default(command, message);
+                commandExecutionSuccessful = yield index_1.default.conversion.time(command, message);
             }
             else if (command.startsWith('country ')) {
-                commandExecutionSuccessful = yield setCountry_1.default(command, message);
+                commandExecutionSuccessful = yield index_1.default.conversion.country(command, message);
             }
             else if (command.startsWith('cash ')) {
-                commandExecutionSuccessful = yield cashTranslate_1.default(command, message);
+                commandExecutionSuccessful = yield index_1.default.conversion.cash(command, message);
             }
             else if (command.startsWith('github ')) {
-                commandExecutionSuccessful = yield github_1.default(command, message, config);
+                commandExecutionSuccessful = yield index_1.default.github.github(command, message, config);
             }
             else if (command.startsWith('clear ')) {
-                yield clear_1.default(command, message, config);
+                yield index_1.default.moderation.clear(command, message, config);
             }
             else if (command == 'server stats') {
-                commandExecutionSuccessful = yield serverStats_1.default(message, config);
+                commandExecutionSuccessful = yield index_1.default.moderation.serverStats(message, config);
             }
             else if (command == 'server invite') {
-                commandExecutionSuccessful = yield inviteLink_1.default(message, config);
+                commandExecutionSuccessful = yield index_1.default.utilities.serverLink(message, config);
             }
             else if (command == 'help' || command == 'helpMessage') {
-                commandExecutionSuccessful = yield helpMessage_1.default(command, message, config);
+                commandExecutionSuccessful = yield index_1.default.moderation.help(command, message, config);
             }
             if (config.get('deleteCommandAfterExecution') == true && commandExecutionSuccessful == true) {
                 const deleteMessage = yield error_1.errorHandler(message.delete());
