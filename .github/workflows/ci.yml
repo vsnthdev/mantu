@@ -27,4 +27,4 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           envs: COMMIT_MESSAGE
-          script: bash /home/vasanth/serverfiles/privateserver/scripts/deploy-mantu.bash
+          script: bash /home/vasanth/serverfiles/privateserver/scripts/deploy-mantu.bash "$COMMIT_MESSAGE"
