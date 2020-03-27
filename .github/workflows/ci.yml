@@ -15,10 +15,12 @@ jobs:
           tags: latest
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Setting Variables
+        run: echo ::set-env name=COMMIT_MESSAGE::$(git show-branch --no-name HEAD)
       - name: Deploying to publicserver
         uses: appleboy/ssh-action@master
         env:
-          COMMIT_MESSAGE: $(git show-branch --no-name HEAD)
+          COMMIT_MESSAGE: ${{ env.COMMIT_MESSAGE }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
