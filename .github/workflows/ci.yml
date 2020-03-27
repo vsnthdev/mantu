@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Setting Variables
-        run: echo ::set-env name=COMMIT_MESSAGE::$(git show-branch --no-name HEAD)
+        run: echo ::set-env name=COMMIT_MESSAGE::'The deployment of commit "'$(git show-branch --no-name HEAD)'" for mantu bot was successful.'
       - name: Deploying to publicserver
         uses: appleboy/ssh-action@master
         env:
