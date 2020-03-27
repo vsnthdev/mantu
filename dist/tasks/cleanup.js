@@ -61,7 +61,7 @@ function updateUsersInDB(oldMember, newMember) {
 function kickUserIfInactive(member, memberInDB, config) {
     return __awaiter(this, void 0, void 0, function* () {
         const daysAgo = moment_1.default().diff(moment_1.default(memberInDB.lastActive, 'x'), 'days');
-        if (daysAgo >= 20) {
+        if (daysAgo >= 50) {
             const template = yield templates_1.default('inactiveKick');
             let memberDMed = false;
             try {
@@ -72,9 +72,9 @@ function kickUserIfInactive(member, memberInDB, config) {
             catch (e) {
                 logger_1.default.warning(`Failed to send DM to ${member.displayName} before kicking.`);
             }
-            yield member.kick('Inactive for 20+ days.');
+            yield member.kick('Inactive for 50+ days.');
             yield members_1.default.deleteUserFromDatabase(member.id);
-            yield logging_1.default.sendServerLog(`${discord_1.getRandomEmoji(true)} ${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}`, config);
+            yield logging_1.default.sendServerLog(`${discord_1.getRandomEmoji(true)} ${member.displayName} has been kicked due to inactivity for 50+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : ''}`, config);
         }
         return false;
     });

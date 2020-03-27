@@ -58,8 +58,8 @@ async function kickUserIfInactive(member: Discord.GuildMember, memberInDB: Membe
     // calculate the time of lastActivity
     const daysAgo = moment().diff(moment(memberInDB.lastActive, 'x'), 'days')
 
-    // // check if he/she is 20 days older
-    if (daysAgo >= 20) {
+    // // check if he/she is 50 days older
+    if (daysAgo >= 50) {
         // get the DM message template
         const template = await getTemplate('inactiveKick')
 
@@ -74,11 +74,11 @@ async function kickUserIfInactive(member: Discord.GuildMember, memberInDB: Membe
         }
 
         // kick the member
-        await member.kick('Inactive for 20+ days.')
+        await member.kick('Inactive for 50+ days.')
         await daMembers.deleteUserFromDatabase(member.id)
 
         // send this instance to server logs
-        await logging.sendServerLog(`${getRandomEmoji(true)} ${member.displayName} has been kicked due to inactivity for 20+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }`, config)
+        await logging.sendServerLog(`${getRandomEmoji(true)} ${member.displayName} has been kicked due to inactivity for 50+ days. ${(memberDMed == false) ? 'But, couldn\'t send him the direct message.' : '' }`, config)
     }
 
     return false
