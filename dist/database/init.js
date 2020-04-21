@@ -61,7 +61,7 @@ function initCashTranslate(config) {
         const lastFetch = config.get('fixer.lastFetch');
         const todayId = parseInt(moment_1.default().format('YYYYMMDD'));
         if (todayId > lastFetch) {
-            const cashTranslationData = yield (yield node_fetch_1.default(`http://data.fixer.io/api/latest&access_key=${config.get('fixer').token}`)).json();
+            const cashTranslationData = yield (yield node_fetch_1.default(`http://data.fixer.io/api/latest?access_key=${config.get('fixer').token}`)).json();
             if (cashTranslationData.success == false) {
                 logger_1.default.error(`Failed to connect to fixer.io api due to: "${cashTranslationData.error.info}"`, 5);
             }

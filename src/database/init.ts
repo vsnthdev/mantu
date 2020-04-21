@@ -70,7 +70,7 @@ async function initCashTranslate(config: Conf<any>): Promise<void> {
     const lastFetch = config.get('fixer.lastFetch')
     const todayId = parseInt(moment().format('YYYYMMDD'))
     if (todayId > lastFetch) {
-        const cashTranslationData = await (await fetch(`http://data.fixer.io/api/latest&access_key=${config.get('fixer').token}`)).json()
+        const cashTranslationData = await (await fetch(`http://data.fixer.io/api/latest?access_key=${config.get('fixer').token}`)).json()
         
         // handle fixer api errors
         if (cashTranslationData.success == false) {
