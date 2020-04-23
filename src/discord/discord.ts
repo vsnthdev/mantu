@@ -13,8 +13,13 @@ const client = new Discord.Client()
 
 export async function authenticate(token: string, callback): Promise<void> {
     client.on('ready', callback)
+    client.on('debug', (info: string) => {
+        if (!info.includes('Manager was destroyed.'))
+            logger.verbose(info)
+    })
     client.login(token)
         .catch(err => logger.error(err, 2))
+        .then(value => logger.error(value as string))
     return
 }
 

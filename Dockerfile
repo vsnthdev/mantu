@@ -54,4 +54,4 @@ ENV UID=1000
 VOLUME [ "/var/lib/mantu/data" ]
 
 # Set the startup command
-CMD [ "node", "/var/lib/mantu/dist/mantu.js", "-D", "10" ]
+CMD [ "node", "/var/lib/mantu/dist/mantu.js", "-D", "10", "--verbose" ]

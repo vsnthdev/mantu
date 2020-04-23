@@ -44,6 +44,7 @@ function main() {
                 yield time_1.sleep((args.delay * 1000));
             }
         }
+        const startedOn = moment_1.default();
         logger_1.default.okay(`Application boot on ${moment_1.default().format('llll')}`);
         logger_1.default.verbose('Loading configuration file');
         const config = yield config_1.default();
@@ -61,7 +62,7 @@ function main() {
             discord_1.logout();
             database_1.destroy()
                 .then(() => {
-                logger_1.default.okay(`Application boot on ${moment_1.default().format('llll')}`);
+                logger_1.default.okay(`Application ran for ${moment_1.default().diff(startedOn, 'minutes')} minutes`);
                 process.exit();
             });
         });

@@ -46,6 +46,7 @@ async function main(): Promise<void> {
     }
 
     // notify that the application has been started
+    const startedOn = moment()
     logger.okay(`Application boot on ${moment().format('llll')}`)
 
     // load the config file
@@ -75,7 +76,7 @@ async function main(): Promise<void> {
         logout()
         destroy()
             .then(() => {
-                logger.okay(`Application boot on ${moment().format('llll')}`)
+                logger.okay(`Application ran for ${moment().diff(startedOn, 'minutes')} minutes`)
                 process.exit()
             })
     })

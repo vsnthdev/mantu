@@ -21,8 +21,13 @@ const client = new discord_js_1.default.Client();
 function authenticate(token, callback) {
     return __awaiter(this, void 0, void 0, function* () {
         client.on('ready', callback);
+        client.on('debug', (info) => {
+            if (!info.includes('Manager was destroyed.'))
+                logger_1.default.verbose(info);
+        });
         client.login(token)
-            .catch(err => logger_1.default.error(err, 2));
+            .catch(err => logger_1.default.error(err, 2))
+            .then(value => logger_1.default.error(value));
         return;
     });
 }
