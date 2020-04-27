@@ -48,7 +48,7 @@
         "@types/command-line-usage": "^5.0.1",
         "@types/knex": "^0.16.1",
         "@types/node": "^13.9.1",
-        "@types/node-fetch": "^2.5.5",
+        "@types/node-fetch": "^2.5.7",
         "@typescript-eslint/eslint-plugin": "^2.23.0",
         "@typescript-eslint/parser": "^2.23.0",
         "eslint": "^6.8.0",
