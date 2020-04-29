@@ -18,7 +18,7 @@
         "email": "vasanth@vasanthdeveloper.com"
     },
     "scripts": {
-        "start": "node ./dist/mantu.js",
+        "start": "nodemon",
         "watch": "tsc --watch",
         "build": "tsc",
         "build:docker": "docker build .",
@@ -52,6 +52,7 @@
         "@typescript-eslint/eslint-plugin": "^2.30.0",
         "@typescript-eslint/parser": "^2.30.0",
         "eslint": "^6.8.0",
+        "nodemon": "^2.0.3",
         "typescript": "^3.8.3"
     }
 }

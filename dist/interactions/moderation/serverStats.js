@@ -37,18 +37,16 @@ function respond(message, config) {
             format: 'webp',
             size: 256
         }))
-            .setThumbnail(message.guild.icon)
-            .addField('Server ID', config.get('serverId'), false)
-            .addField('Members', totalMembers, true)
             .addField('Online', `${onlinePercent}% (${onlineMembers})`, true)
-            .addField('Moderators', (yield moderators_1.default.getAllModerators(config)).length, true)
             .addField('Region', country_1.setTitleCase(message.guild.region), true)
+            .addField('Created On', moment_1.default(message.guild.createdTimestamp, 'x').format('ll'), true)
+            .addField('Members', totalMembers, true)
+            .addField('Moderators', (yield moderators_1.default.getAllModerators(config)).length, true)
             .addField('Roles', ((yield roles_1.default.getAllRoles()).length - 1), true)
             .addField('Emojis', (yield emojis_1.default.getAllEmojis()).length, true)
-            .addField('Created On', moment_1.default(message.guild.createdTimestamp, 'x').format('ll'), true)
             .addField('Boosters', message.guild.premiumSubscriptionCount, true)
             .addField('Level', message.guild.premiumTier, true)
-            .addField('Invite Link', config.get('inviteLink'), false)
+            .addField('Banned', Array.from((yield message.guild.fetchBans())).length, true)
             .setFooter(`mantu v${config_1.appInfo.version}`).setTimestamp();
         discord_1.sendMessage(response, message.channel);
         return true;

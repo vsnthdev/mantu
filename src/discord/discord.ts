@@ -18,7 +18,6 @@ export async function authenticate(token: string, callback): Promise<void> {
     })
     client.login(token)
         .catch(err => logger.error(err, 2))
-        .then(value => logger.error(value as string))
     return
 }
 

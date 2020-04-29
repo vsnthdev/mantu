@@ -45,6 +45,9 @@ async function main(): Promise<void> {
         }
     }
 
+    // clear the terminal screen
+    console.clear()
+
     // notify that the application has been started
     const startedOn = moment()
     logger.okay(`Application boot on ${moment().format('llll')}`)

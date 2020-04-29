@@ -31,18 +31,16 @@ export default async function respond(message: Discord.Message, config: Conf<Con
             format: 'webp',
             size: 256
         }))
-        .setThumbnail(message.guild.icon)
-        .addField('Server ID', config.get('serverId'), false)
-        .addField('Members', totalMembers, true)
         .addField('Online', `${onlinePercent}% (${onlineMembers})`, true)
-        .addField('Moderators', (await diModerators.getAllModerators(config)).length, true)
         .addField('Region', setTitleCase(message.guild.region), true)
+        .addField('Created On', moment(message.guild.createdTimestamp, 'x').format('ll'), true)
+        .addField('Members', totalMembers, true)
+        .addField('Moderators', (await diModerators.getAllModerators(config)).length, true)
         .addField('Roles', ((await diRoles.getAllRoles()).length - 1), true)
         .addField('Emojis', (await diEmojis.getAllEmojis()).length, true)
-        .addField('Created On', moment(message.guild.createdTimestamp, 'x').format('ll'), true)
         .addField('Boosters', message.guild.premiumSubscriptionCount, true)
         .addField('Level', message.guild.premiumTier, true)
-        .addField('Invite Link', config.get('inviteLink'), false)
+        .addField('Banned', Array.from((await message.guild.fetchBans())).length, true)
         .setFooter(`mantu v${appInfo.version}`).setTimestamp()
 
     // send the response

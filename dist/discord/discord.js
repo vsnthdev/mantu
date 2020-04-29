@@ -26,8 +26,7 @@ function authenticate(token, callback) {
                 logger_1.default.verbose(info);
         });
         client.login(token)
-            .catch(err => logger_1.default.error(err, 2))
-            .then(value => logger_1.default.error(value));
+            .catch(err => logger_1.default.error(err, 2));
         return;
     });
 }

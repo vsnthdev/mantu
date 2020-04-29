@@ -1,0 +1,11 @@
+{
+    "verbose": false,
+    "quiet": true,
+    "ignore": ["./dist"],
+    "exec": "tsc && node ./dist/mantu.js",
+    "ext": "ts,json",
+    "watch": [
+        "./src",
+        "./data"
+    ]
+}
