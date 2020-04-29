@@ -20,28 +20,34 @@ export default async function respond(command: string, message: Discord.Message)
     } else {
         // now that we know there is an actual number in the command
         // get the country and countryCode for the message author
-        const memberCountry = (await daMembers.getMember(message.author.id)).country
+        const fromMember = await daMembers.getMember(message.author.id)
 
         // check if we know the country of the author
-        if (memberCountry == null) {
+        if (!fromMember.country) {
             sendMessage(`${getRandomEmoji(false)} You haven't told me your country. How did you think, I can do currency conversion?`, message.channel)
             return false
         }
 
-        const countryShortCode = (await daCountries.getCountryByName(memberCountry)).cashCode
+        const countryShortCode = (await daCountries.getCountryByName(fromMember.country)).cashCode
         
         // check if there are any mentions
         const members = Array.from(message.mentions.members.values())
         await forEach(members, async (member: Discord.GuildMember) => {
             // check if the member has a country in his database
-            const memberCountry = (await daMembers.getMember(member.id)).country
+            const toMember = await daMembers.getMember(member.id)
             
-            if (memberCountry == null) {
+            // if to member isn't there
+            if (!toMember) {
+                sendMessage(`${getRandomEmoji(false)} That user isn't a member of the server.`, message.channel)
+                return false
+            }
+            
+            if (!toMember.country) {
                 sendMessage(`${getRandomEmoji(false)} I don't know the country of ${member.displayName}.`, message.channel)
                 return false
             } else {
                 // get the country's short code
-                const countryInfo = await daCountries.getCountryByName(memberCountry)
+                const countryInfo = await daCountries.getCountryByName(toMember.country)
 
                 // get conversion rates from our database
                 const ratesInDB = await daCashTranslate.getRates()
@@ -60,7 +66,7 @@ export default async function respond(command: string, message: Discord.Message)
                 const converted = (await cashify.convert(cashToTranslate, { from: countryShortCode, to: countryInfo.cashCode })).toFixed(3)
                 
                 // reply to the user
-                sendMessage(`${getRandomEmoji(true)} <@${member.id}>*for you the amount would be ${converted}${countryInfo.cashSymbol}.`, message.channel)
+                sendMessage(`${getRandomEmoji(true)} <@${member.id}> for you the amount would be ${converted}${countryInfo.cashSymbol}.`, message.channel)
             }
         })
 

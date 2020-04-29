@@ -38,7 +38,13 @@ function setStatus() {
         const presences = [
             [3, 'this server.'],
             [3, 'for a command.'],
-            [0, 'with cupcakes.']
+            [0, 'with 🧁'],
+            [0, 'with 🔥'],
+            [0, 'with 🌊'],
+            [0, 'with a 🧲'],
+            [0, 'with a 🐬'],
+            [0, 'with a 🐨'],
+            [2, 'to 🎵']
         ];
         time_1.setInterval(30000, () => __awaiter(this, void 0, void 0, function* () {
             const presence = presences[Math.floor(Math.random() * presences.length)];

@@ -51,12 +51,12 @@ export default async function respond(command: string, message: Discord.Message,
             .addField('Following', user.data.data.following, true)
             .addField('Followers', user.data.data.followers, true)
             .addField('Joined on', moment(user.data.data.created_at).format('l'), true)
-        
+
         // dynamically add sections that may be empty
-        if (user.data.data.location != '') response.addField('Location', user.data.data.location, true)
-        if (user.data.data.blog != '') response.addField('Web', user.data.data.blog, true)
-        if (user.data.data.bio != null && user.data.data.bio != '') response.setDescription(user.data.data.bio)
-        if (user.data.data.avatar_url != '') response.setThumbnail(user.data.data.avatar_url)
+        if (user.data.data.location) response.addField('Location', user.data.data.location, true)
+        if (user.data.data.blog) response.addField('Web', user.data.data.blog, true)
+        if (user.data.data.bio) response.setDescription(user.data.data.bio)
+        if (user.data.data.avatar_url) response.setThumbnail(user.data.data.avatar_url)
 
         // send the response
         sendMessage(response, message.channel)

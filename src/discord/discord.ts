@@ -34,7 +34,13 @@ export async function setStatus(): Promise<void> {
     const presences = [
         [3, 'this server.'],
         [3, 'for a command.'],
-        [0, 'with cupcakes.']
+        [0, 'with 🧁'],
+        [0, 'with 🔥'],
+        [0, 'with 🌊'],
+        [0, 'with a 🧲'],
+        [0, 'with a 🐬'],
+        [0, 'with a 🐨'],
+        [2, 'to 🎵']
     ]
 
     // change the presence for every 30 seconds

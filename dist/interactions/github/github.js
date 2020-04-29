@@ -47,13 +47,13 @@ function respond(command, message, config) {
                 .addField('Following', user.data.data.following, true)
                 .addField('Followers', user.data.data.followers, true)
                 .addField('Joined on', moment_1.default(user.data.data.created_at).format('l'), true);
-            if (user.data.data.location != '')
+            if (user.data.data.location)
                 response.addField('Location', user.data.data.location, true);
-            if (user.data.data.blog != '')
+            if (user.data.data.blog)
                 response.addField('Web', user.data.data.blog, true);
-            if (user.data.data.bio != null && user.data.data.bio != '')
+            if (user.data.data.bio)
                 response.setDescription(user.data.data.bio);
-            if (user.data.data.avatar_url != '')
+            if (user.data.data.avatar_url)
                 response.setThumbnail(user.data.data.avatar_url);
             discord_1.sendMessage(response, message.channel);
         }
