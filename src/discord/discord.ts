@@ -2,7 +2,6 @@
 // and every file depends on this file to get the client
 
 import Discord, { TextChannel } from 'discord.js'
-import moment from 'moment'
 
 import logger from '../logger'
 import { setInterval } from '../utilities/time'
