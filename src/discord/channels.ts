@@ -11,6 +11,12 @@ async function getHelpChannel(config: Conf<ConfigImpl>): Promise<Discord.TextCha
     return guild.channels.cache.find(channel => channel.id == config.get('channels').help) as Discord.TextChannel
 }
 
+async function getWelcomeChannel(config: Conf<ConfigImpl>): Promise<Discord.TextChannel> {
+    const guild = client.guilds.cache.first()
+    return guild.channels.cache.find(channel => channel.id == config.get('channels').welcome) as Discord.TextChannel
+}
+
 export default {
-    getHelpChannel
+    getHelpChannel,
+    getWelcomeChannel
 }

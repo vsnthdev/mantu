@@ -12,20 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const discord_1 = __importDefault(require("./discord"));
-function getHelpChannel(config) {
+const channels_1 = __importDefault(require("./channels"));
+function createInvite(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        const guild = discord_1.default.guilds.cache.first();
-        return guild.channels.cache.find(channel => channel.id == config.get('channels').help);
-    });
-}
-function getWelcomeChannel(config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const guild = discord_1.default.guilds.cache.first();
-        return guild.channels.cache.find(channel => channel.id == config.get('channels').welcome);
+        const channel = yield channels_1.default.getWelcomeChannel(config);
+        const inviteLink = yield channel.createInvite({
+            maxUses: 1,
+            maxAge: 1800,
+            unique: true,
+            reason: 'Created by mantu bot.'
+        });
+        return `https://discord.gg/${inviteLink.code}`;
     });
 }
 exports.default = {
-    getHelpChannel,
-    getWelcomeChannel
+    createInvite
 };

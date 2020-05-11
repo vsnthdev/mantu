@@ -13,6 +13,8 @@ import { ConfigImpl } from './config'
 import { errorHandler } from './utilities/error'
 import interactions from './interactions/index'
 
+import startWebserver from './webserver/index'
+
 // Tasks to be imported
 import cleanUpServer from './tasks/cleanup'
 
@@ -70,5 +72,8 @@ export default async function online(config: Conf<ConfigImpl>): Promise<Function
     
         // Initial running of all the tasks
         await cleanUpServer(config)
+
+        // start the web server
+        await startWebserver(config)
     }
 }

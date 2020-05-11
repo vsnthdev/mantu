@@ -20,6 +20,9 @@ export interface ConfigImpl {
         password: string;
         database: string;
     };
+    server: {
+        port: number;
+    };
     fixer: {
         lastFetch?: number;
         token?: string;
@@ -31,6 +34,7 @@ export interface ConfigImpl {
     channels: {
         log: string;
         help: string;
+        welcome: string;
     };
 }
 
@@ -48,6 +52,9 @@ const defaultConfig: ConfigImpl = {
         password: 'password',
         database: 'mantu'
     },
+    server: {
+        port: 4437
+    },
     fixer: {
         lastFetch: 10000000,
         token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -58,7 +65,8 @@ const defaultConfig: ConfigImpl = {
     },
     channels: {
         log: '100000000000000000',
-        help: '100000000000000000'
+        help: '100000000000000000',
+        welcome: '100000000000000000'
     }
 }
 

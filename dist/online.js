@@ -19,6 +19,7 @@ const discord_1 = require("./discord/discord");
 const init_1 = __importDefault(require("./database/init"));
 const error_1 = require("./utilities/error");
 const index_1 = __importDefault(require("./interactions/index"));
+const index_2 = __importDefault(require("./webserver/index"));
 const cleanup_1 = __importDefault(require("./tasks/cleanup"));
 function linkCommands(config) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -71,6 +72,7 @@ function online(config) {
             yield init_1.default(config);
             yield linkCommands(config);
             yield cleanup_1.default(config);
+            yield index_2.default(config);
         });
     });
 }

@@ -20,6 +20,9 @@ const defaultConfig = {
         password: 'password',
         database: 'mantu'
     },
+    server: {
+        port: 4437
+    },
     fixer: {
         lastFetch: 10000000,
         token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -30,7 +33,8 @@ const defaultConfig = {
     },
     channels: {
         log: '100000000000000000',
-        help: '100000000000000000'
+        help: '100000000000000000',
+        welcome: '100000000000000000'
     }
 };
 const config = new conf_1.default({
