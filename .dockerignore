@@ -1,0 +1,9 @@
+.eslintrc.js
+.dockerignore
+.gitignore
+.git
+prettier.config.js
+nodemon.json
+Dockerfile
+node_modules
+data

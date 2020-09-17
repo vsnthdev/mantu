@@ -1,0 +1,9 @@
+{
+    "verbose": false,
+    "quiet": true,
+    "exec": "node src/mantu.js",
+    "ext": "js,json",
+    "watch": [
+        "./src"
+    ]
+}
