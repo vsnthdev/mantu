@@ -20,7 +20,12 @@
         "build": "docker build ."
     },
     "keywords": [],
-    "dependencies": {},
+    "dependencies": {
+        "chalk": "^4.1.0",
+        "itivrutaha": "^0.1.1",
+        "knex": "^0.21.5",
+        "pg": "^8.3.3"
+    },
     "devDependencies": {
         "eslint": "^7.9.0",
         "eslint-config-prettier": "^6.11.0",
