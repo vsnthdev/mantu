@@ -19,7 +19,7 @@ const migrateLatest = async () => {
             '--esm',
             'migrate:latest',
         ])
-        logger.success('Finished syncing PostgreSQL database schema')
+        logger.info('Finished syncing PostgreSQL database schema')
     } catch (e) {
         logger.error(e, 2)
     }
@@ -33,7 +33,7 @@ const connect = async () => {
     // verify the connection by running a RAW query
     try {
         await temp.raw('SELECT 1')
-        logger.success('Connected to PostgreSQL database')
+        logger.info('Connected to PostgreSQL database')
 
         // run migrations
         await migrateLatest()

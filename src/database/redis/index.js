@@ -44,7 +44,7 @@ export const connect = async () => {
     // try the connection by setting a var
     await set('_server', 'testing')
     await del('_server')
-    logger.success('Connected to Redis database')
+    logger.info('Connected to Redis database')
 }
 
 // disconnect from the Redis database

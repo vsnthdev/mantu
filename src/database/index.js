@@ -18,4 +18,4 @@ const disconnect = () => {
     // databases
 }
 
-export default { connect, disconnect }
+export const database = { connect, disconnect }

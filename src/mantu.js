@@ -1,8 +1,11 @@
-import logger from './logger/index.js'
-import database from './database/index.js'
+import { database } from './database/index.js'
+import { discord } from './bot/discord/index.js'
 
 // connect to the database
 await database.connect()
+
+// login to Discord
+await discord.login()
 
 // startup order:
 //     1. connect to the database

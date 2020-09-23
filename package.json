@@ -24,6 +24,7 @@
         "@vasanthdeveloper/utilities": "^0.0.3",
         "chalk": "^4.1.0",
         "conf": "^7.1.2",
+        "discord.js": "^12.3.1",
         "execa": "^4.0.3",
         "itivrutaha": "^0.1.1",
         "js-yaml": "^3.14.0",
