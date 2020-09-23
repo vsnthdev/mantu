@@ -1,6 +1,8 @@
 import logger from './logger/index.js'
+import database from './database/index.js'
 
-logger.info('hey 👋')
+// connect to the database
+await database.connect()
 
 // startup order:
 //     1. connect to the database
