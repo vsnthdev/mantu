@@ -11,6 +11,9 @@
         "email": "vasanth@vasanthdeveloper.com",
         "url": "https://vasanth.tech"
     },
+    "engines": {
+        "node": ">=14.11.0"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/vasanthdeveloper/mantu.git"

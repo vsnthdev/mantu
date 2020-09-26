@@ -4,8 +4,8 @@
  *  Created On 22 September 2020
  */
 
-import { postgres } from './postgres/index.js'
-import { redis } from './redis/index.js'
+import pg, { postgres } from './postgres/index.js'
+import rd, { redis } from './redis/index.js'
 
 const connect = async () => {
     // connect both the databases
@@ -19,3 +19,7 @@ const disconnect = () => {
 }
 
 export const database = { connect, disconnect }
+export default {
+    postgres: pg,
+    redis: rd,
+}

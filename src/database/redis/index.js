@@ -8,12 +8,10 @@ import { promisify } from 'util'
 
 import redisLib from 'redis'
 
-import logger from '../../logger/index.js'
+import { app as logger } from '../../logger/index.js'
 import config from '../../config/index.js'
 
-let set
-let get
-let del
+const exportable = {}
 
 // connect to the Redis database
 export const connect = async () => {
@@ -37,13 +35,13 @@ export const connect = async () => {
 
     // make set and get global, while converting
     // them into modern promises
-    get = promisify(client.get).bind(client)
-    set = promisify(client.set).bind(client)
-    del = promisify(client.del).bind(client)
+    exportable['get'] = promisify(client.get).bind(client)
+    exportable['set'] = promisify(client.set).bind(client)
+    exportable['del'] = promisify(client.del).bind(client)
 
     // try the connection by setting a var
-    await set('_server', 'testing')
-    await del('_server')
+    await exportable.set('_server', 'testing')
+    await exportable.del('_server')
     logger.info('Connected to Redis database')
 }
 
@@ -53,4 +51,4 @@ export const disconnect = async () => {
 }
 
 export const redis = { connect, disconnect }
-export default { get, set, del }
+export default exportable

@@ -6,10 +6,12 @@
 
 import djs from 'discord.js'
 
-import logger from '../../logger/index.js'
+import { app as logger } from '../../logger/index.js'
 import config from '../../config/index.js'
+import roles from './roles.js'
+import members from './members.js'
 
-let client
+export let client
 
 // login on Discord
 const login = () => {
@@ -18,7 +20,7 @@ const login = () => {
 
         client.on('ready', () => {
             logger.info('Finished logged into Discord')
-            resolve()
+            resolve(client)
         })
 
         client
@@ -38,3 +40,7 @@ const logout = async () => {
 }
 
 export const discord = { login, logout }
+export default {
+    roles,
+    members,
+}

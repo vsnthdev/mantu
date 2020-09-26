@@ -10,7 +10,10 @@ import knex from 'knex'
 import execa from 'execa'
 
 import knexfile from '../../../knexfile.js'
-import logger from '../../logger/index.js'
+import { app as logger } from '../../logger/index.js'
+import members from './members.js'
+
+export let database
 
 // migrate to latest schema of database
 const migrateLatest = async () => {
@@ -37,6 +40,9 @@ const connect = async () => {
 
         // run migrations
         await migrateLatest()
+
+        // make database global
+        database = temp
     } catch (err) {
         logger.error(
             `Failed to connect to PostgreSQL database due to 👇\n${err.message}`,
@@ -51,3 +57,6 @@ const disconnect = () => {
 }
 
 export const postgres = { connect, disconnect }
+export default {
+    members,
+}

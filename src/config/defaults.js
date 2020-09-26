@@ -27,6 +27,7 @@ export default config => {
     // discord settings
     set('discord.token', null)
     set('discord.prefix', 'm ')
+    set('discord.baseRole', null)
 
     return config
 }

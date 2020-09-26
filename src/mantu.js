@@ -1,11 +1,16 @@
 import { database } from './database/index.js'
 import { discord } from './bot/discord/index.js'
+import { tasks } from './bot/tasks/index.js'
 
 // connect to the database
 await database.connect()
 
 // login to Discord
-await discord.login()
+const client = await discord.login()
+
+// initialize the operations that run
+// periodically
+await tasks(client)
 
 // startup order:
 //     1. connect to the database
