@@ -18,5 +18,6 @@ module.exports = {
         quotes: ['error', 'single'],
         semi: ['error', 'never'],
         'no-extra-semi': 'off',
+        'node/no-unpublished-import': 'off',
     },
 }

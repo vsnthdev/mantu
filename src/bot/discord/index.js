@@ -10,6 +10,7 @@ import { app as logger } from '../../logger/index.js'
 import config from '../../config/index.js'
 import roles from './roles.js'
 import members from './members.js'
+import messages from './messages.js'
 
 export let client
 
@@ -43,4 +44,5 @@ export const discord = { login, logout }
 export default {
     roles,
     members,
+    messages,
 }

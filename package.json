@@ -37,6 +37,7 @@
         "redis": "^3.0.2"
     },
     "devDependencies": {
+        "chokidar": "^3.4.2",
         "eslint": "^7.9.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-node": "^11.1.0",
