@@ -1,12 +1,16 @@
-import { app, app as logger } from './logger/index.js'
-import { database } from './database/index.js'
+import { cmds } from './bot/cmds/index.js'
 import { discord } from './bot/discord/index.js'
 import { tasks } from './bot/tasks/index.js'
-import { cmds } from './bot/cmds/index.js'
+import { database } from './database/index.js'
+import { app, app as logger } from './logger/index.js'
 
 // tell the user we're running in development mode
 // if in case
-if ((process.env.NODE_ENV ? process.env.NODE_ENV : 'development') == 'development') app.warning('The bot is running in development mode.')
+if (
+    (process.env.NODE_ENV ? process.env.NODE_ENV : 'development') ==
+    'development'
+)
+    app.warning('The bot is running in development mode.')
 
 // connect to the database
 await database.connect()

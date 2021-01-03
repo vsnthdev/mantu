@@ -6,8 +6,8 @@
 
 import path from 'path'
 
-import { client } from '../discord/index.js'
 import { app as logger } from '../../logger/index.js'
+import { client } from '../discord/index.js'
 import validation from './validation.js'
 
 // addCmd() will determine if the command is valid and add it to
@@ -18,7 +18,6 @@ export const addCmd = async (p, suppress) => {
     const validated = validation(
         // eslint-disable-next-line prettier/prettier
         (
-            // eslint-disable-next-line node/no-unsupported-features/es-syntax
             await import(
                 `${path.resolve(p)}?id=${Math.random()
                     .toString(36)
@@ -79,7 +78,6 @@ export default async () => {
         // add auto reload for commands so
         // the bot doesn't need to restart every
         // time a command is updated
-        // eslint-disable-next-line node/no-unsupported-features/es-syntax
         const chokidar = (await import('chokidar')).default
 
         chokidar

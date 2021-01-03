@@ -4,12 +4,11 @@
  *  Created On 23 September 2020
  */
 
+import redisLib from 'redis'
 import { promisify } from 'util'
 
-import redisLib from 'redis'
-
-import { app as logger } from '../../logger/index.js'
 import config from '../../config/index.js'
+import { app as logger } from '../../logger/index.js'
 
 const exportable = {}
 

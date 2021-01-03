@@ -3,15 +3,14 @@
  *  Created On 28 September 2020
  */
 
+import utilities from '@vasanthdeveloper/utilities'
+import { MessageEmbed } from 'discord.js'
 import fs from 'fs'
 import path from 'path'
 
-import { MessageEmbed } from 'discord.js'
-import utilities from '@vasanthdeveloper/utilities'
-
-import discord, { client } from '../discord/index.js'
-import { app as logger } from '../../logger/index.js'
 import config from '../../config/index.js'
+import { app as logger } from '../../logger/index.js'
+import discord, { client } from '../discord/index.js'
 import hotReload, { addCmd } from './reload.js'
 
 // noCommand() will respond to a user that a command

@@ -3,9 +3,9 @@
  *  Created On 25 September 2020
  */
 
-import { client } from './index.js'
 import config from '../../config/index.js'
 import { discord as logger } from '../../logger/index.js'
+import { client } from './index.js'
 
 const getRole = async name => {
     const guild = client.guilds.cache.first()

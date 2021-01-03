@@ -4,10 +4,9 @@
  *  Created On 22 September 2020
  */
 
-import path from 'path'
-
-import knex from 'knex'
 import execa from 'execa'
+import knex from 'knex'
+import path from 'path'
 
 import knexfile from '../../../knexfile.js'
 import { app as logger } from '../../logger/index.js'

@@ -3,11 +3,10 @@
  *  Created On 19 September 2020
  */
 
-import path from 'path'
-
 import Conf from 'conf'
-import moment from 'moment'
 import yaml from 'js-yaml'
+import moment from 'moment'
+import path from 'path'
 
 import defaults from './defaults.js'
 

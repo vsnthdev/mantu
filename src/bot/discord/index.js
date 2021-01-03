@@ -6,11 +6,11 @@
 
 import djs from 'discord.js'
 
-import { app as logger } from '../../logger/index.js'
 import config from '../../config/index.js'
-import roles from './roles.js'
+import { app as logger } from '../../logger/index.js'
 import members from './members.js'
 import messages from './messages.js'
+import roles from './roles.js'
 
 export let client
 

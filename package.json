@@ -37,12 +37,15 @@
         "redis": "^3.0.2"
     },
     "devDependencies": {
+        "@babel/core": "^7.12.10",
+        "@babel/eslint-parser": "^7.12.1",
+        "@babel/plugin-syntax-top-level-await": "^7.12.1",
         "chokidar": "^3.4.2",
-        "eslint": "^7.9.0",
-        "eslint-config-prettier": "^6.11.0",
-        "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-prettier": "^3.1.4",
+        "eslint": "^7.17.0",
+        "eslint-config-prettier": "^7.1.0",
+        "eslint-plugin-prettier": "^3.3.0",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
         "nodemon": "^2.0.4",
-        "prettier": "^2.1.2"
+        "prettier": "^2.2.1"
     }
 }

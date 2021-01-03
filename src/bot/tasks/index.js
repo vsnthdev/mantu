@@ -4,10 +4,9 @@
  *  Created On 24 September 2020
  */
 
+import utilities from '@vasanthdeveloper/utilities'
 import fs from 'fs'
 import path from 'path'
-
-import utilities from '@vasanthdeveloper/utilities'
 
 import { app as logger } from '../../logger/index.js'
 
@@ -23,7 +22,6 @@ export const tasks = async client => {
         const isDirectory = (await fs.promises.stat(fPath)).isDirectory()
         if (isDirectory) {
             // import the directory and asynchronously run the handler function
-            // eslint-disable-next-line node/no-unsupported-features/es-syntax
             await (await import(path.join(fPath, 'index.js'))).default(client)
         }
     })

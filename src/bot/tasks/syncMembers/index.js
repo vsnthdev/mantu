@@ -4,12 +4,12 @@
  *  Created On 24 September 2020
  */
 
-import moment from 'moment'
 import utilities from '@vasanthdeveloper/utilities'
+import moment from 'moment'
 
+import database from '../../../database/index.js'
 import { tasks as logger } from '../../../logger/index.js'
 import discord from '../../discord/index.js'
-import database from '../../../database/index.js'
 
 const action = async () => {
     const members = await discord.members.getAllMembers()
