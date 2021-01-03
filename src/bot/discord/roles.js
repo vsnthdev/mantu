@@ -4,7 +4,7 @@
  */
 
 import config from '../../config/index.js'
-import { discord as logger } from '../../logger/index.js'
+import logger from '../../logger/discord.js'
 import { client } from './index.js'
 
 const getRole = async name => {

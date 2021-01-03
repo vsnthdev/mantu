@@ -6,7 +6,7 @@
 
 import path from 'path'
 
-import { app as logger } from '../../logger/index.js'
+import logger from '../../logger/app.js'
 import { client } from '../discord/index.js'
 import validation from './validation.js'
 

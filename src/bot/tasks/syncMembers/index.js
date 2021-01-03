@@ -8,7 +8,7 @@ import utilities from '@vasanthdeveloper/utilities'
 import moment from 'moment'
 
 import database from '../../../database/index.js'
-import { tasks as logger } from '../../../logger/index.js'
+import logger from '../../../logger/tasks.js'
 import discord from '../../discord/index.js'
 
 const action = async () => {

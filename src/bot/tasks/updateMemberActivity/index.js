@@ -7,7 +7,7 @@ import moment from 'moment'
 
 import config from '../../../config/index.js'
 import database from '../../../database/index.js'
-import { tasks as logger } from '../../../logger/index.js'
+import logger from '../../../logger/tasks.js'
 
 const action = async member => {
     // check if the message came from a real human

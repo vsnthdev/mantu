@@ -7,7 +7,7 @@
 import djs from 'discord.js'
 
 import config from '../../config/index.js'
-import { app as logger } from '../../logger/index.js'
+import logger from '../../logger/app.js'
 import members from './members.js'
 import messages from './messages.js'
 import roles from './roles.js'

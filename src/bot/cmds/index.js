@@ -9,7 +9,7 @@ import fs from 'fs'
 import path from 'path'
 
 import config from '../../config/index.js'
-import { app as logger } from '../../logger/index.js'
+import logger from '../../logger/app.js'
 import discord, { client } from '../discord/index.js'
 import hotReload, { addCmd } from './reload.js'
 

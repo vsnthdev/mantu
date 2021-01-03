@@ -9,7 +9,7 @@ import knex from 'knex'
 import path from 'path'
 
 import knexfile from '../../../knexfile.js'
-import { app as logger } from '../../logger/index.js'
+import logger from '../../logger/app.js'
 import members from './members.js'
 
 export let database

@@ -8,7 +8,7 @@ import redisLib from 'redis'
 import { promisify } from 'util'
 
 import config from '../../config/index.js'
-import { app as logger } from '../../logger/index.js'
+import logger from '../../logger/app.js'
 
 const exportable = {}
 

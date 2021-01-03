@@ -3,7 +3,7 @@
  *  Created On 29 September 2020
  */
 
-import { app as logger } from '../../logger/index.js'
+import logger from '../../logger/app.js'
 
 export default (cmd, p) => {
     // 1. if the module exports an action

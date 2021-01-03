@@ -8,7 +8,7 @@ import utilities from '@vasanthdeveloper/utilities'
 import fs from 'fs'
 import path from 'path'
 
-import { app as logger } from '../../logger/index.js'
+import logger from '../../logger/app.js'
 
 export const tasks = async client => {
     logger.info('Initializing tasks')
