@@ -40,9 +40,8 @@ const logout = async () => {
     //
 }
 
-export const discord = { login, logout }
+export const discord = { roles, members, messages }
 export default {
-    roles,
-    members,
-    messages,
+    login,
+    logout,
 }

@@ -10,7 +10,7 @@ import path from 'path'
 
 import logger from '../../logger/app.js'
 
-export const tasks = async client => {
+export default async client => {
     logger.info('Initializing tasks')
 
     // loop through all directories in current directory

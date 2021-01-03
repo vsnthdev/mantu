@@ -18,7 +18,7 @@ const getRole = async name => {
         logger.error(
             `A role with ID ${config.get(
                 `discord.role.${name}`,
-            )}:${name} does not exist on the server.`,
+            )}:${name} does not exist on the server`,
             2,
         )
     }

@@ -52,7 +52,7 @@ const listen = () => {
     })
 }
 
-export const cmds = async () => {
+export default async () => {
     client.cmds = []
 
     // loop through all directories in current directory

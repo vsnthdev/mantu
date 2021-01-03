@@ -1,7 +1,7 @@
-import { cmds } from './bot/cmds/index.js'
-import { discord } from './bot/discord/index.js'
-import { tasks } from './bot/tasks/index.js'
-import { database } from './database/index.js'
+import cmds from './bot/cmds/index.js'
+import discord from './bot/discord/index.js'
+import tasks from './bot/tasks/index.js'
+import database from './database/index.js'
 import logger from './logger/app.js'
 
 // tell the user we're running in development mode

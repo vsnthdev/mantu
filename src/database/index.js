@@ -18,8 +18,8 @@ const disconnect = () => {
     // databases
 }
 
-export const database = { connect, disconnect }
+export const database = { postgres: pg, redis: rd }
 export default {
-    postgres: pg,
-    redis: rd,
+    connect,
+    disconnect,
 }

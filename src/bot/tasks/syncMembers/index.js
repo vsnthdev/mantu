@@ -9,7 +9,7 @@ import moment from 'moment'
 
 import database from '../../../database/index.js'
 import logger from '../../../logger/tasks.js'
-import discord from '../../discord/index.js'
+import { discord } from '../../discord/index.js'
 
 const action = async () => {
     const members = await discord.members.getAllMembers()
