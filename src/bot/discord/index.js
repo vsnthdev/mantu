@@ -20,7 +20,7 @@ const login = () => {
         client = new djs.Client()
 
         client.on('ready', () => {
-            logger.info('Finished logged into Discord')
+            logger.info('Finished logging into Discord')
             resolve(client)
         })
 

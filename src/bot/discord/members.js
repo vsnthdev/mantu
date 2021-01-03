@@ -6,7 +6,7 @@
 import roles from './roles.js'
 
 const getAllMembers = async () => {
-    const base = await roles.getBaseRole()
+    const base = await roles.getRole('base')
     return Array.from(base.members.values())
 }
 
