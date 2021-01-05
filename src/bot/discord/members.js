@@ -1,15 +1,33 @@
 /*
  *  This file interfaces with members on a Discord server.
- *  Created On 25 September 2020
+ *  Created On 05 January 2021
  */
 
-import roles from './roles.js'
+import config from '../../config/index.js'
+import { client } from './index.js'
 
-const getAllMembers = async () => {
-    const base = await roles.getRole('base')
-    return Array.from(base.members.values())
+const hasRole = async (member, role) => {
+    const roles = Array.from(member.roles.cache.values())
+
+    if (typeof role == 'string') {
+        return roles.map(role => role.name).includes(role)
+    } else {
+        return roles.includes(role)
+    }
+}
+
+const isInServer = async member => {
+    const guild = client.guilds.cache.get(config.get('discord.server'))
+    const exists = guild.member(member.id)
+
+    if (exists) {
+        return true
+    } else {
+        return false
+    }
 }
 
 export default {
-    getAllMembers,
+    hasRole,
+    isInServer,
 }

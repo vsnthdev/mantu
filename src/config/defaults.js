@@ -27,7 +27,8 @@ export default config => {
     // discord settings
     set('discord.token', null)
     set('discord.prefix', 'm ')
-    set('discord.roles.base', null)
+    set('discord.server', '690044914444009508')
+    set('tasks.syncMembers', null)
 
     return config
 }

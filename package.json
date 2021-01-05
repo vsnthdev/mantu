@@ -19,6 +19,7 @@
         "url": "https://github.com/vasanthdeveloper/mantu.git"
     },
     "scripts": {
+        "dev": "nodemon",
         "start": "node src/mantu.js",
         "build": "docker build ."
     },
@@ -27,11 +28,11 @@
         "@vasanthdeveloper/utilities": "^0.0.3",
         "chalk": "^4.1.0",
         "conf": "^7.1.2",
-        "discord.js": "^12.3.1",
+        "discord.js": "^12.5.1",
         "execa": "^4.0.3",
         "itivrutaha": "^0.1.1",
         "js-yaml": "^3.14.0",
-        "knex": "^0.21.5",
+        "knex": "^0.21.15",
         "moment": "^2.28.0",
         "pg": "^8.3.3",
         "redis": "^3.0.2"
@@ -45,7 +46,7 @@
         "eslint-config-prettier": "^7.1.0",
         "eslint-plugin-prettier": "^3.3.0",
         "eslint-plugin-simple-import-sort": "^7.0.0",
-        "nodemon": "^2.0.4",
+        "nodemon": "^2.0.6",
         "prettier": "^2.2.1"
     }
 }

@@ -7,12 +7,18 @@
 import utilities from '@vasanthdeveloper/utilities'
 import moment from 'moment'
 
-import database from '../../../database/index.js'
+import config from '../../../config/index.js'
+import { database } from '../../../database/index.js'
 import logger from '../../../logger/tasks.js'
 import { discord } from '../../discord/index.js'
 
 const action = async () => {
-    const members = await discord.members.getAllMembers()
+    const role = await discord.roles.getRoleByName(
+        config.get('tasks.syncMembers'),
+    )
+
+    const members = Array.from(role.members.values())
+
     const membersInDB = await database.postgres.members.getAll()
     const discordMembers = []
 
@@ -47,6 +53,27 @@ const action = async () => {
     logger.verbose('Task syncMembers has finished execution')
 }
 
+const updateMemberActivity = async member => {
+    // sometimes, member is null for
+    // some reason 🤷‍♂️
+    if (!member) return
+
+    // only work for this current server
+    // defined in the config
+    if (!(await discord.members.isInServer(member))) return
+
+    // check if the author has the syncMember's role
+    if (
+        !member.roles.cache.find(
+            role => role.name == config.get('tasks.syncMembers'),
+        )
+    )
+        return
+
+    // update their time in the database
+    await database.redis.set(member.user.id, moment().format('x'))
+}
+
 export default async client => {
     // run initially
     await action()
@@ -54,4 +81,19 @@ export default async client => {
     // schedule the task to run whenever someone changes their username
     // or a new member gets added or removed
     client.on('guildMemberUpdate', action)
+
+    // schedule a subtask when activity happens on the server
+    // the Redis database gets updated
+    client.on('message', msg => updateMemberActivity(msg.member))
+    client.on('messageDelete', msg => updateMemberActivity(msg.member))
+    client.on('messageReactionAdd', reaction =>
+        updateMemberActivity(reaction.message.member),
+    )
+    client.on('messageReactionRemove', reaction =>
+        updateMemberActivity(reaction.message.member),
+    )
+    client.on('messageUpdate', (_, msg) => updateMemberActivity(msg.member))
+    client.on('presenceUpdate', (_, presence) =>
+        updateMemberActivity(presence.member),
+    )
 }

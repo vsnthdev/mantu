@@ -3,7 +3,13 @@
     "quiet": true,
     "exec": "node src/mantu.js",
     "ext": "js,json",
+    "ignore": [
+        "src/bot/cmds"
+    ],
     "watch": [
-        "./src"
+        "src/",
+        "src/bot/cmds/index.js",
+        "src/bot/cmds/reload.js",
+        "src/bot/cmds/validation.js"
     ]
 }
