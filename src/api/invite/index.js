@@ -30,7 +30,7 @@ const isValid = async code => {
 const newCode = async () => {
     // create a new one!
     const channel = await discord.channels.getChannel(
-        config.get('discord.invite'),
+        config.get('discord.invite.channel'),
     )
 
     // create a new invite link

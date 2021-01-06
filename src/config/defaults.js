@@ -30,6 +30,7 @@ export default config => {
     )
     set('discord.server', '690044914444009508')
     set('discord.prefix', 'm ')
-    set('discord.invite', '796271826447630386')
+    set('discord.invite.channel', '796271826447630386')
+    set('discord.invite.target', 'https://vasanth.tech/discord')
     set('discord.tasks.syncMembers', 'Member')
 }

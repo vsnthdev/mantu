@@ -5,7 +5,7 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import discord from '../../discord/index.js'
+import { discord } from '../../discord/index.js'
 
 const action = async msg =>
     await discord.messages.sendEmbed(
