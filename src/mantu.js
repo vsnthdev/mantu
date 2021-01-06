@@ -1,3 +1,4 @@
+import api from './api/index.js'
 import cmds from './bot/cmds/index.js'
 import discord from './bot/discord/index.js'
 import tasks from './bot/tasks/index.js'
@@ -26,6 +27,9 @@ await tasks(client)
 
 // listen for bot commands on Discord
 await cmds()
+
+// start the API server
+await api()
 
 // startup order:
 //     1. connect to the database
