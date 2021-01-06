@@ -7,14 +7,14 @@
 import utilities from '@vasanthdeveloper/utilities'
 import { DateTime } from 'luxon'
 
-import config from '../../../config/index.js'
+import { config } from '../../../config/index.js'
 import { database } from '../../../database/index.js'
 import logger from '../../../logger/tasks.js'
 import { discord } from '../../discord/index.js'
 
 const action = async () => {
     const role = await discord.roles.getRoleByName(
-        config.get('tasks.syncMembers'),
+        config.get('discord.tasks.syncMembers'),
     )
 
     const members = Array.from(role.members.values())
@@ -23,7 +23,7 @@ const action = async () => {
     const discordMembers = []
 
     // loop through everyone from discord
-    await utilities.loops.default.forEach(members, async member => {
+    await utilities.loops.forEach(members, async member => {
         const exists = await database.postgres.members.getMemberBy.Id(
             member.user.id,
         )
@@ -46,7 +46,7 @@ const action = async () => {
     })
 
     // loop through all the members in database and delete non-existent ones
-    await utilities.loops.default.forEach(membersInDB, async member => {
+    await utilities.loops.forEach(membersInDB, async member => {
         const removed = !discordMembers.includes(member.id)
         if (removed) {
             await database.redis.del(member.id)
@@ -68,7 +68,7 @@ const updateMemberActivity = async member => {
     // check if the author has the syncMember's role
     if (
         !member.roles.cache.find(
-            role => role.name == config.get('tasks.syncMembers'),
+            role => role.name == config.get('discord.tasks.syncMembers'),
         )
     )
         return

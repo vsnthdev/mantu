@@ -1,6 +1,7 @@
 import cmds from './bot/cmds/index.js'
 import discord from './bot/discord/index.js'
 import tasks from './bot/tasks/index.js'
+import config from './config/index.js'
 import database from './database/index.js'
 import logger from './logger/app.js'
 
@@ -9,6 +10,9 @@ import logger from './logger/app.js'
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
 if (env == 'development')
     logger.warning('The bot is running in development mode')
+
+// load the config
+await config()
 
 // connect to the database
 await database.connect()

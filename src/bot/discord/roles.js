@@ -4,7 +4,7 @@
  *  Created On 25 September 2020
  */
 
-import config from '../../config/index.js'
+import { config } from '../../config/index.js'
 import logger from '../../logger/discord.js'
 import { client } from './index.js'
 

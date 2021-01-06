@@ -3,7 +3,7 @@
  *  Created On 05 January 2021
  */
 
-import config from '../../config/index.js'
+import { config } from '../../config/index.js'
 import { client } from './index.js'
 
 const hasRole = async (member, role) => {

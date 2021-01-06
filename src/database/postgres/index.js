@@ -8,7 +8,7 @@ import execa from 'execa'
 import knex from 'knex'
 import path from 'path'
 
-import knexfile from '../../../knexfile.js'
+import * as knexfile from '../../../knexfile.js'
 import logger from '../../logger/app.js'
 import members from './members.js'
 

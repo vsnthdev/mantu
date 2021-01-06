@@ -8,7 +8,7 @@ import { MessageEmbed } from 'discord.js'
 import fs from 'fs'
 import path from 'path'
 
-import config from '../../config/index.js'
+import { config } from '../../config/index.js'
 import logger from '../../logger/app.js'
 import discord, { client } from '../discord/index.js'
 import hotReload, { addCmd } from './reload.js'
@@ -59,7 +59,7 @@ export default async () => {
     const dir = await fs.promises.readdir(
         path.resolve(path.join('src', 'bot', 'cmds')),
     )
-    await utilities.loops.default.forEach(dir, async dir => {
+    await utilities.loops.forEach(dir, async dir => {
         const fPath = path.resolve(path.join('src', 'bot', 'cmds', dir))
         const isDirectory = (await fs.promises.stat(fPath)).isDirectory()
         if (isDirectory) await addCmd(path.join(fPath, 'index.js'))

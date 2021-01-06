@@ -3,17 +3,39 @@
  *  Created On 19 September 2020
  */
 
-import config from './src/config/index.js'
+import chalk from 'chalk'
+import fs from 'fs'
+import yaml from 'js-yaml'
+import path from 'path'
 
-export default {
-    client: 'postgresql',
-    connection: {
-        database: config.get('database.postgres.name'),
-        user: config.get('database.postgres.username'),
-        password: config.get('database.postgres.password'),
-    },
-    pool: {
-        min: 2,
-        max: 10,
-    },
+// knex.js config options
+export const client = 'pg'
+export const debug = false
+export const pool = { min: 1, max: 20 }
+export let connection = null
+export const migrations = { tableName: 'migrations' }
+
+// try to open the config file
+// and read the settings
+// if failed, simply log an error
+// and terminate
+try {
+    const {
+        database: { postgres },
+    } = yaml.safeLoad(
+        fs.readFileSync(path.resolve(path.join('data', 'config.yml')), {
+            encoding: 'utf-8',
+        }),
+    )
+
+    // now, assign database to connection
+    // global variable we declared 👆
+    connection = postgres
+} catch {
+    console.log(
+        `${chalk.whiteBright.underline(
+            'mantu',
+        )} hasn't been initialized yet.\nPlease run at least once before attempting to connect to the database.`,
+    )
+    process.exit(0)
 }
