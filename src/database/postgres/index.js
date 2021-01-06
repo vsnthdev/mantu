@@ -8,7 +8,7 @@ import execa from 'execa'
 import knex from 'knex'
 import path from 'path'
 
-import * as knexfile from '../../../knexfile.js'
+import { config } from '../../config/index.js'
 import logger from '../../logger/app.js'
 import members from './members.js'
 
@@ -30,7 +30,21 @@ const migrateLatest = async () => {
 // connect to PostgreSQL database
 const connect = async () => {
     logger.verbose('Attempting to connect to PostgreSQL database')
-    const temp = knex(knexfile)
+    const temp = knex({
+        client: 'pg',
+        debug: false,
+        connection: {
+            host: config.get('database.postgres.host'),
+            port: config.get('database.postgres.port'),
+            database: config.get('database.postgres.name'),
+            user: config.get('database.postgres.username'),
+            password: config.get('database.postgres.password'),
+        },
+        pool: {
+            min: 1,
+            max: 20,
+        },
+    })
 
     // verify the connection by running a RAW query
     try {

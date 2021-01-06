@@ -29,6 +29,7 @@ export default Joi.object({
         token: Joi.string().length(59).required(),
         prefix: Joi.string().required(),
         server: Joi.string().length(18).required(),
+        invite: Joi.string().required(),
         tasks: Joi.object({
             syncMembers: Joi.string().required(),
         }),

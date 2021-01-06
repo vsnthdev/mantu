@@ -16,15 +16,13 @@ import schema from './schema.js'
 
 export let config
 
-// const config =
-
 export default async () => {
     config = new Conf({
-        defaults,
         projectSuffix: '',
         cwd: path.join(process.cwd(), 'data'),
         configName: 'config',
         fileExtension: 'yml',
+        clearInvalidConfig: true,
         serialize: data => {
             return `# Run control for mantu.\n# Last modified on ${DateTime.local().toFormat(
                 'ccc, dd LLLL yyyy',
@@ -38,6 +36,9 @@ export default async () => {
         },
         deserialize: yaml.safeLoad,
     })
+
+    // set default values
+    await defaults(config)
 
     // validate the config file
     const validate = await utilities.promise.handle(

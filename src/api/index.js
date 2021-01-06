@@ -5,6 +5,7 @@
 
 import Hapi from '@hapi/hapi'
 import chalk from 'chalk'
+import rateLimit from 'hapi-rate-limit'
 
 import { config } from '../config/index.js'
 import logger from '../logger/api.js'
@@ -15,6 +16,15 @@ export default async () => {
     const server = Hapi.server({
         host: config.get('server.host'),
         port: config.get('server.port'),
+    })
+
+    // attach the plugins
+    await server.register({
+        plugin: rateLimit,
+        options: {
+            userLimit: 20,
+            trustProxy: true,
+        },
     })
 
     // connect all routes
