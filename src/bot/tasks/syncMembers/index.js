@@ -5,7 +5,7 @@
  */
 
 import utilities from '@vasanthdeveloper/utilities'
-import moment from 'moment'
+import { DateTime } from 'luxon'
 
 import config from '../../../config/index.js'
 import { database } from '../../../database/index.js'
@@ -38,7 +38,10 @@ const action = async () => {
                 await database.postgres.members.updateId(member)
         } else {
             await database.postgres.members.add(member)
-            await database.redis.set(member.user.id, moment().format('x'))
+            await database.redis.set(
+                member.user.id,
+                DateTime.local().toFormat('x'),
+            )
         }
     })
 
@@ -71,7 +74,7 @@ const updateMemberActivity = async member => {
         return
 
     // update their time in the database
-    await database.redis.set(member.user.id, moment().format('x'))
+    await database.redis.set(member.user.id, DateTime.local().toFormat('x'))
 }
 
 export default async client => {

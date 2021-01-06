@@ -17,6 +17,7 @@ export default async client => {
     const dir = await fs.promises.readdir(
         path.resolve(path.join('src', 'bot', 'tasks')),
     )
+
     await utilities.loops.default.forEach(dir, async dir => {
         const fPath = path.resolve(path.join('src', 'bot', 'tasks', dir))
         const isDirectory = (await fs.promises.stat(fPath)).isDirectory()
