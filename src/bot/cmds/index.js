@@ -56,14 +56,14 @@ export default async () => {
     client.cmds = []
 
     // loop through all directories in current directory
-    const dir = await fs.promises.readdir(
+    const dirs = await fs.promises.readdir(
         path.resolve(path.join('src', 'bot', 'cmds')),
     )
-    await utilities.loops.forEach(dir, async dir => {
+    for (const dir of dirs) {
         const fPath = path.resolve(path.join('src', 'bot', 'cmds', dir))
         const isDirectory = (await fs.promises.stat(fPath)).isDirectory()
         if (isDirectory) await addCmd(path.join(fPath, 'index.js'))
-    })
+    }
 
     // enable hot reloading command reloading
     // during development

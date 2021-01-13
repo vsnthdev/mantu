@@ -23,7 +23,7 @@ const action = async () => {
     const discordMembers = []
 
     // loop through everyone from discord
-    await utilities.loops.forEach(members, async member => {
+    for (const member of members) {
         const exists = await database.postgres.members.getMemberBy.Id(
             member.user.id,
         )
@@ -43,16 +43,16 @@ const action = async () => {
                 DateTime.local().toFormat('x'),
             )
         }
-    })
+    }
 
     // loop through all the members in database and delete non-existent ones
-    await utilities.loops.forEach(membersInDB, async member => {
+    for (const member of membersInDB) {
         const removed = !discordMembers.includes(member.id)
         if (removed) {
             await database.redis.del(member.id)
             await database.postgres.members.del(member.id)
         }
-    })
+    }
     logger.verbose('Task syncMembers has finished execution')
 }
 

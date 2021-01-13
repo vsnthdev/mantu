@@ -539,10 +539,10 @@
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
-"@vasanthdeveloper/utilities@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@vasanthdeveloper/utilities/-/utilities-0.0.4.tgz#fdc58c647202fb64b89c557286b72dbe8cf56a2b"
-  integrity sha512-nmMHpE+4xXc+nEgYOOH51dPpeO2rAHs4+oyJIM/h2SeO3/7vrf8D5m12fw+N1fVTVaKBFSvlbDnu8fIGxcKCyQ==
+"@vasanthdeveloper/utilities@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@vasanthdeveloper/utilities/-/utilities-0.2.0.tgz#5022bd4be6d703b393886d89fa3aa3e15d42eb76"
+  integrity sha512-tGQfYDwih+XFKD76Py0j3WYnRmEVbG8K0S/jYCcjC7YuM7YLPvYrUQYhPk2oItql4QSyrGLcb91z2vs0HuMxhg==
 
 abbrev@1:
   version "1.1.1"

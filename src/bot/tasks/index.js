@@ -14,16 +14,16 @@ export default async client => {
     logger.info('Initializing tasks')
 
     // loop through all directories in current directory
-    const dir = await fs.promises.readdir(
+    const dirs = await fs.promises.readdir(
         path.resolve(path.join('src', 'bot', 'tasks')),
     )
 
-    await utilities.loops.forEach(dir, async dir => {
+    for (const dir of dirs) {
         const fPath = path.resolve(path.join('src', 'bot', 'tasks', dir))
         const isDirectory = (await fs.promises.stat(fPath)).isDirectory()
         if (isDirectory) {
             // import the directory and asynchronously run the handler function
             await (await import(path.join(fPath, 'index.js'))).default(client)
         }
-    })
+    }
 }

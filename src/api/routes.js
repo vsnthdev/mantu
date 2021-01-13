@@ -27,13 +27,14 @@ const getRoutes = async () => {
 
     // loop through each index file and import it
     const returnable = []
-    await utilities.loops.forEach(indexes, async file => {
+
+    for (const file of indexes) {
         const route = file.slice(dirname().length).split('/')[1]
         const module = (await import(file)).default
 
         module.path = stripTrailingSlash('/' + path.join(route, module.path))
         returnable.push(module)
-    })
+    }
 
     return returnable
 }
@@ -43,10 +44,10 @@ export default async server => {
 
     // loop through all returned routes
     // and add them to our server
-    await utilities.loops.forEach(routes, async route => {
+    for (const route of routes) {
         logger.verbose(
             `Linking ${chalk.gray.dim.underline(route.path)} to the server`,
         )
         await server.route(route)
-    })
+    }
 }
