@@ -3,11 +3,10 @@
  *  Created On 06 January 2021
  */
 
-import { config } from '../../config/index.js'
-import { client } from './index.js'
+import guilds from './guilds.js'
 
 const getChannel = async id => {
-    const guild = await client.guilds.cache.get(config.get('discord.server'))
+    const guild = await guilds.getGuild()
 
     return guild.channels.cache.get(id)
 }

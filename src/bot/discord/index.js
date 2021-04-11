@@ -9,6 +9,7 @@ import djs from 'discord.js'
 import { config } from '../../config/index.js'
 import logger from '../../logger/app.js'
 import channels from './channels.js'
+import guilds from './guilds.js'
 import members from './members.js'
 import messages from './messages.js'
 import roles from './roles.js'
@@ -41,7 +42,7 @@ const logout = async () => {
     //
 }
 
-export const discord = { roles, messages, members, channels }
+export const discord = { roles, messages, members, channels, guilds }
 export default {
     login,
     logout,

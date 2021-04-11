@@ -33,8 +33,5 @@ export default Joi.object({
             channel: Joi.string().required(),
             target: Joi.string().required(),
         }),
-        tasks: Joi.object({
-            syncMembers: Joi.string().required(),
-        }),
     }),
 })

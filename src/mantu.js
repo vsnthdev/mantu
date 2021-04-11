@@ -8,8 +8,8 @@ import logger from './logger/app.js'
 
 // tell the user we're running in development mode
 // if in case
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
-if (env == 'development')
+global.env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
+if (global.env == 'development')
     logger.warning('The bot is running in development mode')
 
 // load the config
@@ -36,4 +36,3 @@ await api()
 //     2. login to Discord
 //     3. start the web server
 //     4. run the tasks initially
-//     5. run puppeteer automation if required

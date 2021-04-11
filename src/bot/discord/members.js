@@ -3,8 +3,7 @@
  *  Created On 05 January 2021
  */
 
-import { config } from '../../config/index.js'
-import { client } from './index.js'
+import guilds from './guilds.js'
 
 const hasRole = async (member, role) => {
     const roles = Array.from(member.roles.cache.values())
@@ -17,17 +16,24 @@ const hasRole = async (member, role) => {
 }
 
 const isInServer = async member => {
-    const guild = client.guilds.cache.get(config.get('discord.server'))
-    const exists = guild.member(member.id)
+    const everyone = await getAllMembers(false, true)
+    return Boolean(everyone.find(mem => mem.id == member))
+}
 
-    if (exists) {
-        return true
-    } else {
-        return false
-    }
+const getAllMembers = async (bots = false, admin = false) => {
+    const guild = await guilds.getGuild()
+    let members = Array.from(guild.members.cache).map(mem => mem[1])
+
+    if (bots == false) members = members.filter(mem => mem.user.bot == false)
+    if (admin == false)
+        members = members.filter(
+            mem => mem.hasPermission('ADMINISTRATOR') == false,
+        )
+    return members
 }
 
 export default {
     hasRole,
     isInServer,
+    getAllMembers,
 }

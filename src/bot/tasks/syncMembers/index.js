@@ -6,18 +6,12 @@
 
 import { DateTime } from 'luxon'
 
-import { config } from '../../../config/index.js'
 import { database } from '../../../database/index.js'
 import logger from '../../../logger/tasks.js'
 import { discord } from '../../discord/index.js'
 
 const action = async () => {
-    const role = await discord.roles.getRoleByName(
-        config.get('discord.tasks.syncMembers'),
-    )
-
-    const members = Array.from(role.members.values())
-
+    const members = await discord.members.getAllMembers(false, true)
     const membersInDB = await database.postgres.members.getAll()
     const discordMembers = []
 
@@ -62,18 +56,14 @@ const updateMemberActivity = async member => {
 
     // only work for this current server
     // defined in the config
-    if (!(await discord.members.isInServer(member))) return
+    if ((await discord.members.isInServer(member)) == false) return
 
-    // check if the author has the syncMember's role
-    if (
-        !member.roles.cache.find(
-            role => role.name == config.get('discord.tasks.syncMembers'),
-        )
-    )
-        return
+    // ensure the member isn't a bot
+    if (member.user.bot) return
 
     // update their time in the database
-    await database.redis.set(member.user.id, DateTime.local().toFormat('x'))
+    console.log(member.user.username)
+    await database.redis.set(member.id, DateTime.local().toFormat('x'))
 }
 
 export default async client => {

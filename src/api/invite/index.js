@@ -3,6 +3,7 @@
  *  Created On 06 January 2021
  */
 
+import boom from '@hapi/boom'
 import utilities from '@vasanthdeveloper/utilities'
 import axios from 'axios'
 import Joi from 'joi'
@@ -32,6 +33,10 @@ const newCode = async () => {
     const channel = await discord.channels.getChannel(
         config.get('discord.invite.channel'),
     )
+
+    // handle if channel doesn't exist
+    if (!channel)
+        throw boom.notFound('The configured invite channel was not found')
 
     // create a new invite link
     const invite = await channel.createInvite({

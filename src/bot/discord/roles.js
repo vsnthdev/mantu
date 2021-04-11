@@ -10,6 +10,7 @@ import { client } from './index.js'
 
 const getRoleByName = async name => {
     const guild = await client.guilds.cache.get(config.get('discord.server'))
+
     const role = await guild.roles.cache.find(role => role.name === name)
 
     if (!role)
