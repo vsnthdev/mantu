@@ -32,7 +32,14 @@ const getRoutes = async () => {
         const route = file.slice(dirname().length).split('/')[1]
         const module = (await import(file)).default
 
-        module.path = stripTrailingSlash('/' + path.join(route, module.path))
+        if (route != 'index') {
+            module.path = stripTrailingSlash(
+                '/' + path.join(route, module.path),
+            )
+        } else {
+            module.path = '/'
+        }
+
         returnable.push(module)
     }
 

@@ -71,7 +71,7 @@ const handler = async (req, h) => {
 export default {
     handler,
     method: 'GET',
-    path: '',
+    path: '/',
     options: {
         validate: {
             query: Joi.object({

@@ -62,7 +62,6 @@ const updateMemberActivity = async member => {
     if (member.user.bot) return
 
     // update their time in the database
-    console.log(member.user.username)
     await database.redis.set(member.id, DateTime.local().toFormat('x'))
 }
 
