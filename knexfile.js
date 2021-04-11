@@ -22,7 +22,7 @@ export const migrations = { tableName: 'migrations' }
 try {
     const {
         database: { postgres },
-    } = yaml.safeLoad(
+    } = yaml.load(
         fs.readFileSync(path.resolve(path.join('data', 'config.yml')), {
             encoding: 'utf-8',
         }),

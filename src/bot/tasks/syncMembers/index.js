@@ -4,7 +4,6 @@
  *  Created On 24 September 2020
  */
 
-import utilities from '@vasanthdeveloper/utilities'
 import { DateTime } from 'luxon'
 
 import { config } from '../../../config/index.js'
