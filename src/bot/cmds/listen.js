@@ -4,7 +4,9 @@
  *  Created On 12 April 2021
  */
 
-import { client } from '../discord/index.js'
+import { MessageEmbed } from 'discord.js'
+
+import { client, discord } from '../discord/index.js'
 
 export default async () => {
     client.ws.on('INTERACTION_CREATE', async inter => {
@@ -16,12 +18,28 @@ export default async () => {
         if (!cmd) {
             // send a card saying that interaction
             // couldn't be found
+            return await discord.interactions.sendEmbed(
+                new MessageEmbed()
+                    .setTitle(`404! Couldn't Locate The Universe`)
+                    .setDescription(
+                        `The requested command \`${command}\` cannot be found.`,
+                    ),
+                inter,
+            )
         } else {
             try {
                 cmd.action(inter, args)
             } catch (err) {
                 // send a card saying the interaction
                 // failed due to
+                const error = '```javascript\n' + err.toString() + '\n```'
+
+                return await discord.interactions.sendEmbed(
+                    new MessageEmbed()
+                        .setTitle('Runtime Exception')
+                        .setDescription(error),
+                    inter,
+                )
             }
         }
     })

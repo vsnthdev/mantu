@@ -68,12 +68,14 @@ export default async () => {
         logger.verbose(`Registered ${chalk.gray.dim(name)} with Discord`)
     }
 
-    logger.info('Finished loading commands into memory')
+    logger.verbose('Finished loading commands into memory')
 
     // delete non-existing commands in background
-    update()
+    await update()
 
     // listen for any commands
     // now that we've loaded all of them into memory
     await listen()
+
+    logger.info(`Synced commands with Discord`)
 }
