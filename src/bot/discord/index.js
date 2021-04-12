@@ -10,6 +10,7 @@ import { config } from '../../config/index.js'
 import logger from '../../logger/app.js'
 import channels from './channels.js'
 import guilds from './guilds.js'
+import interactions from './interactions.js'
 import members from './members.js'
 import messages from './messages.js'
 import roles from './roles.js'
@@ -21,11 +22,13 @@ const login = () => {
     return new Promise(resolve => {
         client = new djs.Client()
 
+        // upon the ready even, we load all the commands
         client.on('ready', () => {
             logger.info('Finished logging into Discord')
             resolve(client)
         })
 
+        // this will trigger the ready event
         client
             .login(config.get('discord.token'))
             .catch(err =>
@@ -42,7 +45,14 @@ const logout = async () => {
     //
 }
 
-export const discord = { roles, messages, members, channels, guilds }
+export const discord = {
+    roles,
+    messages,
+    members,
+    channels,
+    guilds,
+    interactions,
+}
 export default {
     login,
     logout,

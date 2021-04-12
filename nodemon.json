@@ -3,9 +3,6 @@
     "quiet": true,
     "exec": "node src/mantu.js --verbose",
     "ext": "js,json",
-    "ignore": [
-        "src/bot/cmds"
-    ],
     "watch": [
         "src/",
         "src/bot/cmds/index.js",

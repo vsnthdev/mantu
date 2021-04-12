@@ -5,19 +5,17 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../../discord/index.js'
+import { client, discord } from '../../discord/index.js'
 
-const action = async msg =>
-    await discord.messages.sendEmbed(
-        new MessageEmbed()
-            .addField('Ping', `${Math.round(msg.client.ws.ping)}ms`, true)
-            .addField(
-                'Latency',
-                `${Date.now() - msg.createdTimestamp}ms`,
-                true,
-            ),
-        msg,
+const action = async inter => {
+    const embed = new MessageEmbed().addField(
+        'Ping',
+        `${Math.round(client.ws.ping)}ms`,
+        true,
     )
+
+    await discord.interactions.sendEmbed(embed, inter)
+}
 
 export default {
     action,

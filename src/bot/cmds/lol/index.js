@@ -6,7 +6,6 @@
 import axios from 'axios'
 import { MessageEmbed } from 'discord.js'
 
-import { config } from '../../../config/index.js'
 import { discord } from '../../discord/index.js'
 
 // we'll pick one depending on the request
@@ -17,17 +16,15 @@ const list = {
     'tech support': 'techsupportmemes',
 }
 
-const action = async msg => {
-    const req =
-        msg.content.slice(config.get('discord.prefix').length + 3).trim() ||
-        'default'
+const action = async inter => {
+    const req = 'default'
 
     if (!list[req])
-        return await discord.messages.sendEmbed(
+        return await discord.interactions.sendEmbed(
             new MessageEmbed().setDescription(
                 `The requested subreddit "${req}" isn't allowed.`,
             ),
-            msg,
+            inter,
         )
 
     // request a sub-reddit in JSON format from Reddit
@@ -59,12 +56,12 @@ const action = async msg => {
 
     const meme = res[Math.floor(Math.random() * res.length)]
 
-    return await discord.messages.sendEmbed(
+    return await discord.interactions.sendEmbed(
         new MessageEmbed()
             .setTitle(meme.title)
             .setURL(meme.url)
             .setImage(meme.thumbnail),
-        msg,
+        inter,
     )
 }
 

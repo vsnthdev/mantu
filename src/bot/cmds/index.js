@@ -3,72 +3,77 @@
  *  Created On 28 September 2020
  */
 
-import utilities from '@vasanthdeveloper/utilities'
-import { MessageEmbed } from 'discord.js'
-import fs from 'fs'
+import chalk from 'chalk'
+import dirname from 'es-dirname'
+import glob from 'glob'
 import path from 'path'
 
 import { config } from '../../config/index.js'
 import logger from '../../logger/app.js'
-import discord, { client } from '../discord/index.js'
-import hotReload, { addCmd } from './reload.js'
+import { client } from '../discord/index.js'
+import listen from './listen.js'
 
-// noCommand() will respond to a user that a command
-// of that name was not found, as well as fire a commandNotFound
-// event on client
-const noCommand = async (cmdString, msg) => {
-    client.emit('commandNotFound', cmdString)
-    const embed = new MessageEmbed().setDescription(
-        `A command with name **"${cmdString}"** does not exist.`,
-    )
-    await discord.messages.sendEmbed(embed, msg)
-}
+const update = async () => {
+    const registered = await client.api
+        .applications(client.user.id)
+        .guilds(config.get('discord.server'))
+        .commands()
+        .get()
 
-// listen() will attach the event listener
-// so commands get fired.
-const listen = () => {
-    logger.success('The bot is now online and ready!')
-    client.on('message', async msg => {
-        if (
-            !msg.content.startsWith(config.get('discord.prefix')) ||
-            msg.author.bot
-        )
-            return
+    for (const rCmd of registered) {
+        const exists = client.cmds.find(cmd => cmd.name == rCmd.name)
 
-        const args = msg.content
-            .slice(config.get('discord.prefix').length)
-            .trim()
-            .split(/ +/)
-        const command = args.shift().toLowerCase()
-        const cmd = client.cmds.find(c => c.name == command)
+        if (!exists) {
+            await client.api
+                .applications(client.user.id)
+                .guilds(config.get('discord.server'))
+                .commands(rCmd.id)
+                .delete()
 
-        // if command not found, respond with a no
-        if (!cmd) {
-            noCommand(command, msg)
-        } else {
-            // fire the command and pass the arguments
-            await cmd.action(msg, args)
+            logger.verbose(
+                `Unregistered ${chalk.gray.dim(
+                    rCmd.name,
+                )} command from Discord`,
+            )
         }
-    })
+    }
 }
 
 export default async () => {
+    // where we'll store all loaded commands
+    // into memory
     client.cmds = []
 
-    // loop through all directories in current directory
-    const dirs = await fs.promises.readdir(
-        path.resolve(path.join('src', 'bot', 'cmds')),
-    )
-    for (const dir of dirs) {
-        const fPath = path.resolve(path.join('src', 'bot', 'cmds', dir))
-        const isDirectory = (await fs.promises.stat(fPath)).isDirectory()
-        if (isDirectory) await addCmd(path.join(fPath, 'index.js'))
+    // grab all command files
+    const files = glob
+        .sync(path.join(dirname(), '**', 'index.js'))
+        .filter(file => path.basename(path.dirname(file)) != 'cmds')
+
+    // loop through each file and import them
+    for (const file of files) {
+        const { default: mod } = await import(file)
+        const name = path.parse(path.dirname(file)).name
+
+        client.cmds.push({ ...mod, ...{ name } })
+
+        await client.api
+            .applications(client.user.id)
+            .guilds(config.get('discord.server'))
+            .commands.post({
+                data: {
+                    name,
+                    description: mod.description,
+                },
+            })
+        logger.verbose(`Registered ${chalk.gray.dim(name)} with Discord`)
     }
 
-    // enable hot reloading command reloading
-    // during development
-    hotReload()
+    logger.info('Finished loading commands into memory')
 
-    logger.info('Loaded commands into memory')
-    listen()
+    // delete non-existing commands in background
+    update()
+
+    // listen for any commands
+    // now that we've loaded all of them into memory
+    await listen()
 }
