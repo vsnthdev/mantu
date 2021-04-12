@@ -30,6 +30,7 @@ export default config => {
     )
     set('discord.server', '690044914444009508')
     set('discord.prefix', 'm ')
+    set('discord.logs', 'xxxxxxxxxxxxxxxxxx')
     set('discord.invite.channel', '796271826447630386')
     set('discord.invite.target', 'https://vas.cx/discord')
 }

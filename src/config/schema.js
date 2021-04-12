@@ -26,8 +26,9 @@ export default Joi.object({
         port: Joi.number().min(1000).max(60000).required(),
     }),
     discord: Joi.object({
-        token: Joi.string().length(59).required(),
         prefix: Joi.string().required(),
+        logs: Joi.string().length(18).required(),
+        token: Joi.string().length(59).required(),
         server: Joi.string().length(18).required(),
         invite: Joi.object({
             channel: Joi.string().required(),
