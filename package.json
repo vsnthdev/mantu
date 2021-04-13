@@ -21,7 +21,8 @@
     "scripts": {
         "dev": "nodemon",
         "start": "node src/mantu.js",
-        "build": "docker build ."
+        "build": "docker build . --squash --tag vasanthdeveloper/mantu",
+        "deploy": "docker push vasanthdeveloper/mantu"
     },
     "keywords": [],
     "dependencies": {
