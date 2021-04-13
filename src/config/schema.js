@@ -17,7 +17,7 @@ export default Joi.object({
         redis: Joi.object({
             host: Joi.string().required(),
             port: Joi.number().min(1000).max(60000).required(),
-            channel: Joi.number().min(1).max(99).required(),
+            channel: Joi.number().min(0).max(99).required(),
             password: Joi.string().allow(null).required(),
         }),
     }),
