@@ -8,6 +8,14 @@ import { MessageEmbed } from 'discord.js'
 
 import { client, discord } from '../discord/index.js'
 
+const transformArgs = args => {
+    if (!args) return {}
+
+    const returnable = {}
+    for (const obj of args) returnable[obj.name] = obj.value
+    return returnable
+}
+
 export default async () => {
     client.ws.on('INTERACTION_CREATE', async inter => {
         const command = inter.data.name.toLowerCase()
@@ -28,7 +36,7 @@ export default async () => {
             )
         } else {
             try {
-                cmd.action(inter, args)
+                cmd.action(inter, transformArgs(args))
             } catch (err) {
                 // send a card saying the interaction
                 // failed due to

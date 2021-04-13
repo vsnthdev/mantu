@@ -63,6 +63,7 @@ export default async () => {
                 data: {
                     name,
                     description: mod.description,
+                    options: mod.options,
                 },
             })
         logger.verbose(`Registered ${chalk.gray.dim(name)} with Discord`)

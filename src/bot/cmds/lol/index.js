@@ -8,24 +8,8 @@ import { MessageEmbed } from 'discord.js'
 
 import { discord } from '../../discord/index.js'
 
-// we'll pick one depending on the request
-const list = {
-    default: 'ProgrammerHumor',
-    alt: 'techhumor',
-    it: 'ITMemes',
-    'tech support': 'techsupportmemes',
-}
-
-const action = async inter => {
-    const req = 'default'
-
-    if (!list[req])
-        return await discord.interactions.sendEmbed(
-            new MessageEmbed().setDescription(
-                `The requested subreddit "${req}" isn't allowed.`,
-            ),
-            inter,
-        )
+const action = async (inter, { subreddit }) => {
+    subreddit = subreddit || 'ProgrammerHumor'
 
     // request a sub-reddit in JSON format from Reddit
     let {
@@ -34,7 +18,7 @@ const action = async inter => {
         },
     } = await axios({
         method: 'GET',
-        url: `https://www.reddit.com/r/${list[req]}.json`,
+        url: `https://www.reddit.com/r/${subreddit}.json`,
     })
 
     // remove 18+, and keep only
@@ -68,4 +52,29 @@ const action = async inter => {
 export default {
     action,
     description: 'A random programming meme from Reddit.',
+    options: [
+        {
+            name: 'subreddit',
+            description: 'The subreddit to get meme from',
+            type: 3,
+            choices: [
+                {
+                    name: 'Default',
+                    value: 'ProgrammerHumor',
+                },
+                {
+                    name: 'Alternative',
+                    value: 'techhumor',
+                },
+                {
+                    name: 'IT',
+                    value: 'ITMemes',
+                },
+                {
+                    name: 'Tech Support',
+                    value: 'techsupportmemes',
+                },
+            ],
+        },
+    ],
 }
