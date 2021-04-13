@@ -36,8 +36,8 @@ const connect = async () => {
         connection: {
             host: config.get('database.postgres.host'),
             port: config.get('database.postgres.port'),
-            database: config.get('database.postgres.name'),
-            user: config.get('database.postgres.username'),
+            user: config.get('database.postgres.user'),
+            database: config.get('database.postgres.database'),
             password: config.get('database.postgres.password'),
         },
         pool: {

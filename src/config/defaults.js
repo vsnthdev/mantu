@@ -11,8 +11,8 @@ export default config => {
     // database
     set('database.postgres.host', '127.0.0.1')
     set('database.postgres.port', 5432)
-    set('database.postgres.name', 'mantu')
-    set('database.postgres.username', process.env.USER || 'vasanth')
+    set('database.postgres.user', process.env.USER || 'vasanth')
+    set('database.postgres.database', 'mantu')
     set('database.postgres.password', null)
     set('database.redis.host', '127.0.0.1')
     set('database.redis.port', 6379)
