@@ -22,13 +22,14 @@ const isInServer = async member => {
 
 const getAllMembers = async (bots = false, admin = false) => {
     const guild = await guilds.getGuild()
-    let members = Array.from(guild.members.cache).map(mem => mem[1])
+    let members = Array.from(await guild.members.fetch()).map(mem => mem[1])
 
     if (bots == false) members = members.filter(mem => mem.user.bot == false)
     if (admin == false)
         members = members.filter(
             mem => mem.hasPermission('ADMINISTRATOR') == false,
         )
+
     return members
 }
 

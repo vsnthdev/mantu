@@ -29,7 +29,7 @@ const action = async () => {
         days = Math.round(days)
 
         // kick them!
-        if (days >= 50) await kick(member)
+        if (days >= 50) await kick(member, days)
     }
 }
 

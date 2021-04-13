@@ -40,7 +40,7 @@ const dm = async member => {
     }
 }
 
-export default async member => {
+export default async (member, days) => {
     const dmStatus = await dm(member)
     await member.kick('Inactive for 50+ days.')
 
@@ -51,6 +51,7 @@ export default async member => {
     return await discord.messages.sendEmbed(
         new MessageEmbed()
             .setTitle('Server Cleanup')
+            .addField('Period', days.toString(), true)
             .addField('Direct Message', dmStatus ? 'Sent' : 'Failed', true)
             .addField('Invite Link', config.get('discord.invite.target'), true)
             .setDescription(
