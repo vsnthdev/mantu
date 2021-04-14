@@ -29,7 +29,11 @@ const action = async () => {
         days = Math.round(days)
 
         // kick them!
-        if (days >= 50) await kick(member, days)
+        // due to some unknown error, the number
+        // sometimes goes to 18731 in which case
+        // we want to prevent mantu from accidentally
+        // kicking everyone 😬
+        if (days >= 50 && days <= 1000) await kick(member, days)
     }
 }
 
