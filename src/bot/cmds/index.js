@@ -46,7 +46,7 @@ export default async () => {
 
     // grab all command files
     const files = glob
-        .sync(path.join(dirname(), '**', 'index.js'))
+        .sync(path.join(dirname(), '*', 'index.js'))
         .filter(file => path.basename(path.dirname(file)) != 'cmds')
 
     // loop through each file and import them

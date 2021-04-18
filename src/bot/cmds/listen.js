@@ -16,9 +16,18 @@ const transformArgs = args => {
     return returnable
 }
 
+const getCommandStr = inter =>
+    (inter.data.options || [])
+        .filter(sub => sub.type == 1)
+        .reduce(
+            (accumulator, current) => `${accumulator} ${current.name}`,
+            inter.data.name.toLowerCase(),
+        )
+        .trim()
+
 export default async () => {
     client.ws.on('INTERACTION_CREATE', async inter => {
-        const command = inter.data.name.toLowerCase()
+        const command = getCommandStr(inter)
         const args = inter.data.options
 
         const cmd = client.cmds.find(cmd => cmd.name == command)
