@@ -32,4 +32,6 @@ export default config => {
     set('discord.logs', 'xxxxxxxxxxxxxxxxxx')
     set('discord.invite.channel', '796271826447630386')
     set('discord.invite.target', 'https://vas.cx/discord')
+    set('discord.channelSep', '｜')
+    set('discord.channelPosition', 0)
 }

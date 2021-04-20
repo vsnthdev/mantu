@@ -29,6 +29,8 @@ export default Joi.object({
         logs: Joi.string().length(18).required(),
         token: Joi.string().length(59).required(),
         server: Joi.string().length(18).required(),
+        channelSep: Joi.string().required(),
+        channelPosition: Joi.number().required(),
         invite: Joi.object({
             channel: Joi.string().required(),
             target: Joi.string().required(),

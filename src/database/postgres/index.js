@@ -10,6 +10,7 @@ import path from 'path'
 
 import { config } from '../../config/index.js'
 import logger from '../../logger/app.js'
+import events from './events.js'
 import members from './members.js'
 
 export let database
@@ -72,4 +73,5 @@ const disconnect = () => {
 export const postgres = { connect, disconnect }
 export default {
     members,
+    events,
 }

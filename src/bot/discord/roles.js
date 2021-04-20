@@ -6,10 +6,11 @@
 
 import { config } from '../../config/index.js'
 import logger from '../../logger/discord.js'
+import guilds from './guilds.js'
 import { client } from './index.js'
 
 const getRoleByName = async name => {
-    const guild = await client.guilds.cache.get(config.get('discord.server'))
+    const guild = await guilds.getGuild()
 
     const role = await guild.roles.cache.find(role => role.name === name)
 
@@ -19,6 +20,18 @@ const getRoleByName = async name => {
     return role
 }
 
+const createNewRole = async (name, color, reason) => {
+    const guild = await guilds.getGuild()
+    return await guild.roles.create({
+        data: {
+            name,
+            color,
+        },
+        reason,
+    })
+}
+
 export default {
     getRoleByName,
+    createNewRole,
 }
