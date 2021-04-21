@@ -4,10 +4,13 @@
  *  Created On 25 September 2020
  */
 
-import { config } from '../../config/index.js'
 import logger from '../../logger/discord.js'
 import guilds from './guilds.js'
-import { client } from './index.js'
+
+const get = async id => {
+    const guild = await guilds.getGuild()
+    return await guild.roles.cache.get(id)
+}
 
 const getRoleByName = async name => {
     const guild = await guilds.getGuild()
@@ -32,6 +35,7 @@ const createNewRole = async (name, color, reason) => {
 }
 
 export default {
+    get,
     getRoleByName,
     createNewRole,
 }

@@ -5,7 +5,7 @@
 
 import guilds from './guilds.js'
 
-const getChannel = async id => {
+const get = async id => {
     const guild = await guilds.getGuild()
 
     return guild.channels.cache.get(id)
@@ -43,7 +43,7 @@ const createChannel = async ({ name, parent, isPrivate, type }) => {
 }
 
 export default {
-    getChannel,
+    get,
     createGroup,
     createChannel,
 }

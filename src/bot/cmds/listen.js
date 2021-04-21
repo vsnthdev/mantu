@@ -15,7 +15,10 @@ const transformArgs = (command, args) => {
     const returnable = {}
     if (cmds.length > 1) {
         const subCmd = args.find(arg => arg.type == 1 && arg.name == cmds.pop())
-        for (const obj of subCmd.options) returnable[obj.name] = obj.value
+
+        if (subCmd.options)
+            for (const obj of subCmd.options) returnable[obj.name] = obj.value
+
         return returnable
     } else {
         for (const obj of args) returnable[obj.name] = obj.value
@@ -35,7 +38,7 @@ const getCommandStr = inter =>
 export default async () => {
     client.ws.on('INTERACTION_CREATE', async inter => {
         const command = getCommandStr(inter)
-        const args = transformArgs(command, inter.data.options)
+        const args = transformArgs(command, inter.data.options || [])
 
         const cmd = client.cmds.find(cmd => cmd.name == command)
 

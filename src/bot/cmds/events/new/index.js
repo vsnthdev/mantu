@@ -12,7 +12,13 @@ const action = async (inter, { name, color, emoji }) => {
     const { role, group, text, stage } = await create({ name, color, emoji })
 
     // add the newly created event into database
-    await database.postgres.events.add({ name, role, group, text, stage })
+    await database.postgres.events.add({
+        name: `${emoji}  ${name}`,
+        role,
+        group,
+        text,
+        stage,
+    })
 
     // TODO: Send a welcome message to the text channel
     // showing a title and a description of the following event

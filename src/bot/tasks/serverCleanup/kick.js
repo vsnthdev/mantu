@@ -44,9 +44,7 @@ export default async (member, days) => {
     const dmStatus = await dm(member)
     await member.kick('Inactive for 50+ days.')
 
-    const channel = await discord.channels.getChannel(
-        config.get('discord.logs'),
-    )
+    const channel = await discord.channels.get(config.get('discord.logs'))
 
     return await discord.messages.sendEmbed(
         new MessageEmbed()
