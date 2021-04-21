@@ -26,6 +26,7 @@ const action = async (inter, { id: role }) => {
 export default {
     action,
     description: 'Delete an event',
+    perms: ['ADMINISTRATOR'],
     options: [
         {
             name: 'id',

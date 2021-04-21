@@ -33,6 +33,7 @@ const action = async (inter, { name, color, emoji }) => {
 export default {
     action,
     description: 'Create a new event',
+    perms: ['ADMINISTRATOR'],
     options: [
         {
             type: 3,

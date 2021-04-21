@@ -33,7 +33,13 @@ const getAllMembers = async (bots = false, admin = false) => {
     return members
 }
 
+const get = async id => {
+    const guild = await guilds.getGuild()
+    return guild.members.cache.get(id)
+}
+
 export default {
+    get,
     hasRole,
     isInServer,
     getAllMembers,

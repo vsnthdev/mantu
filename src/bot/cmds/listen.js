@@ -54,6 +54,25 @@ export default async () => {
                 inter,
             )
         } else {
+            // check for permissions
+            if (cmd.perms) {
+                const member = await discord.members.get(inter.member.user.id)
+
+                for (const perm of cmd.perms) {
+                    if (member.hasPermission(perm) == false) {
+                        return await discord.interactions.sendEmbed(
+                            new MessageEmbed()
+                                .setTitle(`I'm afraid I don't know you.`)
+                                .setDescription(
+                                    `The following command requires **${perm}** permission which you don't seem to have 🤷‍♂️`,
+                                ),
+                            inter,
+                        )
+                    }
+                }
+            }
+
+            // run the action tied to the requested interaction
             try {
                 cmd.action(inter, args)
             } catch (err) {
