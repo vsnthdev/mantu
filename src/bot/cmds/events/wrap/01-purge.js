@@ -12,8 +12,15 @@ export default async ({ role, group, text, stage }) => {
     stage = await discord.channels.get(stage)
 
     // delete them in order!
-    await text.delete()
-    await stage.delete()
-    await group.delete()
-    await role.delete()
+    if (text) text = await text.delete()
+    if (stage) stage = await stage.delete()
+    if (group) group = await group.delete()
+    if (role) role = await role.delete()
+
+    return {
+        text: text ? text.deleted : false,
+        stage: stage ? stage.deleted : false,
+        group: group ? group.deleted : false,
+        role: role ? role.deleted : false,
+    }
 }

@@ -5,21 +5,22 @@
 
 import { database } from '../../../../database/index.js'
 import purge from './01-purge.js'
-import respond from './02-respond.js'
+import respond, { notFound } from './02-respond.js'
 
 const action = async (inter, { id: role }) => {
+    // get event's connected resources from our database
     const data = await database.postgres.events.get(role)
 
-    // TODO: Handle when data is undefined
-    if (!data) return
+    // handle when we don't have that role
+    if (!data) return await notFound(role, inter)
 
     // delete resources created on Discord
-    await purge(data)
+    const purged = await purge(data)
 
     // delete our event in the database
     await database.postgres.events.purge(role)
 
-    return await respond({ inter, name: data.name })
+    return await respond(data.name, purged, inter)
 }
 
 export default {

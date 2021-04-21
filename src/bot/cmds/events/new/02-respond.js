@@ -17,10 +17,10 @@ export default async ({ inter, role, stage, text }) => {
         .addField('Stage', `<#${stage.id}>`, true)
         .addField('Text', `<#${text.id}>`, true)
 
+    // respond
+    await discord.interactions.sendEmbed(msg, inter)
+
     // send to log channel
     const channel = await discord.channels.get(config.get('discord.logs'))
     await discord.messages.sendEmbed(msg, { channel })
-
-    // respond
-    return await discord.interactions.sendEmbed(msg, inter)
 }
