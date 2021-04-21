@@ -5,13 +5,26 @@
 
 import chalk from 'chalk'
 import itivrutaha from 'itivrutaha'
-import { typeCase } from 'itivrutaha/src/config.js'
 
-export default itivrutaha.createNewLogger({
-    theme: `🤖 ${chalk.cyanBright('APP')} [${chalk.gray(
-        ':time',
-    )}] :type :message`,
-    timeFormat: 'hh:MM:ss TT, dS mmm yyyy',
-    boldType: true,
-    typeCase: typeCase.lower,
+const ascii = `
+
+                         __
+.--------..---.-..-----.|  |_ .--.--.
+|        ||  _  ||     ||   _||  |  |
+|__|__|__||___._||__|__||____||_____|
+
+`
+    .split('\n')
+    .filter(line => line != '')
+    .join('\n')
+    .concat('\n')
+
+console.clear()
+console.log(chalk.redBright.bold(ascii))
+
+export default await itivrutaha.createNewLogger({
+    context: {
+        name: 'app',
+        color: chalk.redBright,
+    },
 })

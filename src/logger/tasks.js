@@ -5,13 +5,12 @@
 
 import chalk from 'chalk'
 import itivrutaha from 'itivrutaha'
-import { typeCase } from 'itivrutaha/src/config.js'
 
-export default itivrutaha.createNewLogger({
-    theme: `✅ ${chalk.redBright('TAS')} [${chalk.gray(
-        ':time',
-    )}] :type :message`,
-    timeFormat: 'hh:MM:ss TT, dS mmm yyyy',
-    boldType: true,
-    typeCase: typeCase.lower,
+export default await itivrutaha.createNewLogger({
+    bootLog: false,
+    shutdownLog: false,
+    context: {
+        name: 'tas',
+        color: chalk.blueBright,
+    },
 })

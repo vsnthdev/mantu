@@ -37,7 +37,7 @@
         "execa": "^5.0.0",
         "glob": "^7.1.6",
         "hapi-rate-limit": "^5.0.0",
-        "itivrutaha": "^0.1.1",
+        "itivrutaha": "^2.0.4",
         "joi": "^17.4.0",
         "js-yaml": "^4.0.0",
         "knex": "^0.95.4",
