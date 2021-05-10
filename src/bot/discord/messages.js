@@ -22,9 +22,17 @@ export const transformEmbed = async embed => {
         .setFooter(`mantu v${version}`)
 }
 
-const sendEmbed = async (embed, msg) =>
-    await msg.channel.send(await transformEmbed(embed))
-
 export default {
-    sendEmbed,
+    send: {
+        embed: async (embed, msg, content = '') =>
+            await msg.channel.send(content, {
+                embed: await transformEmbed(embed),
+            }),
+    },
+    update: {
+        embed: async (embed, msg, content) =>
+            await msg.edit(content, {
+                embed: await transformEmbed(embed),
+            }),
+    },
 }

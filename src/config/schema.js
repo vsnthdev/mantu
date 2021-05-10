@@ -27,6 +27,7 @@ export default Joi.object({
     }),
     discord: Joi.object({
         logs: Joi.string().length(18).required(),
+        moderator: Joi.string().length(18).required(),
         token: Joi.string().length(59).required(),
         server: Joi.string().length(18).required(),
         channelSep: Joi.string().required(),
@@ -34,6 +35,9 @@ export default Joi.object({
         invite: Joi.object({
             channel: Joi.string().required(),
             target: Joi.string().required(),
+        }),
+        showcase: Joi.object({
+            server: Joi.string().length(18).required(),
         }),
     }),
 })

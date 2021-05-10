@@ -11,16 +11,16 @@ import { discord } from '../../../discord/index.js'
 
 export default async ({ inter, role, stage, text }) => {
     // prepare the message
-    const msg = new MessageEmbed()
+    const embed = new MessageEmbed()
         .setTitle(`New Event Created`)
         .addField('Role', `<@&${role.id}>`)
         .addField('Stage', `<#${stage.id}>`, true)
         .addField('Text', `<#${text.id}>`, true)
 
     // respond
-    await discord.interactions.sendEmbed(msg, inter)
+    await discord.interactions.send.embed(embed, inter)
 
     // send to log channel
     const channel = await discord.channels.get(config.get('discord.logs'))
-    await discord.messages.sendEmbed(msg, { channel })
+    await discord.messages.send.embed(embed, { channel })
 }

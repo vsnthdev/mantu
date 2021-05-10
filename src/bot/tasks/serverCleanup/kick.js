@@ -27,7 +27,7 @@ const dm = async member => {
             .trim()
             .replace(/  +/g, '')
 
-        await discord.messages.sendEmbed(
+        await discord.messages.send.embed(
             new MessageEmbed()
                 .setTitle('Sorry to see you go')
                 .setDescription(desc),
@@ -46,7 +46,7 @@ export default async (member, days) => {
 
     const channel = await discord.channels.get(config.get('discord.logs'))
 
-    return await discord.messages.sendEmbed(
+    return await discord.messages.send.embed(
         new MessageEmbed()
             .setTitle('Server Cleanup')
             .addField('Period', days.toString(), true)

@@ -31,6 +31,7 @@
         "@vasanthdeveloper/utilities": "^0.2.0",
         "axios": "^0.21.1",
         "chalk": "^4.1.0",
+        "chunk-text": "^2.0.1",
         "conf": "^9.0.2",
         "discord.js": "^12.5.3",
         "es-dirname": "^0.1.0",

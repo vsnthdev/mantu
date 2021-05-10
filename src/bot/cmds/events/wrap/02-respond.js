@@ -15,7 +15,7 @@ export const notFound = async (role, inter) => {
         .setTitle('Event Not Found')
         .setDescription(`An event tied to <@&${role}> was not found.`)
 
-    return await discord.interactions.sendEmbed(msg, inter)
+    return await discord.interactions.send.embed(msg, inter)
 }
 
 export default async (name, purged, inter) => {
@@ -49,9 +49,9 @@ export default async (name, purged, inter) => {
     ])
 
     // respond
-    await discord.interactions.sendEmbed(msg, inter)
+    await discord.interactions.send.embed(msg, inter)
 
     // send to log channel
     const channel = await discord.channels.get(config.get('discord.logs'))
-    await discord.messages.sendEmbed(msg, { channel })
+    await discord.messages.send.embed(msg, { channel })
 }

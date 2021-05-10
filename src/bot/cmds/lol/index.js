@@ -40,7 +40,7 @@ const action = async (inter, { subreddit }) => {
 
     const meme = res[Math.floor(Math.random() * res.length)]
 
-    return await discord.interactions.sendEmbed(
+    return await discord.interactions.send.embed(
         new MessageEmbed()
             .setTitle(meme.title)
             .setURL(meme.url)
