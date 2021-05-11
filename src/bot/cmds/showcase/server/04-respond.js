@@ -27,7 +27,7 @@ const timeout = async inter =>
         new MessageEmbed()
             .setTitle(`:clock4: It's Too Late!`)
             .setDescription(
-                `It's been more than 30 seconds and you didn't respond yet.`,
+                `It's been more than 2 minutes and you didn't respond yet.`,
             ),
         inter,
     )

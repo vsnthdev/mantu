@@ -17,7 +17,7 @@ export default async inter => {
     const { error, returned: desc } = await utilities.promise.handle(
         channel.awaitMessages(filter, {
             max: 1,
-            time: 30000,
+            time: 120000,
             errors: ['time'],
         }),
     )
