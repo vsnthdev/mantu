@@ -31,7 +31,7 @@ const isValid = async code => {
 const newCode = async () => {
     // create a new one!
     const channel = await discord.channels.get(
-        config.get('discord.invite.channel'),
+        config.get('discord.channels.identifiers.invite'),
     )
 
     // handle if channel doesn't exist

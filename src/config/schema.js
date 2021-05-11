@@ -26,18 +26,28 @@ export default Joi.object({
         port: Joi.number().min(1000).max(60000).required(),
     }),
     discord: Joi.object({
-        logs: Joi.string().length(18).required(),
-        moderator: Joi.string().length(18).required(),
         token: Joi.string().length(59).required(),
         server: Joi.string().length(18).required(),
-        channelSep: Joi.string().required(),
-        channelPosition: Joi.number().required(),
-        invite: Joi.object({
-            channel: Joi.string().required(),
-            target: Joi.string().required(),
+        invite: Joi.string().required(),
+        roles: Joi.object({
+            identifer: Joi.object({
+                moderator: Joi.string().length(18).required(),
+            }),
         }),
-        showcase: Joi.object({
-            server: Joi.string().length(18).required(),
+        channels: Joi.object({
+            settings: Joi.object({
+                sep: Joi.string().max(5).required(),
+            }),
+            positions: Joi.object({
+                events: Joi.number().min(0).required(),
+            }),
+            identifiers: Joi.object({
+                logs: Joi.string().length(18).required(),
+                invite: Joi.string().length(18).required(),
+                showcase: Joi.object({
+                    server: Joi.string().length(18).required(),
+                }),
+            }),
         }),
     }),
 })

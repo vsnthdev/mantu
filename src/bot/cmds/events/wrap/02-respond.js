@@ -52,6 +52,8 @@ export default async (name, purged, inter) => {
     await discord.interactions.send.embed(msg, inter)
 
     // send to log channel
-    const channel = await discord.channels.get(config.get('discord.logs'))
+    const channel = await discord.channels.get(
+        config.get('discord.channels.identifiers.logs'),
+    )
     await discord.messages.send.embed(msg, { channel })
 }

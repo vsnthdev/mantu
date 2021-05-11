@@ -20,7 +20,7 @@ const dm = async member => {
 
         Feel free to re-join the server, when you become active again.
         Here is a permanent invite link to the server :point_down:
-        <${config.get('discord.invite.target')}>
+        <${config.get('discord.invite')}>
 
         Hope to see you again! :sparkles:
         `
@@ -44,14 +44,16 @@ export default async (member, days) => {
     const dmStatus = await dm(member)
     await member.kick('Inactive for 50+ days.')
 
-    const channel = await discord.channels.get(config.get('discord.logs'))
+    const channel = await discord.channels.get(
+        config.get('discord.channels.identifiers.logs'),
+    )
 
     return await discord.messages.send.embed(
         new MessageEmbed()
             .setTitle('Server Cleanup')
             .addField('Period', days.toString(), true)
             .addField('Direct Message', dmStatus ? 'Sent' : 'Failed', true)
-            .addField('Invite Link', config.get('discord.invite.target'), true)
+            .addField('Invite Link', config.get('discord.invite'), true)
             .setDescription(
                 `<@${member.id}> has been kick due to inactivity for 50+ days.`,
             ),

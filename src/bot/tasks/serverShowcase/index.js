@@ -14,7 +14,7 @@ import { discord } from '../../discord/index.js'
 const action = async () => {
     // get the server showcase channel
     const channel = await discord.channels.get(
-        config.get('discord.showcase.server'),
+        config.get('discord.channels.identifiers.showcase.server'),
     )
 
     // get all messages
@@ -39,7 +39,9 @@ const action = async () => {
             await msg.delete()
 
             // notify in the log channel
-            const log = await discord.channels.get(config.get('discord.logs'))
+            const log = await discord.channels.get(
+                config.get('discord.channels.identifiers.logs'),
+            )
             await discord.messages.send.embed(
                 new MessageEmbed()
                     .setTitle(':hourglass: Server Showcase Cleaned')
@@ -48,7 +50,7 @@ const action = async () => {
                     )
                     .addField('Code', code),
                 { channel: log },
-                `<@&${config.get('discord.moderator')}>`,
+                `<@&${config.get('discord.roles.identifer.moderator')}>`,
             )
         }
     }

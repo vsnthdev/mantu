@@ -20,7 +20,7 @@ export default async ({ name, color, emoji }) => {
     // create a channel group
     const group = await discord.channels.createGroup(
         name,
-        config.get('discord.channelPosition'),
+        config.get('discord.channels.positions.events'),
     )
 
     // create a text channel
@@ -28,12 +28,14 @@ export default async ({ name, color, emoji }) => {
         type: 'text',
         parent: group,
         isPrivate: role,
-        name: `💬${config.get('discord.channelSep')}${slug(name)}`,
+        name: `💬${config.get('discord.channels.settings.sep')}${slug(name)}`,
     })
 
     // create a voice channel or stage channel
     const stage = await discord.channels.createChannel({
-        name: `${emoji}${config.get('discord.channelSep')}${slug(name)}`,
+        name: `${emoji}${config.get('discord.channels.settings.sep')}${slug(
+            name,
+        )}`,
         type: 'voice',
         parent: group,
         isPrivate: role,

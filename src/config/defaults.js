@@ -29,11 +29,15 @@ export default config => {
         'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     )
     set('discord.server', '690044914444009508')
-    set('discord.moderator', 'xxxxxxxxxxxxxxxxxx')
-    set('discord.logs', 'xxxxxxxxxxxxxxxxxx')
-    set('discord.invite.channel', '796271826447630386')
-    set('discord.invite.target', 'https://vas.cx/discord')
-    set('discord.channelSep', '｜')
-    set('discord.channelPosition', 0)
-    set('discord.showcase.server', 'xxxxxxxxxxxxxxxxxx')
+    set('discord.invite', 'https://vas.cx/discord')
+
+    // Discord Roles
+    set('discord.roles.identifer.moderator', 'xxxxxxxxxxxxxxxxxx')
+
+    // Discord Channels
+    set('discord.channels.settings.sep', '｜')
+    set('discord.channels.positions.events', 0)
+    set('discord.channels.identifiers.logs', 'xxxxxxxxxxxxxxxxxx')
+    set('discord.channels.identifiers.invite', 'xxxxxxxxxxxxxxxxxx')
+    set('discord.channels.identifiers.showcase.server', 'xxxxxxxxxxxxxxxxxx')
 }
