@@ -16,7 +16,7 @@ const action = async inter =>
 
 export default {
     action,
-    description: 'Start an event',
+    description: 'Start a created event on this server.',
     perms: ['ADMINISTRATOR'],
     options: [],
 }

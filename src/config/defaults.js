@@ -38,6 +38,7 @@ export default config => {
     set('discord.channels.settings.sep', '｜')
     set('discord.channels.positions.events', 0)
     set('discord.channels.identifiers.logs', 'xxxxxxxxxxxxxxxxxx')
+    set('discord.channels.identifiers.roles', 'xxxxxxxxxxxxxxxxxx')
     set('discord.channels.identifiers.invite', 'xxxxxxxxxxxxxxxxxx')
     set('discord.channels.identifiers.showcase.server', 'xxxxxxxxxxxxxxxxxx')
 }

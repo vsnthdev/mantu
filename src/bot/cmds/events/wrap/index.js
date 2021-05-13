@@ -25,12 +25,12 @@ const action = async (inter, { id: role }) => {
 
 export default {
     action,
-    description: 'Delete an event',
+    description: 'Clean up an event on this server.',
     perms: ['ADMINISTRATOR'],
     options: [
         {
             name: 'id',
-            description: 'Text channel or stage channel ID',
+            description: 'Text channel or stage channel id.',
             type: 8,
             required: true,
         },

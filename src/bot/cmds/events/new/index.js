@@ -74,26 +74,26 @@ const action = async (inter, { name, color, emoji }) => {
 
 export default {
     action,
-    description: 'Create a new event',
+    description: 'Setup a new event on this server.',
     perms: ['ADMINISTRATOR'],
     options: [
         {
             type: 3,
             name: 'name',
             required: true,
-            description: 'The name of the event to be created',
+            description: 'The name of the event to be created.',
         },
         {
             type: 3,
             name: 'emoji',
             required: true,
-            description: 'Emoji for the event to be created',
+            description: 'Emoji for the event to be created.',
         },
         {
             type: 3,
             name: 'color',
             required: true,
-            description: 'Color for the event to be created',
+            description: 'Color for the event to be created.',
         },
     ],
 }

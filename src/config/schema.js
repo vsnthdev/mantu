@@ -43,6 +43,7 @@ export default Joi.object({
             }),
             identifiers: Joi.object({
                 logs: Joi.string().length(18).required(),
+                roles: Joi.string().length(18).required(),
                 invite: Joi.string().length(18).required(),
                 showcase: Joi.object({
                     server: Joi.string().length(18).required(),

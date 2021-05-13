@@ -33,14 +33,14 @@ const action = async (inter, { code }) => {
 
 export default {
     action,
-    description: 'Showcase another Discord server',
+    description: 'Showcase another Discord server on this server.',
     perms: ['ADMINISTRATOR'],
     options: [
         {
             type: 3,
             name: 'code',
             required: true,
-            description: 'Invite code for the server you want to showcase',
+            description: 'Invite code for the server you want to showcase.',
         },
     ],
 }

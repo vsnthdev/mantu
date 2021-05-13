@@ -41,6 +41,6 @@ export const subCmds = async (dir, options) => {
 }
 
 export default {
-    description: 'Commands related to event management',
+    description: 'Event management on this server.',
     options: await subCmds(dirname(), []),
 }

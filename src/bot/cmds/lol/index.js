@@ -51,11 +51,11 @@ const action = async (inter, { subreddit }) => {
 
 export default {
     action,
-    description: 'A random programming meme from Reddit.',
+    description: 'Want a random programming meme from Reddit?',
     options: [
         {
             name: 'subreddit',
-            description: 'The subreddit to get meme from',
+            description: 'The subreddit to get meme from.',
             type: 3,
             choices: [
                 {
