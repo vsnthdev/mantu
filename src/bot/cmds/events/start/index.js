@@ -8,10 +8,11 @@ import { MessageEmbed } from 'discord.js'
 import { discord } from '../../../discord/index.js'
 
 const action = async inter =>
-    await discord.interactions.send.embed(
-        new MessageEmbed().setTitle('start an event'),
+    await discord.interactions.send.embed({
         inter,
-    )
+        ephemeral: true,
+        embed: new MessageEmbed().setTitle('start an event'),
+    })
 
 export default {
     action,

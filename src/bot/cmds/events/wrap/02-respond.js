@@ -11,11 +11,15 @@ import { discord } from '../../../discord/index.js'
 
 export const notFound = async (role, inter) => {
     // prepare the message
-    const msg = new MessageEmbed()
+    const embed = new MessageEmbed()
         .setTitle('Event Not Found')
         .setDescription(`An event tied to <@&${role}> was not found.`)
 
-    return await discord.interactions.send.embed(msg, inter)
+    return await discord.interactions.send.embed({
+        inter,
+        embed,
+        ephemeral: true,
+    })
 }
 
 export default async (name, purged, inter) => {
@@ -25,7 +29,7 @@ export default async (name, purged, inter) => {
     const group = purged.group ? ':white_check_mark: Deleted' : ':x: Failed'
 
     // prepare the message
-    const msg = new MessageEmbed().setTitle(`${name} Wrapped`).addFields([
+    const embed = new MessageEmbed().setTitle(`${name} Wrapped`).addFields([
         {
             name: 'Role',
             value: role,
@@ -49,11 +53,12 @@ export default async (name, purged, inter) => {
     ])
 
     // respond
-    await discord.interactions.send.embed(msg, inter)
+    await discord.interactions.send.embed({ inter, embed, ephemeral: true })
 
     // send to log channel
+    if (global.env == 'development') return
     const channel = await discord.channels.get(
         config.get('discord.channels.identifiers.logs'),
     )
-    await discord.messages.send.embed(msg, { channel })
+    await discord.messages.send.embed(embed, { channel })
 }

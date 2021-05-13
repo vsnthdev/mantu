@@ -45,14 +45,15 @@ export default async () => {
         if (!cmd) {
             // send a card saying that interaction
             // couldn't be found
-            return await discord.interactions.send.embed(
-                new MessageEmbed()
+            return await discord.interactions.send.embed({
+                inter,
+                embed: new MessageEmbed()
                     .setTitle(`404! Couldn't Locate The Universe`)
                     .setDescription(
                         `The requested command \`${command}\` cannot be found.`,
                     ),
-                inter,
-            )
+                ephemeral: true,
+            })
         } else {
             // check for permissions
             if (cmd.perms) {
@@ -60,14 +61,15 @@ export default async () => {
 
                 for (const perm of cmd.perms) {
                     if (member.hasPermission(perm) == false) {
-                        return await discord.interactions.send.embed(
-                            new MessageEmbed()
+                        return await discord.interactions.send.embed({
+                            inter,
+                            embed: new MessageEmbed()
                                 .setTitle(`I'm afraid I don't know you.`)
                                 .setDescription(
                                     `The following command requires **${perm}** permission which you don't seem to have 🤷‍♂️`,
                                 ),
-                            inter,
-                        )
+                            ephemeral: true,
+                        })
                     }
                 }
             }
@@ -80,12 +82,13 @@ export default async () => {
                 // failed due to
                 const error = '```javascript\n' + err.toString() + '\n```'
 
-                return await discord.interactions.send.embed(
-                    new MessageEmbed()
+                return await discord.interactions.send.embed({
+                    inter,
+                    embed: new MessageEmbed()
                         .setTitle('Runtime Exception')
                         .setDescription(error),
-                    inter,
-                )
+                    ephemeral: true,
+                })
             }
         }
     })

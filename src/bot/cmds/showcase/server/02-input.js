@@ -36,5 +36,6 @@ export default async inter => {
         return
     }
 
-    return desc.first()
+    desc.first().delete()
+    return desc.first().content
 }

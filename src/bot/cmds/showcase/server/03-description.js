@@ -9,7 +9,7 @@ import respond from './04-respond.js'
 
 export default async (inter, raw) => {
     // remove any newlines
-    let msg = raw.content.replace(/(\r\n|\n|\r)/gm, ' ')
+    let msg = raw.replace(/(\r\n|\n|\r)/gm, ' ')
 
     // ensure the description isn't too big
     if (msg.length >= 180) {
@@ -23,6 +23,5 @@ export default async (inter, raw) => {
     // format description
     msg = chunk(msg, 64)
 
-    await raw.delete()
     return `**${msg.join('\n')}**`
 }
