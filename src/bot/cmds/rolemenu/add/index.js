@@ -34,7 +34,6 @@ const action = async (inter, { role, emoji }) => {
     content.splice(content.length - 2, 0, `> ${emoji}  ➜  ${name}`)
 
     await msg.edit(content.join('\n'))
-    content.join('\n')
 
     return await discord.interactions.send.embed({
         inter,

@@ -11,6 +11,7 @@ import input from '../../showcase/server/02-input.js'
 import create from './01-create.js'
 import respond from './02-respond.js'
 import description from './03-description.js'
+import rolemenu from './04-rolemenu.js'
 
 const action = async (inter, { name, color, emoji }) => {
     // check if the emoji is a unicode character
@@ -47,6 +48,8 @@ const action = async (inter, { name, color, emoji }) => {
     // format the description
     desc = chunk(desc.replace(/(\r\n|\n|\r)/gm, ' '), 100).join('\n')
 
+    await respond.processing({ inter })
+
     // create the required resource on Discord
     const { role, group, text, stage } = await create({ name, color, emoji })
 
@@ -63,13 +66,11 @@ const action = async (inter, { name, color, emoji }) => {
         stage,
     })
 
-    // TODO: Send a welcome message to the text channel
-    // showing a title and a description of the following event
-    // also show the timings of the event in top timezones
+    // add the role to our role menu so people
+    // can join
+    await rolemenu({ name, emoji, role })
 
-    // TODO: upon the start command, we ping all users with that
-    // role to invite them into the event
-    return await respond.finalize({ inter, role, stage, text })
+    return await respond.finalize({ inter, emoji, role, stage, text })
 }
 
 export default {

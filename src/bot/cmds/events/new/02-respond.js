@@ -39,7 +39,16 @@ export default {
                     ),
             ),
         }),
-    finalize: async ({ inter, role, stage, text }) => {
+    processing: async ({ inter, operation = 'update' }) =>
+        await discord.interactions[operation].embed({
+            inter,
+            embed: new MessageEmbed()
+                .setTitle(':clock4: Processing')
+                .setDescription(
+                    'Please sit tight while, I am working on the server.',
+                ),
+        }),
+    finalize: async ({ inter, emoji, role, stage, text }) => {
         // prepare the message
         const embed = new MessageEmbed()
             .setTitle(`:flame: Good Luck!`)
@@ -47,18 +56,27 @@ export default {
             .addField('Stage', `<#${stage.id}>`, true)
             .addField('Text', `<#${text.id}>`, true)
 
+        // send to log channel
+        if (global.env != 'development') {
+            const channel = await discord.channels.get(
+                config.get('discord.channels.identifiers.logs'),
+            )
+            await discord.messages.send.embed(embed, { channel })
+        }
+
+        // add the Zira bot adding command
+        embed.setDescription([
+            `Run the below command to finish integration with <@275813801792634880>`,
+            `\`\`\``,
+            `z/toggle ${emoji} <@&${role.id}>`,
+            `\`\`\``,
+        ])
+
         // update the interaction
         await discord.interactions.update.embed({
             inter,
             embed,
             ephemeral: true,
         })
-
-        // send to log channel
-        if (global.env == 'development') return
-        const channel = await discord.channels.get(
-            config.get('discord.channels.identifiers.logs'),
-        )
-        await discord.messages.send.embed(embed, { channel })
     },
 }

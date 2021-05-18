@@ -8,6 +8,8 @@ import { MessageEmbed } from 'discord.js'
 import { discord } from '../../../discord/index.js'
 
 const action = async inter =>
+    // TODO: upon the start command, we ping all users with that
+    // role to invite them into the event
     await discord.interactions.send.embed({
         inter,
         ephemeral: true,
