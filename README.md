@@ -6,6 +6,7 @@
 1. Generates invite links & redirects from a vanity URL
 2. Gracefully kicks people if they're inactive for set period
 3. Pulls _Programmer Memes_ from Reddit
+3. Creates resources related to events and then cleans them up later
 
 ## 📜 License
 > The **mantu** project is released under the [GPL v2](LICENSE.md). <br> Developed &amp; maintained By Vasanth Srivatsa. Copyright 2021 © Vasanth Developer.

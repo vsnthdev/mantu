@@ -19,12 +19,15 @@ const get = async id =>
     (await database('events').where({ text: id }).first().select()) ||
     (await database('events').where({ stage: id }).first().select())
 
+const list = async () => await database('events')
+
 const purge = async id =>
     (await database('events').where({ role: id }).first().del()) ||
     (await database('events').where({ text: id }).first().del()) ||
     (await database('events').where({ stage: id }).first().del())
 
 export default {
+    list,
     get,
     add,
     purge,
