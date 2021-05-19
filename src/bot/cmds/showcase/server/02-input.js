@@ -6,7 +6,7 @@
 import utilities from '@vasanthdeveloper/utilities'
 
 import { discord } from '../../../discord/index.js'
-import respond from './04-respond.js'
+import respond from './04-responses.js'
 
 export default async inter => {
     // grab only author's messages

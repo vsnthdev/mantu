@@ -5,7 +5,7 @@
 
 import chunk from 'chunk-text'
 
-import respond from './04-respond.js'
+import respond from './04-responses.js'
 
 export default async (inter, raw) => {
     // remove any newlines

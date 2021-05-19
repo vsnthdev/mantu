@@ -9,23 +9,23 @@ import { DateTime } from 'luxon'
 import { database } from '../../../../database/index.js'
 import input from '../../showcase/server/02-input.js'
 import create from './01-create.js'
-import respond from './02-respond.js'
+import responses from './02-responses.js'
 import description from './03-description.js'
 import rolemenu from './04-rolemenu.js'
 
 const action = async (inter, { name, color, emoji }) => {
     // check if the emoji is a unicode character
     if (emoji.match(/^<.*>/g) != null) {
-        respond.invalid(
+        responses.abort({
             inter,
-            `The given emoji ${emoji} is invalid to be used with events. Only unicode emojis are supported.`,
-            'send',
-        )
+            operation: 'send',
+            reason: `The given emoji ${emoji} is invalid to be used with events. Only unicode emojis are supported.`,
+        })
         return
     }
 
     // ask the user, the timings!
-    respond.time({ inter, name, emoji })
+    responses.time({ inter, name, emoji })
     const iTime = await input(inter)
     if (!iTime) return
 
@@ -33,22 +33,24 @@ const action = async (inter, { name, color, emoji }) => {
 
     // handle invalid time
     if (time.isValid == false) {
-        respond.invalid(
+        responses.abort({
             inter,
-            `**The given time \`${iTime}\` is invalid.**\n**Provide time in the format \`HH:mm dd-LL-yyyy\`**\n\n**[Click here](https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens) to see formatting help.**`,
-        )
+            operation: 'update',
+            reason: `**The given time \`${iTime}\` is invalid.**\n**Provide time in the format \`HH:mm dd-LL-yyyy\`**\n\n**[Click here](https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens) to see formatting help.**`,
+        })
         return
     }
 
     // ask the user for a description
-    await respond.description({ inter, name, emoji })
+    await responses.desc({ inter, name, emoji })
     let desc = await input(inter)
     if (!desc) return
 
     // format the description
     desc = chunk(desc.replace(/(\r\n|\n|\r)/gm, ' '), 100).join('\n')
 
-    await respond.processing({ inter })
+    // tell the user we're working
+    await responses.processing({ inter })
 
     // create the required resource on Discord
     const { role, group, text, stage } = await create({ name, color, emoji })
@@ -70,7 +72,7 @@ const action = async (inter, { name, color, emoji }) => {
     // can join
     await rolemenu({ name, emoji, role })
 
-    return await respond.finalize({ inter, emoji, role, stage, text })
+    return await responses.completed({ inter, emoji, role, stage, text })
 }
 
 export default {

@@ -6,17 +6,15 @@
 import message from './01-message.js'
 import input from './02-input.js'
 import description from './03-description.js'
-import respond from './04-respond.js'
+import responses from './04-responses.js'
 
 const action = async (inter, { code }) => {
     // if discord invite link was provided
     // instead, convert it to code
     if (code.startsWith('https://discord.gg')) code = code.substring(19)
 
-    // respond to the interaction
-    await respond.make(inter, code)
-
-    // ask for user input
+    // ask the user for a description
+    await responses.desc({ inter, code })
     const raw = await input(inter)
     if (!raw) return
 
@@ -28,7 +26,11 @@ const action = async (inter, { code }) => {
     await message(desc, { code })
 
     // update the embed too!
-    await respond.finalize(inter, desc.substring(2, desc.length - 2), code)
+    await responses.completed({
+        inter,
+        code,
+        desc: desc.substring(2, desc.length - 2),
+    })
 }
 
 export default {

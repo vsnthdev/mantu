@@ -6,7 +6,7 @@
 import { MessageEmbed } from 'discord.js'
 
 import { discord } from '../../../discord/index.js'
-import respond from '../../showcase/server/04-respond.js'
+import responses from '../../../utilities/responses.js'
 import { getRoleMessage } from '../add/index.js'
 
 const action = async (inter, { emoji }) => {
@@ -20,11 +20,11 @@ const action = async (inter, { emoji }) => {
 
     // handle when emoji not found
     if (!found) {
-        respond.invalid(
+        responses.abort({
             inter,
-            `No role found in the role menu message with the given emoji "${emoji}".`,
-            'send',
-        )
+            operation: 'send',
+            reason: `No role found in the role menu message with the given emoji "${emoji}".`,
+        })
         return
     }
 

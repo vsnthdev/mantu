@@ -8,12 +8,13 @@ import { MessageEmbed } from 'discord.js'
 
 import { config } from '../../../../config/index.js'
 import { discord } from '../../../discord/index.js'
-import respond from '../../events/new/02-respond.js'
+import responses from '../../../utilities/responses.js'
 
 export default {
-    ...respond,
+    ...responses,
     ...{
-        invalid: async ({ inter, role }) =>
+        // overriding the abort message
+        abort: async ({ inter, role }) =>
             await discord.interactions.send.embed({
                 inter,
                 ephemeral: true,
@@ -24,7 +25,8 @@ export default {
                     ),
             }),
 
-        finalize: async ({ inter, data, purged, operation, msg }) => {
+        // overriding the completed message
+        completed: async ({ inter, data, purged, operation }) => {
             const role = purged.role
                 ? ':white_check_mark: Deleted'
                 : ':x: Failed'
