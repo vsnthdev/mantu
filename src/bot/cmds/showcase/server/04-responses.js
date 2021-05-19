@@ -12,20 +12,15 @@ export default {
     ...responses,
     ...{
         // ask the user the server's description
-        desc: async ({ inter, code }) =>
+        desc: async ({ inter }) =>
             await discord.interactions.send.embed({
                 inter,
                 ephemeral: true,
                 embed: addInputNote(
                     new MessageEmbed()
-                        .setTitle(
-                            `:thinking: Why should someone join this server?`,
-                        )
+                        .setTitle(`Why should someone join this server?`)
                         .setDescription(
-                            [
-                                `Please enter a clear and concise :clipboard: description`,
-                                `below, for invite code: \`${code}\``,
-                            ].join('\n'),
+                            'Enter a clear and concise description.',
                         ),
                 ),
             }),
@@ -36,7 +31,7 @@ export default {
                 inter,
                 ephemeral: true,
                 embed: new MessageEmbed()
-                    .setTitle(`:sparkles: Shiny New Showcase!`)
+                    .setTitle(`Added server to showcase`)
                     .setDescription(desc)
                     .addField('Code', code),
             }),

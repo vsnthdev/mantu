@@ -14,7 +14,7 @@ const action = async (inter, { code }) => {
     if (code.startsWith('https://discord.gg')) code = code.substring(19)
 
     // ask the user for a description
-    await responses.desc({ inter, code })
+    await responses.desc({ inter })
     const raw = await input(inter)
     if (!raw) return
 

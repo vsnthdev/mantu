@@ -17,7 +17,7 @@ const getZoneName = time =>
         .join('')
         .toUpperCase()
 
-export default async ({ text, time, desc }) => {
+export default async ({ text, time }) => {
     // timezones
     const est = time.setZone('America/New_York')
     const gmt = time.setZone('Europe/London')
@@ -26,19 +26,16 @@ export default async ({ text, time, desc }) => {
 
     // construct the timings
     const timings = [
-        time.toFormat('LLL d, yyyy '),
-        `${time.toFormat('h:mm a')} (${getZoneName(time)})`,
+        `${time.toFormat('LLL d, yyyy ')} ${time.toFormat(
+            'h:mm a',
+        )} (${getZoneName(time)})`,
         `${est.toFormat(getFormat(time, est))} (${getZoneName(est)})`,
         `${gmt.toFormat(getFormat(time, gmt))} (${getZoneName(gmt)})`,
         `${cest.toFormat(getFormat(time, cest))} (${getZoneName(cest)})`,
         `${jst.toFormat(getFormat(time, jst))} (${getZoneName(jst)})`,
     ]
 
-    const content = desc
-        .trim()
-        .concat('\n\n')
-        .concat(`**On ${timings.join('       ')}**`)
-
     // send the event description to the text channel
-    await text.send(content)
+    // eslint-disable-next-line no-irregular-whitespace
+    await text.setTopic(`:clock4: ${timings.join(' ｜ ')}`)
 }

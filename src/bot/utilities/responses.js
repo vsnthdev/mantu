@@ -12,17 +12,19 @@ import { discord } from '../discord/index.js'
 // and also gives a way to cancel out
 // the operation
 export const addInputNote = embed => {
-    embed.setDescription(
-        embed.description
-            .split('\n')
-            .map(line => (line.length > 1 ? `**${line}**` : line))
-            .join('\n')
-            .concat('\n\n')
-            .concat(
-                ':bulb: **Tip:** Type __cancel__ to abort and clean up.\n\n',
-            )
-            .concat(':point_down:'),
-    )
+    if (embed.description) {
+        embed.setDescription(
+            embed.description
+                .concat('\n\n')
+                .concat(
+                    ':bulb: **Tip:** Type __cancel__ to abort and clean up.\n',
+                ),
+        )
+    } else {
+        embed.setDescription(
+            ':bulb: **Tip:** Type __cancel__ to abort and clean up.',
+        )
+    }
 
     return embed
 }
@@ -41,7 +43,7 @@ export default {
             inter,
             ephemeral: true,
             embed: new MessageEmbed()
-                .setTitle(`:warning: Operation Aborted`)
+                .setTitle(`Operation Aborted`)
                 .setDescription(reason),
         }),
 
@@ -52,7 +54,7 @@ export default {
             inter,
             ephemeral: true,
             embed: new MessageEmbed()
-                .setTitle(`:rotating_light: Rolled It Back!`)
+                .setTitle(`Rolled It Back!`)
                 .setDescription(
                     `The operation has been cancelled as per your request.`,
                 ),
@@ -63,7 +65,8 @@ export default {
     processing: async ({ inter, operation = 'update' }) =>
         await discord.interactions[operation].embed({
             inter,
-            embed: new MessageEmbed().setTitle(':clock4: Processing'),
+            ephemeral: true,
+            embed: new MessageEmbed().setTitle('Processing'),
         }),
 
     // when the user input expected wasn't given
@@ -73,7 +76,7 @@ export default {
             inter,
             ephemeral: true,
             embed: new MessageEmbed()
-                .setTitle(`:clock4: It's Too Late!`)
+                .setTitle(`It's Too Late!`)
                 .setDescription(
                     `It's been more than ${duration} without a response, so the operation was aborted.`,
                 ),
@@ -84,8 +87,6 @@ export default {
         await discord.interactions.update.embed({
             inter,
             ephemeral: true,
-            embed: new MessageEmbed().setTitle(
-                ':white_check_mark: Operation Successful',
-            ),
+            embed: new MessageEmbed().setTitle('Operation Successful'),
         }),
 }

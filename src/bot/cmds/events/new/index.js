@@ -57,7 +57,7 @@ const action = async (inter, { name, color, emoji }) => {
 
     // send event details to the newly
     // created text channel
-    await description({ text, time, desc })
+    await description({ text, time })
 
     // add the newly created event into database
     await database.postgres.events.add({

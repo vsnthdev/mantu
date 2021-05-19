@@ -14,33 +14,30 @@ export default {
     ...responses,
     ...{
         // ask the user when the event will start
-        time: async ({ inter, name, emoji }) =>
+        time: async ({ inter }) =>
             await discord.interactions.send.embed({
                 inter,
                 ephemeral: true,
                 embed: addInputNote(
                     new MessageEmbed()
-                        .setTitle(
-                            `:hourglass_flowing_sand: When does the event start?`,
-                        )
+                        .setTitle(`When does the event start?`)
                         .setDescription(
-                            `Please enter the date & time when the event would start in the format\n\`HH:mm dd-LL-yyyy\` for the event \`${emoji} ${name}\`\n\n[Click here](https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens) to see formatting help.`,
-                        ),
+                            `[Click here](https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens) to see formatting help.`,
+                        )
+                        .addField('Format', '`HH:mm dd-LL-yyyy`', true),
                 ),
             }),
 
         // ask the user a description for the event
-        desc: async ({ inter, name, emoji }) =>
+        desc: async ({ inter }) =>
             await discord.interactions.update.embed({
                 inter,
                 ephemeral: true,
-                embed: addInputNote(
-                    new MessageEmbed()
-                        .setTitle(`:thinking: What is the event about?`)
-                        .setDescription(
-                            `Please enter a detailed description for the event \`${emoji} ${name}\``,
-                        ),
-                ),
+                embed: new MessageEmbed()
+                    .setTitle(`What is the event about?`)
+                    .setDescription(
+                        'Write a detailed description of the event.',
+                    ),
             }),
 
         // the message we'll show the event
@@ -48,7 +45,7 @@ export default {
         completed: async ({ inter, emoji, role, stage, text }) => {
             // prepare the message
             const embed = new MessageEmbed()
-                .setTitle(`:flame: Good Luck!`)
+                .setTitle(`Good Luck!`)
                 .addField('Role', `<@&${role.id}>`)
                 .addField('Stage', `<#${stage.id}>`, true)
                 .addField('Text', `<#${text.id}>`, true)
