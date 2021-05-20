@@ -8,7 +8,7 @@ import { MessageEmbed } from 'discord.js'
 
 import { config } from '../../../../config/index.js'
 import { discord } from '../../../discord/index.js'
-import responses from '../../../utilities/responses.js'
+import responses, { embedColors } from '../../../utilities/responses.js'
 
 export default {
     ...responses,
@@ -22,7 +22,8 @@ export default {
                     .setTitle('Event Not Found')
                     .setDescription(
                         `An event tied to <@&${role}> was not found.`,
-                    ),
+                    )
+                    .setColor(embedColors.yellow),
             }),
 
         // overriding the completed message
@@ -65,6 +66,7 @@ export default {
                         inline: true,
                     },
                 ])
+                .setColor(embedColors.green)
 
             // send to log channel
             if (global.env != 'development') {

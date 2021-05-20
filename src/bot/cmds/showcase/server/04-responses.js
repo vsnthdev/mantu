@@ -6,7 +6,10 @@
 import { MessageEmbed } from 'discord.js'
 
 import { discord } from '../../../discord/index.js'
-import responses, { addInputNote } from '../../../utilities/responses.js'
+import responses, {
+    addInputNote,
+    embedColors,
+} from '../../../utilities/responses.js'
 
 export default {
     ...responses,
@@ -21,7 +24,8 @@ export default {
                         .setTitle(`Why should someone join this server?`)
                         .setDescription(
                             'Enter a clear and concise description.',
-                        ),
+                        )
+                        .setColor(embedColors.purple),
                 ),
             }),
 
@@ -33,7 +37,8 @@ export default {
                 embed: new MessageEmbed()
                     .setTitle(`Added server to showcase`)
                     .setDescription(desc)
-                    .addField('Code', code),
+                    .addField('Code', code)
+                    .setColor(embedColors.green),
             }),
     },
 }

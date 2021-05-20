@@ -6,7 +6,7 @@
 import { MessageEmbed } from 'discord.js'
 
 import { discord } from '../../../discord/index.js'
-import responses from '../../../utilities/responses.js'
+import responses, { embedColors } from '../../../utilities/responses.js'
 import { getRoleMessage } from '../add/index.js'
 
 const action = async (inter, { emoji }) => {
@@ -35,10 +35,11 @@ const action = async (inter, { emoji }) => {
         inter,
         ephemeral: true,
         embed: new MessageEmbed()
-            .setTitle(':zap: Job Done!')
+            .setTitle('Job Done!')
             .setDescription(
                 `Removed **"${found.substr(2)}"** from the role menu message.`,
-            ),
+            )
+            .setColor(embedColors.green),
     })
 }
 

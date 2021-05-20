@@ -8,7 +8,7 @@ import { MessageEmbed } from 'discord.js'
 
 import { config } from '../../../../config/index.js'
 import { discord } from '../../../discord/index.js'
-import responses from '../../../utilities/responses.js'
+import responses, { embedColors } from '../../../utilities/responses.js'
 
 export default {
     ...responses,
@@ -22,6 +22,7 @@ export default {
                 .addField('Role', `<@&${role.id}>`)
                 .addField('Stage', `<#${stage.id}>`, true)
                 .addField('Text', `<#${text.id}>`, true)
+                .setColor(embedColors.green)
 
             // send to log channel
             if (global.env != 'development') {

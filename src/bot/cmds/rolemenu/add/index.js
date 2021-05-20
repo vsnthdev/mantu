@@ -7,6 +7,7 @@ import { MessageEmbed } from 'discord.js'
 
 import { config } from '../../../../config/index.js'
 import { discord } from '../../../discord/index.js'
+import { embedColors } from '../../../utilities/responses.js'
 
 // gets the role message
 export const getRoleMessage = async () => {
@@ -39,12 +40,11 @@ const action = async (inter, { role, emoji }) => {
         inter,
         ephemeral: true,
         embed: new MessageEmbed()
-            .setTitle(':ribbon: Successfully Added')
+            .setTitle('Successfully Added')
             .setDescription(
                 `Added **"${emoji}  ➜  ${name}"** to the role menu message.`,
             )
-            .addField('Emoji', emoji, true)
-            .addField('Role', `<@&${role}>`, true),
+            .setColor(embedColors.green),
     })
 }
 

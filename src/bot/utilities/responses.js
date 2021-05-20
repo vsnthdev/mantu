@@ -7,6 +7,27 @@ import { MessageEmbed } from 'discord.js'
 
 import { discord } from '../discord/index.js'
 
+export const embedColors = {
+    // when an error occurs
+    // during an operation
+    red: '#EF233C',
+
+    // when an operation is on-going
+    blue: '#09A6F3',
+
+    // when an operation is
+    // successfully executed
+    green: '#34D399',
+
+    // when the user provides invalid
+    // inputs, or the operation is aborted
+    // before anything modifications are made
+    yellow: '#FFD60A',
+
+    // when requesting user input
+    purple: '#5865F2',
+}
+
 // adds a helpful message telling the user
 // that we're expecting some user input
 // and also gives a way to cancel out
@@ -44,7 +65,8 @@ export default {
             ephemeral: true,
             embed: new MessageEmbed()
                 .setTitle(`Operation Aborted`)
-                .setDescription(reason),
+                .setDescription(reason)
+                .setColor(embedColors.red),
         }),
 
     // when the user types cancel manually
@@ -57,7 +79,8 @@ export default {
                 .setTitle(`Rolled It Back!`)
                 .setDescription(
                     `The operation has been cancelled as per your request.`,
-                ),
+                )
+                .setColor(embedColors.yellow),
         }),
 
     // when the operation is being executed
@@ -66,7 +89,9 @@ export default {
         await discord.interactions[operation].embed({
             inter,
             ephemeral: true,
-            embed: new MessageEmbed().setTitle('Processing'),
+            embed: new MessageEmbed()
+                .setTitle('Processing')
+                .setColor(embedColors.blue),
         }),
 
     // when the user input expected wasn't given
@@ -79,7 +104,8 @@ export default {
                 .setTitle(`It's Too Late!`)
                 .setDescription(
                     `It's been more than ${duration} without a response, so the operation was aborted.`,
-                ),
+                )
+                .setColor(embedColors.yellow),
         }),
 
     // when the given operation has been completed
@@ -87,6 +113,8 @@ export default {
         await discord.interactions.update.embed({
             inter,
             ephemeral: true,
-            embed: new MessageEmbed().setTitle('Operation Successful'),
+            embed: new MessageEmbed()
+                .setTitle('Operation Successful')
+                .setColor(embedColors.green),
         }),
 }
