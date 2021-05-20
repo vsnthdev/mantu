@@ -4,6 +4,7 @@
  *  Created On 12 April 2021
  */
 
+import utilities from '@vasanthdeveloper/utilities'
 import { MessageEmbed } from 'discord.js'
 
 import { client, discord } from '../discord/index.js'
@@ -38,7 +39,7 @@ const getCommandStr = inter =>
 export default async () => {
     client.ws.on('INTERACTION_CREATE', async inter => {
         const command = getCommandStr(inter)
-        const args = transformArgs(command, inter.data.options || [])
+        let args = transformArgs(command, inter.data.options || [])
 
         const cmd = client.cmds.find(cmd => cmd.name == command)
 
@@ -48,7 +49,7 @@ export default async () => {
             return await discord.interactions.send.embed({
                 inter,
                 embed: new MessageEmbed()
-                    .setTitle(`404! Couldn't Locate The Universe`)
+                    .setTitle(`No such command`)
                     .setDescription(
                         `The requested command \`${command}\` cannot be found.`,
                     ),
@@ -63,14 +64,51 @@ export default async () => {
                     if (member.hasPermission(perm) == false) {
                         return await discord.interactions.send.embed({
                             inter,
+                            ephemeral: true,
                             embed: new MessageEmbed()
                                 .setTitle(`I'm afraid I don't know you.`)
                                 .setDescription(
                                     `The following command requires **${perm}** permission which you don't seem to have 🤷‍♂️`,
                                 ),
-                            ephemeral: true,
                         })
                     }
+                }
+            }
+
+            // validate the arguments if a schema was provided
+            if (cmd.schema) {
+                const { error, returned } = await utilities.promise.handle(
+                    cmd.schema.validateAsync(args),
+                )
+
+                if (error) {
+                    return await discord.interactions.send.embed({
+                        inter,
+                        ephemeral: true,
+                        embed: new MessageEmbed()
+                            .setTitle('Invalid argument provided')
+                            .addField(
+                                'Argument',
+                                error.details[0].context.key,
+                                true,
+                            )
+                            .addField(
+                                'Provided',
+                                error.details[0].context.value,
+                                true,
+                            )
+                            .addField(
+                                'Description',
+                                cmd.options.find(
+                                    opt =>
+                                        opt.name ==
+                                        error.details[0].context.key,
+                                ).description,
+                                true,
+                            ),
+                    })
+                } else {
+                    args = returned
                 }
             }
 

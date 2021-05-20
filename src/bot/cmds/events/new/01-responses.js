@@ -8,38 +8,11 @@ import { MessageEmbed } from 'discord.js'
 
 import { config } from '../../../../config/index.js'
 import { discord } from '../../../discord/index.js'
-import responses, { addInputNote } from '../../../utilities/responses.js'
+import responses from '../../../utilities/responses.js'
 
 export default {
     ...responses,
     ...{
-        // ask the user when the event will start
-        time: async ({ inter }) =>
-            await discord.interactions.send.embed({
-                inter,
-                ephemeral: true,
-                embed: addInputNote(
-                    new MessageEmbed()
-                        .setTitle(`When does the event start?`)
-                        .setDescription(
-                            `[Click here](https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens) to see formatting help.`,
-                        )
-                        .addField('Format', '`HH:mm dd-LL-yyyy`', true),
-                ),
-            }),
-
-        // ask the user a description for the event
-        desc: async ({ inter }) =>
-            await discord.interactions.update.embed({
-                inter,
-                ephemeral: true,
-                embed: new MessageEmbed()
-                    .setTitle(`What is the event about?`)
-                    .setDescription(
-                        'Write a detailed description of the event.',
-                    ),
-            }),
-
         // the message we'll show the event
         // has been created
         completed: async ({ inter, emoji, role, stage, text }) => {

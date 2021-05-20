@@ -3,7 +3,7 @@
  *  Created On 13 May 2021
  */
 
-import { getRoleMessage } from '../../rolemenu/add/index.js'
+import { getRoleMessage } from '../../../rolemenu/add/index.js'
 
 export default async ({ name, emoji }) => {
     const msg = await getRoleMessage()
