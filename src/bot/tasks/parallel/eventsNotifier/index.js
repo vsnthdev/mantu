@@ -5,11 +5,11 @@
 
 import { DateTime } from 'luxon'
 
-import { config } from '../../../config/index.js'
-import { database } from '../../../database/index.js'
-import logger from '../../../logger/tasks.js'
-import wrap from '../../cmds/events/wrap/index.js'
-import { discord } from '../../discord/index.js'
+import { config } from '../../../../config/index.js'
+import { database } from '../../../../database/index.js'
+import logger from '../../../../logger/tasks.js'
+import wrap from '../../../cmds/events/wrap/index.js'
+import { discord } from '../../../discord/index.js'
 import responses from './responses.js'
 
 // notify about a scheduled event

@@ -4,26 +4,39 @@
  *  Created On 24 September 2020
  */
 
-import utilities from '@vasanthdeveloper/utilities'
+import dirname from 'es-dirname'
 import fs from 'fs'
 import path from 'path'
 
 import logger from '../../logger/app.js'
 
-export default async client => {
-    logger.info('Initializing tasks')
-
+const load = async (dir, client) => {
     // loop through all directories in current directory
-    const dirs = await fs.promises.readdir(
-        path.resolve(path.join('src', 'bot', 'tasks')),
-    )
+    const files = await fs.promises.readdir(dir)
 
-    for (const dir of dirs) {
-        const fPath = path.resolve(path.join('src', 'bot', 'tasks', dir))
-        const isDirectory = (await fs.promises.stat(fPath)).isDirectory()
+    for (const name of files) {
+        const absolute = path.join(dir, name)
+
+        const isDirectory = (await fs.promises.stat(absolute)).isDirectory()
         if (isDirectory) {
             // import the directory and asynchronously run the handler function
-            await (await import(path.join(fPath, 'index.js'))).default(client)
+            await (await import(path.join(absolute, 'index.js'))).default(
+                client,
+            )
         }
     }
+}
+
+export default async client => {
+    // construct paths for both directories
+    const consecutive = path.join(dirname(), 'consecutive')
+    const parallel = path.join(dirname(), 'parallel')
+
+    // first load the sync ones
+    await load(consecutive, client)
+
+    // now we'll load the async ones
+    load(parallel, client)
+
+    logger.info('Initialized all tasks')
 }

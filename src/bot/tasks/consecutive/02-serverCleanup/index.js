@@ -5,8 +5,8 @@
 
 import { DateTime } from 'luxon'
 
-import { database } from '../../../database/index.js'
-import { discord } from '../../discord/index.js'
+import { database } from '../../../../database/index.js'
+import { discord } from '../../../discord/index.js'
 import kick from './kick.js'
 
 const action = async () => {

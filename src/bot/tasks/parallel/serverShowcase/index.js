@@ -8,8 +8,8 @@ import utilities from '@vasanthdeveloper/utilities'
 import axios from 'axios'
 import { MessageEmbed } from 'discord.js'
 
-import { config } from '../../../config/index.js'
-import { discord } from '../../discord/index.js'
+import { config } from '../../../../config/index.js'
+import { discord } from '../../../discord/index.js'
 
 const action = async () => {
     // get the server showcase channel

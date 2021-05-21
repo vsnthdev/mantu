@@ -5,7 +5,7 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../../discord/index.js'
+import { discord } from '../../../discord/index.js'
 
 export default {
     // the notification to be send a day before
