@@ -56,7 +56,7 @@ export default async () => {
 
         client.cmds.push({ ...mod, ...{ name } })
 
-        await client.api
+        client.api
             .applications(client.user.id)
             .guilds(config.get('discord.server'))
             .commands.post({
@@ -66,13 +66,10 @@ export default async () => {
                     options: mod.options,
                 },
             })
-        logger.verbose(`Registered ${chalk.gray.dim(name)} with Discord`)
     }
 
-    logger.verbose('Finished loading commands into memory')
-
     // delete non-existing commands in background
-    await update()
+    update()
 
     // listen for any commands
     // now that we've loaded all of them into memory

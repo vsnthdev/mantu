@@ -10,7 +10,7 @@ import path from 'path'
 
 import logger from '../../logger/app.js'
 
-const load = async (dir, client) => {
+const load = async (dir, client, parallel = false) => {
     // loop through all directories in current directory
     const files = await fs.promises.readdir(dir)
 
@@ -19,10 +19,16 @@ const load = async (dir, client) => {
 
         const isDirectory = (await fs.promises.stat(absolute)).isDirectory()
         if (isDirectory) {
-            // import the directory and asynchronously run the handler function
-            await (await import(path.join(absolute, 'index.js'))).default(
-                client,
-            )
+            if (parallel == false) {
+                // import the task and run the handler
+                // function one-by-one
+                await (await import(path.join(absolute, 'index.js'))).default(
+                    client,
+                )
+            } else {
+                // import the task and run all the handlers at once!
+                ;(await import(path.join(absolute, 'index.js'))).default(client)
+            }
         }
     }
 }
@@ -36,7 +42,7 @@ export default async client => {
     await load(consecutive, client)
 
     // now we'll load the async ones
-    load(parallel, client)
+    load(parallel, client, true)
 
     logger.info('Initialized all tasks')
 }
