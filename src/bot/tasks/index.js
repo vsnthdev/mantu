@@ -27,7 +27,9 @@ const load = async (dir, client, parallel = false) => {
                 )
             } else {
                 // import the task and run all the handlers at once!
-                ;(await import(path.join(absolute, 'index.js'))).default(client)
+                import(path.join(absolute, 'index.js')).then(task => {
+                    task.default(client)
+                })
             }
         }
     }

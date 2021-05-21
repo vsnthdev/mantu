@@ -9,8 +9,8 @@ import rd, { redis } from './redis/index.js'
 
 const connect = async () => {
     // connect both the databases
-    await postgres.connect()
-    await redis.connect()
+    // in background
+    await Promise.all([postgres.connect(), redis.connect()])
 }
 
 const disconnect = () => {

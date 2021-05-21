@@ -16,23 +16,13 @@ if (global.env == 'development')
 await config()
 
 // connect to the database
-await database.connect()
-
-// login to Discord
-const client = await discord.login()
+// and login to Discord at the same time
+const client = (await Promise.all([database.connect(), discord.login()]))[1]
 
 // initialize the operations that run
 // periodically
 await tasks(client)
 
 // listen for bot commands on Discord
-await cmds()
-
-// start the API server
-await api()
-
-// startup order:
-//     1. connect to the database
-//     2. login to Discord
-//     3. start the web server
-//     4. run the tasks initially
+// and start the server at the same time
+await Promise.all([cmds(), api()])
