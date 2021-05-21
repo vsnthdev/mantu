@@ -27,12 +27,12 @@ const dm = async member => {
             .trim()
             .replace(/  +/g, '')
 
-        await discord.messages.send.embed(
-            new MessageEmbed()
+        await discord.messages.send.embed({
+            channel,
+            embed: new MessageEmbed()
                 .setTitle('Sorry to see you go')
                 .setDescription(desc),
-            { channel },
-        )
+        })
 
         return true
     } catch (err) {
@@ -48,8 +48,9 @@ export default async (member, days) => {
         config.get('discord.channels.identifiers.logs'),
     )
 
-    return await discord.messages.send.embed(
-        new MessageEmbed()
+    return await discord.messages.send.embed({
+        channel,
+        embed: new MessageEmbed()
             .setTitle('Server Cleanup')
             .addField('Period', days.toString(), true)
             .addField('Direct Message', dmStatus ? 'Sent' : 'Failed', true)
@@ -57,6 +58,5 @@ export default async (member, days) => {
             .setDescription(
                 `<@${member.id}> has been kick due to inactivity for 50+ days.`,
             ),
-        { channel },
-    )
+    })
 }

@@ -39,7 +39,7 @@ const action = async () => {
 
 export default async () => {
     // run initially
-    await action()
+    action()
 
     const refresh = global.env == 'development' ? 30000 : 3600 * 1000
     setInterval(action, refresh)

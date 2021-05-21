@@ -69,19 +69,20 @@ export default {
                 .setColor(embedColors.green)
 
             // send to log channel
-            if (global.env != 'development') {
+            if (global.env != 'development' || !inter) {
                 const channel = await discord.channels.get(
                     config.get('discord.channels.identifiers.logs'),
                 )
-                discord.messages.send.embed(embed, { channel })
+                discord.messages.send.embed({ channel, embed })
             }
 
             // respond
-            await discord.interactions[operation].embed({
-                inter,
-                embed,
-                ephemeral: true,
-            })
+            inter &&
+                (await discord.interactions[operation].embed({
+                    inter,
+                    embed,
+                    ephemeral: true,
+                }))
         },
     },
 }

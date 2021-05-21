@@ -25,8 +25,8 @@ const action = async (inter, { name, emoji, color, time, date }) => {
     // merge time and date into a new const
     const startsAt = DateTime.fromFormat(
         `${zero(time.getHours())}:${zero(time.getMinutes())} ${zero(
-            date.getDay(),
-        )}-${zero(date.getMonth())}-${zero(date.getFullYear())}`,
+            date.getDate(),
+        )}-${zero(date.getMonth() + 1)}-${zero(date.getFullYear())}`,
         'HH:mm dd-LL-yyyy',
     )
 
@@ -47,11 +47,13 @@ const action = async (inter, { name, emoji, color, time, date }) => {
         // creating the event entry on our
         // PostgreSQL database
         database.postgres.events.add({
-            name: `${emoji}  ${name}`,
             role,
-            group,
             text,
+            group,
             stage,
+            name: `${emoji}  ${name}`,
+            starts: startsAt.toFormat('x'),
+            host: inter.member.user.id,
         }),
 
         // setup and configure role menu

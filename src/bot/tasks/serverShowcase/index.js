@@ -42,22 +42,24 @@ const action = async () => {
             const log = await discord.channels.get(
                 config.get('discord.channels.identifiers.logs'),
             )
-            await discord.messages.send.embed(
-                new MessageEmbed()
-                    .setTitle(':hourglass: Server Showcase Cleaned')
+            await discord.messages.send.embed({
+                channel: log,
+                content: `<@&${config.get(
+                    'discord.roles.identifer.moderator',
+                )}>`,
+                embed: new MessageEmbed()
+                    .setTitle('Server Showcase Cleaned')
                     .setDescription(
                         `Server showcase with the below code has\nbeen cleaned due to expiration.`,
                     )
                     .addField('Code', code),
-                { channel: log },
-                `<@&${config.get('discord.roles.identifer.moderator')}>`,
-            )
+            })
         }
     }
 }
 
 export default async () => {
-    await action()
+    action()
 
     // schedule this task to run every
     // 4 hours during production

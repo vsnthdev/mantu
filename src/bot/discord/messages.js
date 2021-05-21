@@ -18,13 +18,13 @@ export const transformEmbed = async embed => {
 
 export default {
     send: {
-        embed: async (embed, msg, content = '') =>
-            await msg.channel.send(content, {
+        embed: async ({ channel, embed, content = '' }) =>
+            await channel.send(content, {
                 embed: await transformEmbed(embed),
             }),
     },
     update: {
-        embed: async (embed, msg, content) =>
+        embed: async ({ msg, embed, content = '' }) =>
             await msg.edit(content, {
                 embed: await transformEmbed(embed),
             }),

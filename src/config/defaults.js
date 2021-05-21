@@ -40,5 +40,9 @@ export default config => {
     set('discord.channels.identifiers.logs', 'xxxxxxxxxxxxxxxxxx')
     set('discord.channels.identifiers.roles', 'xxxxxxxxxxxxxxxxxx')
     set('discord.channels.identifiers.invite', 'xxxxxxxxxxxxxxxxxx')
+    set('discord.channels.identifiers.eventsReminders', 'xxxxxxxxxxxxxxxxxx')
     set('discord.channels.identifiers.showcase.server', 'xxxxxxxxxxxxxxxxxx')
+
+    // Discord server events
+    set('discord.events.autoClean', true)
 }

@@ -26,7 +26,7 @@ export default async ({ text, time }) => {
 
     // construct the timings
     const timings = [
-        `${time.toFormat('LLL d, yyyy ')} ${time.toFormat(
+        `${time.toFormat('LLL d, yyyy')} ${time.toFormat(
             'h:mm a',
         )} (${getZoneName(time)})`,
         `${est.toFormat(getFormat(time, est))} (${getZoneName(est)})`,

@@ -13,10 +13,10 @@ const action = async (inter, { id: role }) => {
     const data = await database.postgres.events.get(role)
 
     // handle when we don't have that role
-    if (!data) return await responses.abort({ inter, role })
+    if (!data && inter) return await responses.abort({ inter, role })
 
     // respond with a processing message
-    await responses.processing({ inter, operation: 'send' })
+    inter && (await responses.processing({ inter, operation: 'send' }))
 
     // delete the entry from role menu
     await rolemenu(data.name.split(' ')[0])

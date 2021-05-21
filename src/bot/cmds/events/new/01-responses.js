@@ -29,7 +29,7 @@ export default {
                 const channel = await discord.channels.get(
                     config.get('discord.channels.identifiers.logs'),
                 )
-                await discord.messages.send.embed(embed, { channel })
+                await discord.messages.send.embed({ channel, embed })
             }
 
             // add the Zira bot adding command
