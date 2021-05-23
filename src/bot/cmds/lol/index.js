@@ -8,8 +8,18 @@ import { MessageEmbed } from 'discord.js'
 
 import { discord } from '../../discord/index.js'
 
+const subReddit = [
+    'ProgrammerHumor',
+    'techhumor',
+    'ITMemes',
+    'techsupportmemes',
+    'linuxmemes',
+    'applememes',
+    'windowsmemes',
+]
+
 const action = async (inter, { subreddit }) => {
-    subreddit = subreddit || 'ProgrammerHumor'
+    subreddit = subreddit || subReddit[0]
 
     // request a sub-reddit in JSON format from Reddit
     let {
@@ -57,24 +67,9 @@ export default {
             name: 'subreddit',
             description: 'The subreddit to get meme from.',
             type: 3,
-            choices: [
-                {
-                    name: 'Default',
-                    value: 'ProgrammerHumor',
-                },
-                {
-                    name: 'Alternative',
-                    value: 'techhumor',
-                },
-                {
-                    name: 'IT',
-                    value: 'ITMemes',
-                },
-                {
-                    name: 'Tech Support',
-                    value: 'techsupportmemes',
-                },
-            ],
+            choices: subReddit.map(name => {
+                return { name, value: name }
+            }),
         },
     ],
 }

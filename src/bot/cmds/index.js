@@ -29,12 +29,6 @@ const update = async () => {
                 .guilds(config.get('discord.server'))
                 .commands(rCmd.id)
                 .delete()
-
-            logger.verbose(
-                `Unregistered ${chalk.gray.dim(
-                    rCmd.name,
-                )} command from Discord`,
-            )
         }
     }
 }
