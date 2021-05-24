@@ -66,7 +66,7 @@ const action = async (inter, { name, emoji, color, time, date }) => {
 export default {
     action,
     description: 'Setup a new event on this server.',
-    perms: ['ADMINISTRATOR'],
+    restrict: ['perm:ADMINISTRATOR'],
     schema: Joi.object({
         name: Joi.string().required(),
         emoji: Joi.string()

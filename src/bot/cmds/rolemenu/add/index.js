@@ -51,7 +51,7 @@ const action = async (inter, { role, emoji }) => {
 export default {
     action,
     description: 'Add a new role to the role menu message.',
-    perms: ['ADMINISTRATOR'],
+    perms: ['perm:ADMINISTRATOR'],
     options: [
         {
             name: 'role',

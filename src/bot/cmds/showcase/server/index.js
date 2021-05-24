@@ -36,7 +36,7 @@ const action = async (inter, { code }) => {
 export default {
     action,
     description: 'Showcase another Discord server on this server.',
-    perms: ['ADMINISTRATOR'],
+    perms: ['perm:ADMINISTRATOR'],
     options: [
         {
             type: 3,

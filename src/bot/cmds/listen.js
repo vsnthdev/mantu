@@ -8,6 +8,7 @@ import utilities from '@vasanthdeveloper/utilities'
 import { MessageEmbed } from 'discord.js'
 
 import { client, discord } from '../discord/index.js'
+import restrict from './restrict.js'
 
 const transformArgs = (command, args) => {
     if (!args) return {}
@@ -56,23 +57,12 @@ export default async () => {
                 ephemeral: true,
             })
         } else {
-            // check for permissions
-            if (cmd.perms) {
-                const member = await discord.members.get(inter.member.user.id)
-
-                for (const perm of cmd.perms) {
-                    if (member.hasPermission(perm) == false) {
-                        return await discord.interactions.send.embed({
-                            inter,
-                            ephemeral: true,
-                            embed: new MessageEmbed()
-                                .setTitle(`I'm afraid I don't know you.`)
-                                .setDescription(
-                                    `The following command requires **${perm}** permission which you don't seem to have 🤷‍♂️`,
-                                ),
-                        })
-                    }
-                }
+            try {
+                // check if the user is eligible to execute
+                // this command
+                await restrict({ inter, cmd })
+            } catch (err) {
+                return
             }
 
             // validate the arguments if a schema was provided

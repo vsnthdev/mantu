@@ -46,7 +46,7 @@ const action = async (inter, { emoji }) => {
 export default {
     action,
     description: 'Remove a role from the role menu message.',
-    perms: ['ADMINISTRATOR'],
+    perms: ['perm:ADMINISTRATOR'],
     options: [
         {
             type: 3,

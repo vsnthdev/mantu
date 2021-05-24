@@ -38,7 +38,7 @@ const action = async (inter, { id: role }) => {
 export default {
     action,
     description: 'Clean up an event on this server.',
-    perms: ['ADMINISTRATOR'],
+    perms: ['perm:ADMINISTRATOR'],
     options: [
         {
             name: 'id',
