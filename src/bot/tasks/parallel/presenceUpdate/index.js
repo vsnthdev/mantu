@@ -3,8 +3,8 @@
  *  Created On 05 January 2021
  */
 
-import logger from '../../../../logger/tasks.js'
-import { client } from '../../../discord/index.js'
+import { client } from '~discord'
+import logger from '~logger/tasks.js'
 
 // the list of presences
 // 0 = PLAYING

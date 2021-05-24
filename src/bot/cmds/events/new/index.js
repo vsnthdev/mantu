@@ -8,7 +8,8 @@ import emojiRegex from 'emoji-regex'
 import BaseJoi from 'joi'
 import { DateTime } from 'luxon'
 
-import { database } from '../../../../database/index.js'
+import { database } from '~database'
+
 import responses from './01-responses.js'
 import create from './02-create.js'
 import rolemenu from './async/rolemenu.js'

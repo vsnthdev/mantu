@@ -8,8 +8,8 @@ import dirname from 'es-dirname'
 import glob from 'glob'
 import path from 'path'
 
-import logger from '../../../logger/app.js'
-import { client } from '../../discord/index.js'
+import { client } from '~discord'
+import logger from '~logger/app.js'
 
 export const subCmds = async (dir, options) => {
     // grab all command files

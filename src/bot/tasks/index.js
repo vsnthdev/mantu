@@ -8,7 +8,7 @@ import dirname from 'es-dirname'
 import fs from 'fs'
 import path from 'path'
 
-import logger from '../../logger/app.js'
+import logger from '~logger/app.js'
 
 const load = async (dir, client, parallel = false) => {
     // loop through all directories in current directory

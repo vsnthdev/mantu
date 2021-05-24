@@ -3,8 +3,8 @@
  *  Created On 07 May 2021
  */
 
-import { config } from '../../../../config/index.js'
-import { discord } from '../../../discord/index.js'
+import { config } from '~config'
+import { discord } from '~discord'
 
 export default async (desc, { code }) => {
     const channel = await discord.channels.get(

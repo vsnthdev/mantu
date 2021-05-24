@@ -5,7 +5,8 @@
 
 import utilities from '@vasanthdeveloper/utilities'
 
-import { discord } from '../../../discord/index.js'
+import { discord } from '~discord'
+
 import respond from './04-responses.js'
 
 export default async inter => {

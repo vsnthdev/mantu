@@ -4,13 +4,12 @@
  *  Created On 06 January 2021
  */
 
-import utilities from '@vasanthdeveloper/utilities'
 import chalk from 'chalk'
 import dirname from 'es-dirname'
 import glob from 'glob'
 import path from 'path'
 
-import logger from '../logger/api.js'
+import logger from '~logger/api.js'
 
 // getFiles will get all files named index.js
 const getRoutes = async () => {

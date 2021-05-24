@@ -8,8 +8,9 @@ import execa from 'execa'
 import knex from 'knex'
 import path from 'path'
 
-import { config } from '../../config/index.js'
-import logger from '../../logger/app.js'
+import { config } from '~config'
+import logger from '~logger/app.js'
+
 import events from './events.js'
 import members from './members.js'
 

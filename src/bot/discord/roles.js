@@ -4,7 +4,8 @@
  *  Created On 25 September 2020
  */
 
-import logger from '../../logger/discord.js'
+import logger from '~logger/discord.js'
+
 import guilds from './guilds.js'
 
 const get = async id => {

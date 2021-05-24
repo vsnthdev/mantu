@@ -3,7 +3,7 @@
  *  Created On 21 April 2021
  */
 
-import { discord } from '../../../discord/index.js'
+import { discord } from '~discord'
 
 export default async ({ role, group, text, stage }) => {
     role = await discord.roles.get(role)

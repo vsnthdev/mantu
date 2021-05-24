@@ -6,7 +6,7 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../discord/index.js'
+import { discord } from '~discord'
 
 // channel = the channel to run
 // user = the user to run

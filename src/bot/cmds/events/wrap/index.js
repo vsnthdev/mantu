@@ -3,7 +3,8 @@
  *  Created On 18 April 2021
  */
 
-import { database } from '../../../../database/index.js'
+import { database } from '~database'
+
 import rolemenu from './01-rolemenu.js'
 import purge from './02-purge.js'
 import responses from './03-responses.js'

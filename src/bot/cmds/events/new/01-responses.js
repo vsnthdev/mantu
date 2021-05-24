@@ -6,8 +6,9 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { config } from '../../../../config/index.js'
-import { discord } from '../../../discord/index.js'
+import { config } from '~config'
+import { discord } from '~discord'
+
 import responses, { embedColors } from '../../../utilities/responses.js'
 
 export default {

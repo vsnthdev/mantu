@@ -8,8 +8,8 @@ import utilities from '@vasanthdeveloper/utilities'
 import axios from 'axios'
 import Joi from 'joi'
 
-import { discord } from '../../bot/discord/index.js'
-import { config } from '../../config/index.js'
+import { config } from '~config'
+import { discord } from '~discord'
 
 // inviteCode is a temporary variable that
 // is stored until the application is running

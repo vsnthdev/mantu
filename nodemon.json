@@ -1,7 +1,7 @@
 {
     "verbose": false,
     "quiet": true,
-    "exec": "node src/mantu.js",
+    "exec": "node --no-warnings --experimental-modules --es-module-specifier-resolution=node --loader ./loader.js src/mantu.js",
     "ext": "js,json",
     "watch": [
         "src/",

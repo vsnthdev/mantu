@@ -5,7 +5,8 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../../../discord/index.js'
+import { discord } from '~discord'
+
 import responses, { embedColors } from '../../../utilities/responses.js'
 import { getRoleMessage } from '../add/index.js'
 

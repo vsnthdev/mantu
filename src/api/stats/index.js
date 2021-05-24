@@ -3,8 +3,8 @@
  *  Created On 19 May 2021
  */
 
-import { discord } from '../../bot/discord/index.js'
-import { database } from '../../database/index.js'
+import { database } from '~database'
+import { discord } from '~discord'
 
 const handler = async () => {
     const guild = await discord.guilds.getGuild()

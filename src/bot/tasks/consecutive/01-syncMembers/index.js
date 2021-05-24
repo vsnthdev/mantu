@@ -6,9 +6,9 @@
 
 import { DateTime } from 'luxon'
 
-import { database } from '../../../../database/index.js'
-import logger from '../../../../logger/tasks.js'
-import { discord } from '../../../discord/index.js'
+import { database } from '~database'
+import { discord } from '~discord'
+import logger from '~logger/tasks.js'
 
 const action = async () => {
     const members = await discord.members.getAllMembers(false, true)

@@ -7,10 +7,10 @@ import utilities from '@vasanthdeveloper/utilities'
 import chalk from 'chalk'
 import Conf from 'conf'
 import yaml from 'js-yaml'
-import { DateTime } from 'luxon'
 import path from 'path'
 
-import logger from '../logger/app.js'
+import logger from '~logger/app.js'
+
 import defaults from './defaults.js'
 import schema from './schema.js'
 

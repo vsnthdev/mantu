@@ -7,7 +7,8 @@
 import utilities from '@vasanthdeveloper/utilities'
 import { MessageEmbed } from 'discord.js'
 
-import { client, discord } from '../discord/index.js'
+import { client, discord } from '~discord'
+
 import restrict from './restrict.js'
 
 const transformArgs = (command, args) => {

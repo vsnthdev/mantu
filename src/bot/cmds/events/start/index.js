@@ -5,7 +5,7 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../../../discord/index.js'
+import { discord } from '~discord'
 
 const action = async inter =>
     // TODO: upon the start command, we ping all users with that

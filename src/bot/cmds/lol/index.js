@@ -6,7 +6,7 @@
 import axios from 'axios'
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../../discord/index.js'
+import { discord } from '~discord'
 
 const subReddit = [
     'ProgrammerHumor',

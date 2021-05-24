@@ -5,7 +5,7 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../discord/index.js'
+import { discord } from '~discord'
 
 export const embedColors = {
     // when an error occurs

@@ -6,8 +6,8 @@
 
 import slug from 'slug'
 
-import { config } from '../../../../config/index.js'
-import { discord } from '../../../discord/index.js'
+import { config } from '~config'
+import { discord } from '~discord'
 
 export default async ({ name, color, emoji }) => {
     // create a new role

@@ -5,7 +5,8 @@
 
 import { MessageEmbed } from 'discord.js'
 
-import { discord } from '../../../discord/index.js'
+import { discord } from '~discord'
+
 import responses, {
     addInputNote,
     embedColors,

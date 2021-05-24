@@ -7,8 +7,9 @@ import Hapi from '@hapi/hapi'
 import chalk from 'chalk'
 import rateLimit from 'hapi-rate-limit'
 
-import { config } from '../config/index.js'
-import logger from '../logger/api.js'
+import { config } from '~config'
+import logger from '~logger/api.js'
+
 import routes from './routes.js'
 
 export default async () => {

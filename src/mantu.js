@@ -1,10 +1,16 @@
+/*
+ *  Entryfile for mantu bot.
+ *  Created On 17 Sep 2020
+ */
+
+import database from '~database'
+import logger from '~logger/app.js'
+
 import api from './api/index.js'
 import cmds from './bot/cmds/index.js'
 import discord from './bot/discord/index.js'
 import tasks from './bot/tasks/index.js'
 import config from './config/index.js'
-import database from './database/index.js'
-import logger from './logger/app.js'
 
 // tell the user we're running in development mode
 // if in case

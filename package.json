@@ -20,11 +20,16 @@
     },
     "scripts": {
         "dev": "nodemon",
-        "start": "node src/mantu.js",
+        "start": "node --no-warnings --experimental-modules --es-module-specifier-resolution=node --loader ./loader.js src/mantu.js",
         "build": "docker build . --squash --tag vasanthdeveloper/mantu",
         "deploy": "docker push vasanthdeveloper/mantu"
     },
-    "keywords": [],
+    "aliases": {
+        "~logger": "src/logger",
+        "~config": "src/config/index.js",
+        "~database": "src/database/index.js",
+        "~discord": "src/bot/discord/index.js"
+    },
     "dependencies": {
         "@hapi/boom": "^9.1.2",
         "@hapi/hapi": "^20.1.2",

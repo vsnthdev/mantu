@@ -6,8 +6,9 @@
 
 import djs from 'discord.js'
 
-import { config } from '../../config/index.js'
-import logger from '../../logger/app.js'
+import { config } from '~config'
+import logger from '~logger/app.js'
+
 import channels from './channels.js'
 import guilds from './guilds.js'
 import interactions from './interactions.js'

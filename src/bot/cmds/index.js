@@ -3,14 +3,14 @@
  *  Created On 28 September 2020
  */
 
-import chalk from 'chalk'
 import dirname from 'es-dirname'
 import glob from 'glob'
 import path from 'path'
 
-import { config } from '../../config/index.js'
-import logger from '../../logger/app.js'
-import { client } from '../discord/index.js'
+import { config } from '~config'
+import { client } from '~discord'
+import logger from '~logger/app.js'
+
 import listen from './listen.js'
 
 const update = async () => {

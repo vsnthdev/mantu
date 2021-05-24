@@ -3,7 +3,8 @@
  *  Created On 11 April 2021
  */
 
-import { config } from '../../config/index.js'
+import { config } from '~config'
+
 import { client } from './index.js'
 
 const getGuild = async () =>
