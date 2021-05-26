@@ -23,4 +23,4 @@ RUN npm install --prod && \
     rm -rf /var/cache/apk/*
 
 # run mantu on container boot
-CMD [ "node", "--no-warnings", " --experimental-modules", "--es-module-specifier-resolution=node", "--loader", "./loader.js", "/opt/mantu/src/mantu.js" ]
+CMD [ "node", "--no-warnings", "--experimental-modules", "--es-module-specifier-resolution=node", "--loader", "/opt/mantu/loader.js", "/opt/mantu/src/mantu.js" ]
