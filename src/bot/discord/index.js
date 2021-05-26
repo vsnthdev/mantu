@@ -41,6 +41,20 @@ const login = () => {
     })
 }
 
+// get formatted commands
+export const getFormattedCommands = async () => {
+    const returnable = []
+
+    for (const cmd of client.cmds) {
+        const matched = client.cmds.filter(c => c.name.startsWith(cmd.name))
+            .length
+
+        if (matched == 1) returnable.push(cmd)
+    }
+
+    return returnable
+}
+
 // logout on Discord
 const logout = async () => {
     //
