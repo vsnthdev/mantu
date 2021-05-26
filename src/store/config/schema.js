@@ -25,6 +25,9 @@ export default Joi.object({
         host: Joi.string().required(),
         port: Joi.number().min(1000).max(60000).required(),
     }),
+    todoist: Joi.object({
+        token: Joi.string().length(40).allow(null).required(),
+    }),
     discord: Joi.object({
         token: Joi.string().length(59).required(),
         server: Joi.string().length(18).required(),

@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src",
+        "paths": {
+            "~logger": ["logger"],
+            "~config": ["store/config/index.js"],
+            "~restrict": ["store/restrict/index.js"],
+            "~database": ["database/index.js"],
+            "~discord": ["bot/discord/index.js"]
+        }
+    }
+}

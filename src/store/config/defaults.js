@@ -23,6 +23,9 @@ export default config => {
     set('server.host', 'localhost')
     set('server.port', 2020)
 
+    // Todoist
+    set('todoist.token', null)
+
     // discord
     set(
         'discord.token',
