@@ -6,6 +6,7 @@
 import utilities from '@vasanthdeveloper/utilities'
 import chalk from 'chalk'
 import Conf from 'conf'
+import dirname from 'es-dirname'
 import yaml from 'js-yaml'
 import path from 'path'
 
@@ -19,7 +20,7 @@ export let config
 export default async () => {
     config = new Conf({
         projectSuffix: '',
-        cwd: path.join(process.cwd(), 'data'),
+        cwd: path.join(dirname(), '..', '..', '..', 'data'),
         configName: 'config',
         fileExtension: 'yml',
         clearInvalidConfig: true,

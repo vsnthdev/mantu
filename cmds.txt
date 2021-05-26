@@ -1,0 +1,13 @@
+Commands For Testing
+=======================
+
+/events new name:Docker Explained emoji::whale: color:0db7ed time:21:45 date:26-05-2021 
+/events start
+/events wrap id:@Docker Explained 
+
+/rolemenu add role:@Capitan emoji::purse: 
+/rolemenu remove emoji::purse: 
+
+/showcase server code:b57Gx2jR 
+
+/lol

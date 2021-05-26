@@ -26,7 +26,8 @@
     },
     "aliases": {
         "~logger": "src/logger",
-        "~config": "src/config/index.js",
+        "~config": "src/store/config/index.js",
+        "~restrict": "src/store/restrict/index.js",
         "~database": "src/database/index.js",
         "~discord": "src/bot/discord/index.js"
     },

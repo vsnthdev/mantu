@@ -10,6 +10,7 @@ import path from 'path'
 import { config } from '~config'
 import { client } from '~discord'
 import logger from '~logger/app.js'
+import restrict from '~restrict'
 
 import listen from './listen.js'
 
@@ -62,12 +63,17 @@ export default async () => {
             })
     }
 
-    // delete non-existing commands in background
-    update()
+    await Promise.all([
+        // delete non-existing commands in background
+        update(),
 
-    // listen for any commands
-    // now that we've loaded all of them into memory
-    await listen()
+        // create the restrict store file in background
+        restrict(client.cmds),
+
+        // listen for any commands
+        // now that we've loaded all of them into memory
+        listen(),
+    ])
 
     logger.info(`Synced commands with Discord`)
 }

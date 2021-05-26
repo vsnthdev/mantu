@@ -3,6 +3,7 @@
  *  Created On 17 Sep 2020
  */
 
+import config from '~config'
 import database from '~database'
 import logger from '~logger/app.js'
 
@@ -10,7 +11,6 @@ import api from './api/index.js'
 import cmds from './bot/cmds/index.js'
 import discord from './bot/discord/index.js'
 import tasks from './bot/tasks/index.js'
-import config from './config/index.js'
 
 // tell the user we're running in development mode
 // if in case
