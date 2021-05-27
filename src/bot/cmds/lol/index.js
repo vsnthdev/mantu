@@ -62,6 +62,9 @@ const action = async (inter, { subreddit }) => {
 export default {
     action,
     description: 'Want a random programming meme from Reddit?',
+    coolDown: {
+        ttl: 14400,
+    },
     options: [
         {
             name: 'subreddit',

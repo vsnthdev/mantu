@@ -10,6 +10,8 @@ import { discord } from '~discord'
 import logger from '~logger/app.js'
 import { restrict } from '~restrict'
 
+import { embedColors } from '../utilities/responses.js'
+
 const getEmbed = async ({
     inter,
     cmd,
@@ -22,7 +24,9 @@ const getEmbed = async ({
     const users = user.map(u => `<@${u}>`).join(' ')
     const channels = channel.map(c => `<#${c}>`).join(' ')
 
-    const embed = new MessageEmbed().setTitle(`Restricted Access`)
+    const embed = new MessageEmbed()
+        .setTitle(`Restricted Access`)
+        .setColor(embedColors.red)
 
     if (restrictHelp) {
         embed.setDescription(
@@ -38,7 +42,6 @@ const getEmbed = async ({
     discord.interactions.send.embed({
         inter,
         embed,
-        ephemeral: true,
     })
 }
 

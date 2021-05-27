@@ -9,6 +9,7 @@ import { MessageEmbed } from 'discord.js'
 
 import { client, discord } from '~discord'
 
+import { isHot, registerCoolDown } from './cooldown.js'
 import restrict from './restrict.js'
 
 const transformArgs = (command, args) => {
@@ -58,6 +59,13 @@ export default async () => {
                 ephemeral: true,
             })
         } else {
+            // check if the command is hot
+            try {
+                isHot(inter, cmd)
+            } catch {
+                return
+            }
+
             try {
                 // check if the user is eligible to execute
                 // this command
@@ -106,6 +114,7 @@ export default async () => {
             // run the action tied to the requested interaction
             try {
                 cmd.action(inter, args)
+                registerCoolDown(inter, cmd)
             } catch (err) {
                 // send a card saying the interaction
                 // failed due to
