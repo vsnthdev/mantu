@@ -40,11 +40,12 @@ export default async () => {
     )
 
     // handle validation errors
-    if (validate.error)
-        logger.error(
-            `Invalid config file due to 👇\n${validate.error.message}`,
-            2,
+    if (validate.error) {
+        config.delete(validate.error.details[0].path.join('.'))
+        logger.warning(
+            `Removed invalid config due to 👇\n${validate.error.message}`,
         )
+    }
 
     logger.info('Finished reading run control')
     logger.verbose(

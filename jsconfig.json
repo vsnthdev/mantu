@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": "src",
         "paths": {
-            "~logger": ["logger"],
+            "~logger": ["logger/"],
             "~config": ["store/config/index.js"],
             "~restrict": ["store/restrict/index.js"],
             "~database": ["database/index.js"],
