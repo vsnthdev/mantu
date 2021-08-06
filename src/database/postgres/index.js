@@ -4,9 +4,8 @@
  *  Created On 22 September 2020
  */
 
-import execa from 'execa'
+import { promise } from '@vasanthdeveloper/utilities'
 import knex from 'knex'
-import path from 'path'
 
 import { config } from '~config'
 import logger from '~logger/app.js'
@@ -16,31 +15,18 @@ import members from './members.js'
 
 export let database
 
-// migrate to latest schema of database
-const migrateLatest = async () => {
-    try {
-        await execa(path.join(process.cwd(), 'node_modules', '.bin', 'knex'), [
-            '--esm',
-            'migrate:latest',
-        ])
-        logger.info('Finished syncing PostgreSQL database schema')
-    } catch (e) {
-        logger.error(e, 2)
-    }
-}
-
-// connect to PostgreSQL database
 const connect = async () => {
+    // connect to the database using the provided config
     logger.verbose('Attempting to connect to PostgreSQL database')
-    const temp = knex({
+    database = knex({
         client: 'pg',
         debug: false,
         connection: {
             host: config.get('database.postgres.host'),
             port: config.get('database.postgres.port'),
             user: config.get('database.postgres.user'),
-            database: config.get('database.postgres.database'),
-            password: config.get('database.postgres.password'),
+            database: config.get('database.postgres.name'),
+            password: config.get('database.postgres.pass'),
         },
         pool: {
             min: 1,
@@ -49,27 +35,23 @@ const connect = async () => {
     })
 
     // verify the connection by running a RAW query
-    try {
-        await temp.raw('SELECT 1')
-        logger.info('Connected to PostgreSQL database')
-
-        // run migrations
-        await migrateLatest()
-
-        // make database global
-        database = temp
-    } catch (err) {
+    const { error } = await promise.handle(database.raw('SELECT 1'))
+    if (error)
         logger.error(
-            `Failed to connect to PostgreSQL database due to 👇\n${err.message}`,
+            `Failed to connect to PostgreSQL database due to 👇\n${error.message}`,
             2,
         )
-    }
+
+    // tell the user we have connected to the database
+    logger.info('Connected to PostgreSQL database')
+
+    // migrate the database schema to the latest version
+    await database.migrate.latest()
+    logger.info('Finished migrating PostgreSQL database schema')
 }
 
-const disconnect = () => {
-    // dispose the connection to both the
-    // databases
-}
+// dispose the database connection
+const disconnect = async () => await database.destroy()
 
 export const postgres = { connect, disconnect }
 export default {

@@ -10,9 +10,9 @@ export default Joi.object({
         postgres: Joi.object({
             host: Joi.string().required(),
             port: Joi.number().min(1000).max(60000).required(),
+            name: Joi.string().required(),
             user: Joi.string().required(),
-            database: Joi.string().required(),
-            password: Joi.string().allow(null).required(),
+            pass: Joi.string().allow(null).required(),
         }),
         redis: Joi.object({
             host: Joi.string().required(),
