@@ -5,6 +5,8 @@
  */
 
 import { promise } from '@vasanthdeveloper/utilities'
+import { highlight } from 'cli-highlight'
+import yaml from 'js-yaml'
 import knex from 'knex'
 
 import { config } from '~config'
@@ -18,7 +20,16 @@ export let database
 const connect = async () => {
     // connect to the database using the provided config
     logger.verbose('Attempting to connect to PostgreSQL database')
-    database = knex({
+
+    // prepare a masked password
+    const maskedPassword = `${(
+        config.get('database.postgres.pass') || ''
+    ).slice(0, 5)}${'*'.repeat(
+        (config.get('database.postgres.pass') || '').length,
+    )}`
+
+    // create and log the knexConfig object
+    const knexConfig = {
         client: 'pg',
         debug: false,
         connection: {
@@ -26,13 +37,30 @@ const connect = async () => {
             port: config.get('database.postgres.port'),
             user: config.get('database.postgres.user'),
             database: config.get('database.postgres.name'),
-            password: config.get('database.postgres.pass'),
+            password: maskedPassword,
         },
         pool: {
             min: 1,
             max: 20,
         },
-    })
+    }
+
+    logger.verbose(
+        `Here are the connection settings 👇\n${highlight(
+            yaml.dump(knexConfig, {
+                indent: 4,
+            }),
+            {
+                language: 'yaml',
+            },
+        ).trim()}`,
+    )
+
+    // set the actual password before connecting
+    knexConfig.connection.password = config.get('database.postgres.pass')
+
+    // initialize knex with the config
+    database = knex(knexConfig)
 
     // verify the connection by running a RAW query
     const { error } = await promise.handle(database.raw('SELECT 1'))
