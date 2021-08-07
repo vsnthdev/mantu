@@ -74,7 +74,9 @@ const connect = async () => {
     logger.info('Connected to PostgreSQL database')
 
     // migrate the database schema to the latest version
-    await database.migrate.latest()
+    await database.migrate.latest({
+        loadExtensions: ['.mjs'],
+    })
     logger.info('Finished migrating PostgreSQL database schema')
 }
 
