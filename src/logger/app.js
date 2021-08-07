@@ -6,6 +6,11 @@
 import chalk from 'chalk'
 import itivrutaha from 'itivrutaha'
 
+import { givenArgs } from '../cli/args.js'
+
+const initLogs = givenArgs('-h', '--help', '-v', '--version')
+const printAscii = givenArgs('-q', '--quiet')
+
 const ascii = `
 
                          __
@@ -19,10 +24,13 @@ const ascii = `
     .join('\n')
     .concat('\n')
 
-console.clear()
-console.log(chalk.redBright.bold(ascii))
+initLogs || printAscii || console.clear()
+printAscii || console.log(chalk.redBright.bold(ascii))
 
 export default await itivrutaha.createNewLogger({
+    bootLog: !initLogs,
+    shutdownLog: !initLogs,
+    verboseIdentifier: ['-V', '--verbose'],
     context: {
         name: 'app',
         color: chalk.redBright,

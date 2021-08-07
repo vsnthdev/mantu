@@ -11,6 +11,9 @@ import api from './api/index.js'
 import cmds from './bot/cmds/index.js'
 import discord from './bot/discord/index.js'
 import tasks from './bot/tasks/index.js'
+import cli from './cli/index.js'
+
+await cli()
 
 // tell the user we're running in development mode
 // if in case

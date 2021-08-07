@@ -9,6 +9,7 @@ import itivrutaha from 'itivrutaha'
 export default await itivrutaha.createNewLogger({
     bootLog: false,
     shutdownLog: false,
+    verboseIdentifier: ['-V', '--verbose'],
     context: {
         name: 'dis',
         color: chalk.hex('#7289da'),
